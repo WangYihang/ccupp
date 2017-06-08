@@ -1,7 +1,7 @@
-# chinese-weak-password-generator
-基于社会工程学的弱口令密码字典生成工具
+# Chinese Common User Passwords Profiler
+> 基于社会工程学的弱口令密码字典生成工具
 
-# Usage : 
+# 使用方法 : 
 1. 第一步 : 定义已知信息
 ```
 class Person:
@@ -20,4 +20,9 @@ class Person:
 2. 第二步 : 运行脚本
 ```
 python chinese-weak-password-generator.py
+```
+
+# 参考资料
+```
+http://www.moonsec.com/post-181.html
 ```
