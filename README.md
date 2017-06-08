@@ -1,4 +1,4 @@
-# chinese-weak-password-generator
+# Chinese Common User Passwords Profiler
 基于社会工程学的弱口令密码字典生成工具
 
 # 使用方法 : 
