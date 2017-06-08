@@ -17,7 +17,7 @@ class Person:
     ACCOUNT = ["twodog",]
     PASSWORD = ["old_password",]
 
-Delimiters = ["", "-", ".", "|", "_", "+"]
+Delimiters = ["", "-", ".", "|", "_", "+", "#", "@"]
 Prefix = ["",]
 Suffix = ["",]
 
