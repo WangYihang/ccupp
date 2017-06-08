@@ -19,7 +19,7 @@ class Person:
 
 Delimiters = ["", "-", ".", "|", "_", "+", "#", "@"]
 Prefix = ["",]
-Suffix = ["",]
+Suffix = ["","123","@","abc",".","123.","!!!",]
 
 
 def get_pinyin(word):
@@ -34,11 +34,19 @@ def get_abbreviation(word):
 def get_full_pinyin(word):
     return get_pinyin(word)
 
+def get_title(word):
+    result = list(word)
+    result[0] = result[0].upper()
+    return "".join(i for i in result)
+
 def get_name_compent(person):
     result = []
     result.append(get_pinyin(person.NAME))
     result.append(get_pinyin(person.NAME[0]))
     result.append(get_pinyin(person.NAME[1:]))
+    result.append(get_title(get_pinyin(person.NAME)))
+    result.append(get_title(get_pinyin(person.NAME[0])))
+    result.append(get_title(get_pinyin(person.NAME[1:])))
     result.append(get_abbreviation(person.NAME))
     result.append(get_abbreviation(person.NAME[0]))
     result.append(get_abbreviation(person.NAME[1:]))
@@ -74,6 +82,9 @@ def get_hometown_compent(person):
     result.append(get_pinyin(person.HOMETOWN[0]))
     result.append(get_pinyin(person.HOMETOWN[1]))
     result.append(get_pinyin(person.HOMETOWN[2]))
+    result.append(get_title(get_pinyin(person.HOMETOWN[0])))
+    result.append(get_title(get_pinyin(person.HOMETOWN[1])))
+    result.append(get_title(get_pinyin(person.HOMETOWN[2])))
     result.append(get_abbreviation(person.HOMETOWN[0]))
     result.append(get_abbreviation(person.HOMETOWN[1]))
     result.append(get_abbreviation(person.HOMETOWN[2]))
@@ -85,6 +96,9 @@ def get_place_compent(person):
         result.append(get_pinyin(place[0]))
         result.append(get_pinyin(place[1]))
         result.append(get_pinyin(place[2]))
+        result.append(get_title(get_pinyin(place[0])))
+        result.append(get_title(get_pinyin(place[1])))
+        result.append(get_title(get_pinyin(place[2])))
         result.append(get_abbreviation(place[0]))
         result.append(get_abbreviation(place[1]))
         result.append(get_abbreviation(place[2]))
@@ -101,6 +115,7 @@ def get_company_compent(person):
     for company in person.COMPANY:
         for name in company:
             result.append(get_pinyin(name))
+            result.append(get_title(get_pinyin(name)))
             result.append(get_abbreviation(name))
     return result
 
@@ -109,6 +124,7 @@ def get_school_compent(person):
     for school in person.SCHOOL:
         for name in school:
             result.append(get_pinyin(name))
+            result.append(get_title(get_pinyin(name)))
             result.append(get_abbreviation(name))
     return result
 
@@ -116,12 +132,8 @@ def get_account_compent(person):
     result = []
     for account in person.ACCOUNT:
         result.append(get_pinyin(account))
+        result.append(get_title(get_pinyin(account)))
         result.append(get_abbreviation(account))
-    return result
-
-def get_compent(person):
-    result = []
-    #result.append(person.)
     return result
 
 def get_all_compent(person):
@@ -140,6 +152,25 @@ def get_all_compent(person):
 
 def main():
     compents = get_all_compent(Person)
+    # 单组件密码
+    for Delimiter in Delimiters:
+        for prefix in Prefix:
+            for suffix in Suffix:
+                for compent in compents:
+                    for i in compent:
+                        if Delimiter == "":
+                            password = prefix + i + Delimiter + suffix
+                            if len(password) > 6 and len(password) < 16:
+                                print password
+                            continue
+                        password = prefix + i + Delimiter + suffix
+                        if len(password) > 6 and len(password) < 16:
+                            print password
+                        password = prefix + Delimiter + i + suffix
+                        if len(password) > 6 and len(password) < 16:
+                            print password
+    '''
+    # 两组件密码
     for Delimiter in Delimiters:
         for prefix in Prefix:
             for suffix in Suffix:
@@ -151,6 +182,7 @@ def main():
                                 if len(password) > 6 and len(password) < 16:
                                     print password
 
+    '''
 
 if __name__ == "__main__":
     main()
