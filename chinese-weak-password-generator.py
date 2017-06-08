@@ -16,6 +16,8 @@ class Person:
     ACCOUNT = ["twodog",]
     PASSWORD = ["old_password",]
 
+Delimiters = ["", "-", ".", "|", "_", "+"]
+
 def get_pinyin(word):
     return hanzi2pinyin.hanzi2pinyin(word)
 
@@ -138,9 +140,10 @@ def main():
         for compent_b in compents:
             for i in compent_a:
                 for j in compent_b:
-                    password = i+j
-                    if len(password) > 6 and len(password) < 16:
-                        print password
+                    for Delimiter in Delimiters:
+                        password = i + Delimiter + j
+                        if len(password) > 6 and len(password) < 16:
+                            print password
 
 
 if __name__ == "__main__":
