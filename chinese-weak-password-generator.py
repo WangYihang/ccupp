@@ -136,11 +136,11 @@ def get_all_compent(person):
 
 def main():
     compents = get_all_compent(Person)
-    for compent_a in compents:
-        for compent_b in compents:
-            for i in compent_a:
-                for j in compent_b:
-                    for Delimiter in Delimiters:
+    for Delimiter in Delimiters:
+        for compent_a in compents:
+            for compent_b in compents:
+                for i in compent_a:
+                    for j in compent_b:
                         password = i + Delimiter + j
                         if len(password) > 6 and len(password) < 16:
                             print password
