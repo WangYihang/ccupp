@@ -180,8 +180,6 @@ def main():
                         password = prefix + Delimiter + i + suffix
                         if len(password) > 6 and len(password) < 16:
                             store_password(password, filename)
-
-    '''
     # 两组件密码
     for Delimiter in Delimiters:
         for prefix in Prefix:
@@ -193,8 +191,6 @@ def main():
                                 password = prefix + i + Delimiter + j + suffix
                                 if len(password) > 6 and len(password) < 16:
                                     store_password(password, filename)
-    '''
-
 
 if __name__ == "__main__":
     main()
