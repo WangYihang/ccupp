@@ -2,7 +2,9 @@
 #coding:utf-8
 
 import hanzi2pinyin
+import hashlib
 import sys
+
 
 class Person:
     NAME = u"李二狗"
@@ -21,6 +23,8 @@ Delimiters = ["", "-", ".", "|", "_", "+", "#", "@"]
 Prefix = ["",]
 Suffix = ["","123","@","abc",".","123.","!!!",]
 
+def get_md5(password):
+    return hashlib.md5(password).hexdigest()
 
 def get_pinyin(word):
     return hanzi2pinyin.hanzi2pinyin(word)
@@ -150,8 +154,15 @@ def get_all_compent(person):
     result.append(get_account_compent(person))
     return result
 
+def store_password(password, filename):
+    md5 = get_md5(password)
+    print "[+] %s => %s" % (password, md5)
+    with open(filename, "a+") as f:
+        f.write("%s\t%s\n" % (password, md5))
+
 def main():
     compents = get_all_compent(Person)
+    filename = "password.list"
     # 单组件密码
     for Delimiter in Delimiters:
         for prefix in Prefix:
@@ -161,14 +172,15 @@ def main():
                         if Delimiter == "":
                             password = prefix + i + Delimiter + suffix
                             if len(password) > 6 and len(password) < 16:
-                                print password
+                                store_password(password, filename)
                             continue
                         password = prefix + i + Delimiter + suffix
                         if len(password) > 6 and len(password) < 16:
-                            print password
+                            store_password(password, filename)
                         password = prefix + Delimiter + i + suffix
                         if len(password) > 6 and len(password) < 16:
-                            print password
+                            store_password(password, filename)
+
     '''
     # 两组件密码
     for Delimiter in Delimiters:
@@ -180,9 +192,9 @@ def main():
                             for j in compent_b:
                                 password = prefix + i + Delimiter + j + suffix
                                 if len(password) > 6 and len(password) < 16:
-                                    print password
-
+                                    store_password(password, filename)
     '''
+
 
 if __name__ == "__main__":
     main()
