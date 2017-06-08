@@ -2,6 +2,7 @@
 #coding:utf-8
 
 import hanzi2pinyin
+import sys
 
 class Person:
     NAME = u"李二狗"
@@ -17,6 +18,9 @@ class Person:
     PASSWORD = ["old_password",]
 
 Delimiters = ["", "-", ".", "|", "_", "+"]
+Prefix = ["",]
+Suffix = ["",]
+
 
 def get_pinyin(word):
     return hanzi2pinyin.hanzi2pinyin(word)
@@ -137,13 +141,15 @@ def get_all_compent(person):
 def main():
     compents = get_all_compent(Person)
     for Delimiter in Delimiters:
-        for compent_a in compents:
-            for compent_b in compents:
-                for i in compent_a:
-                    for j in compent_b:
-                        password = i + Delimiter + j
-                        if len(password) > 6 and len(password) < 16:
-                            print password
+        for prefix in Prefix:
+            for suffix in Suffix:
+                for compent_a in compents:
+                    for compent_b in compents:
+                        for i in compent_a:
+                            for j in compent_b:
+                                password = prefix + i + Delimiter + j + suffix
+                                if len(password) > 6 and len(password) < 16:
+                                    print password
 
 
 if __name__ == "__main__":
