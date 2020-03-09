@@ -43,7 +43,7 @@ def get_title(word):
     result[0] = result[0].upper()
     return "".join(i for i in result)
 
-def get_name_compent(person):
+def get_name_component(person):
     result = []
     result.append(get_pinyin(person.NAME))
     result.append(get_pinyin(person.NAME[0]))
@@ -56,21 +56,21 @@ def get_name_compent(person):
     result.append(get_abbreviation(person.NAME[1:]))
     return result
 
-def get_phone_compent(person):
+def get_phone_component(person):
     result = []
     for phone in person.PHONE:
         result.append(phone)
         result.append(phone[-4:])
     return result
 
-def get_card_compent(person):
+def get_card_component(person):
     result = []
     result.append(person.CARD)
     result.append(person.CARD[-6:])
     result.append(person.CARD[0:6])
     return result
 
-def get_birthday_compent(person):
+def get_birthday_component(person):
     result = []
     year = person.BIRTHDAY[0]
     month = person.BIRTHDAY[1]
@@ -81,7 +81,7 @@ def get_birthday_compent(person):
     result.append(year+month+day)
     return result
 
-def get_hometown_compent(person):
+def get_hometown_component(person):
     result = []
     result.append(get_pinyin(person.HOMETOWN[0]))
     result.append(get_pinyin(person.HOMETOWN[1]))
@@ -94,7 +94,7 @@ def get_hometown_compent(person):
     result.append(get_abbreviation(person.HOMETOWN[2]))
     return result
 
-def get_place_compent(person):
+def get_place_component(person):
     result = []
     for place in person.PLACE:
         result.append(get_pinyin(place[0]))
@@ -108,13 +108,13 @@ def get_place_compent(person):
         result.append(get_abbreviation(place[2]))
     return result
 
-def get_qq_compent(person):
+def get_qq_component(person):
     result = []
     for qq in person.QQ:
         result.append(qq)
     return result
 
-def get_company_compent(person):
+def get_company_component(person):
     result = []
     for company in person.COMPANY:
         for name in company:
@@ -123,7 +123,7 @@ def get_company_compent(person):
             result.append(get_abbreviation(name))
     return result
 
-def get_school_compent(person):
+def get_school_component(person):
     result = []
     for school in person.SCHOOL:
         for name in school:
@@ -132,7 +132,7 @@ def get_school_compent(person):
             result.append(get_abbreviation(name))
     return result
 
-def get_account_compent(person):
+def get_account_component(person):
     result = []
     for account in person.ACCOUNT:
         result.append(get_pinyin(account))
@@ -140,28 +140,28 @@ def get_account_compent(person):
         result.append(get_abbreviation(account))
     return result
 
-def get_all_compent(person):
+def get_all_component(person):
     result = []
-    result.append(get_name_compent(person))
-    result.append(get_phone_compent(person))
-    result.append(get_card_compent(person))
-    result.append(get_birthday_compent(person))
-    result.append(get_hometown_compent(person))
-    result.append(get_place_compent(person))
-    result.append(get_qq_compent(person))
-    result.append(get_company_compent(person))
-    result.append(get_school_compent(person))
-    result.append(get_account_compent(person))
+    result.append(get_name_component(person))
+    result.append(get_phone_component(person))
+    result.append(get_card_component(person))
+    result.append(get_birthday_component(person))
+    result.append(get_hometown_component(person))
+    result.append(get_place_component(person))
+    result.append(get_qq_component(person))
+    result.append(get_company_component(person))
+    result.append(get_school_component(person))
+    result.append(get_account_component(person))
     return result
 
 def store_password(password, filename):
     md5 = get_md5(password)
-    print "[+] %s => %s" % (password, md5)
+    print("[+] %s => %s" % (password, md5))
     with open(filename, "a+") as f:
         f.write("%s\t%s\n" % (password, md5))
 
 def main():
-    compents = get_all_compent(Person)
+    compents = get_all_component(Person)
     filename = "password.list"
     # 单组件密码
     for Delimiter in Delimiters:
