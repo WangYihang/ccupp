@@ -1,7 +1,8 @@
 # Chinese Common User Passwords Profiler
 > 基于社会工程学的弱口令密码字典生成工具
 
-# 使用方法 : 
+# 使用方法 :
+
 1. 第一步 : 定义已知信息
 ```
 class Person:
@@ -18,8 +19,10 @@ class Person:
     PASSWORD = ["old_password",]
 ```
 2. 第二步 : 运行脚本
+> 暂只支持 Python2（依赖库 hanzi2pinyin 暂时没有 Python3 版）
+
 ```
-python chinese-weak-password-generator.py
+python2 chinese-weak-password-generator.py
 ```
 3. 输出生成的密码字典并保存到当前目录 password.list 文件中
 ```
@@ -127,6 +130,7 @@ python chinese-weak-password-generator.py
 ```
 
 # 参考资料
+
 ```
 http://www.moonsec.com/post-181.html
 ```
