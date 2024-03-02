@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "ccupp"
+version = "0.1.0"
+description = ""
+authors = ["Yihang Wang <wangyihanger@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+hanzi2pinyin = "^0.1"
+pypinyin = "^0.50.0"
+jinja2 = "^3.1.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

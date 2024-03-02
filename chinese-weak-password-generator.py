@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 #coding:utf-8
 
-import hanzi2pinyin
+from pypinyin import lazy_pinyin, Style
 import hashlib
 import sys
 
 
 class Person:
-    NAME = u"李二狗"
+    FAMILY_NAME = u"李"
+    GIVEN_NAME = u"二狗"
     PHONE = ["13512345678",]
     CARD = "220281198309243953"
     BIRTHDAY = ("1983", "09", "24")
@@ -19,7 +20,7 @@ class Person:
     ACCOUNT = ["twodog",]
     PASSWORD = ["old_password",]
 
-Delimiters = ["", "-", ".", "|", "_", "+", "#", "@"]
+delimiters = ["", "-", ".", "|", "_", "+", "#", "@"]
 Prefix = ["",]
 Suffix = ["","123","@","abc",".","123.","!!!",]
 
@@ -27,13 +28,10 @@ def get_md5(password):
     return hashlib.md5(password).hexdigest()
 
 def get_pinyin(word):
-    return hanzi2pinyin.hanzi2pinyin(word)
+    return lazy_pinyin(word)
 
-def get_abbreviation(word):
-    result = ""
-    for i in word:
-        result += get_pinyin(i)[0]
-    return result
+def get_pinyin_first_letter(word):
+    return lazy_pinyin(word, style=Style.FIRST_LETTER)
 
 def get_full_pinyin(word):
     return get_pinyin(word)
@@ -44,6 +42,7 @@ def get_title(word):
     return "".join(i for i in result)
 
 def get_name_component(person):
+    print(person.NAME, get_pinyin(person.NAME))
     result = []
     result.append(get_pinyin(person.NAME))
     result.append(get_pinyin(person.NAME[0]))
@@ -51,9 +50,6 @@ def get_name_component(person):
     result.append(get_title(get_pinyin(person.NAME)))
     result.append(get_title(get_pinyin(person.NAME[0])))
     result.append(get_title(get_pinyin(person.NAME[1:])))
-    result.append(get_abbreviation(person.NAME))
-    result.append(get_abbreviation(person.NAME[0]))
-    result.append(get_abbreviation(person.NAME[1:]))
     return result
 
 def get_phone_component(person):
@@ -164,31 +160,31 @@ def main():
     compents = get_all_component(Person)
     filename = "password.list"
     # 单组件密码
-    for Delimiter in Delimiters:
+    for delimiter in delimiters:
         for prefix in Prefix:
             for suffix in Suffix:
                 for compent in compents:
                     for i in compent:
-                        if Delimiter == "":
-                            password = prefix + i + Delimiter + suffix
+                        if delimiter == "":
+                            password = prefix + i + delimiter + suffix
                             if len(password) > 6 and len(password) < 16:
                                 store_password(password, filename)
                             continue
-                        password = prefix + i + Delimiter + suffix
+                        password = prefix + i + delimiter + suffix
                         if len(password) > 6 and len(password) < 16:
                             store_password(password, filename)
-                        password = prefix + Delimiter + i + suffix
+                        password = prefix + delimiter + i + suffix
                         if len(password) > 6 and len(password) < 16:
                             store_password(password, filename)
     # 两组件密码
-    for Delimiter in Delimiters:
+    for delimiter in delimiters:
         for prefix in Prefix:
             for suffix in Suffix:
                 for compent_a in compents:
                     for compent_b in compents:
                         for i in compent_a:
                             for j in compent_b:
-                                password = prefix + i + Delimiter + j + suffix
+                                password = prefix + i + delimiter + j + suffix
                                 if len(password) > 6 and len(password) < 16:
                                     store_password(password, filename)
 
