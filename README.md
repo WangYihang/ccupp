@@ -134,3 +134,5 @@ python2 chinese-weak-password-generator.py
 ```
 http://www.moonsec.com/post-181.html
 ```
+
+* https://arxiv.org/abs/2306.01545
