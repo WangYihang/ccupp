@@ -56,73 +56,67 @@ def extract_components(data, use_pinyin=True):
         result.extend([pinyin, to_pinyin_first_letter(data), to_title_case(pinyin)])
     return result
 
-
-# Person class
 class Person:
     """
-    Represents a person with various attributes.
-    Attributes can be used to generate password components.
+    Represents a person with more generic, flexible attributes.
     """
     def __init__(self):
         self.attributes = {}
 
-    def set_attributes(self, **kwargs):
-        self.attributes.update(kwargs)
+    def set_surname(self, surname):
+        self.attributes['surname'] = surname
 
-    def set_family_name(self, family_name):
-        self.attributes['family_name'] = family_name
+    def set_first_name(self, first_name):
+        self.attributes['first_name'] = first_name
 
-    def set_given_name(self, given_name):
-        self.attributes['given_name'] = given_name
+    def set_phone_numbers(self, phone_numbers):
+        self.attributes['phone_numbers'] = phone_numbers
 
-    def set_phone(self, phone):
-        self.attributes['phone'] = phone
+    def set_identity(self, identity):
+        self.attributes['identity'] = identity
 
-    def set_card(self, card):
-        self.attributes['card'] = card
+    def set_birthdate(self, birthdate):
+        self.attributes['birthdate'] = birthdate
 
-    def set_birthday(self, birthday):
-        self.attributes['birthday'] = birthday
+    def set_hometowns(self, hometowns):
+        self.attributes['hometowns'] = hometowns
 
-    def set_hometown(self, hometown):
-        self.attributes['hometown'] = hometown
+    def set_places(self, places):
+        self.attributes['places'] = places
 
-    def set_place(self, place):
-        self.attributes['place'] = place
+    def set_social_media(self, social_media):
+        self.attributes['social_media'] = social_media
 
-    def set_qq(self, qq):
-        self.attributes['qq'] = qq
+    def set_workplaces(self, workplaces):
+        self.attributes['workplaces'] = workplaces
 
-    def set_company(self, company):
-        self.attributes['company'] = company
+    def set_educational_institutions(self, institutions):
+        self.attributes['educational_institutions'] = institutions
 
-    def set_school(self, school):
-        self.attributes['school'] = school
+    def set_accounts(self, accounts):
+        self.attributes['accounts'] = accounts
 
-    def set_account(self, account):
-        self.attributes['account'] = account
-
-    def set_password(self, password):
-        self.attributes['password'] = password
+    def set_passwords(self, passwords):
+        self.attributes['passwords'] = passwords
 
     def get_components(self):
         """
         Extract components from all attributes for password generation.
+        Use pinyin conversion where needed.
         """
-        components = {
-            'name': extract_components((self.attributes['family_name'], self.attributes['given_name'])),
-            'phone': extract_components(self.attributes['phone'], use_pinyin=False),
-            'card': extract_components(self.attributes['card'], use_pinyin=False),
-            'birthday': extract_components(self.attributes['birthday'], use_pinyin=False),
-            'hometown': extract_components(self.attributes['hometown']),
-            'place': extract_components(self.attributes['place']),
-            'qq': extract_components(self.attributes['qq'], use_pinyin=False),
-            'company': extract_components(self.attributes['company']),
-            'school': extract_components(self.attributes['school']),
-            'account': extract_components(self.attributes['account'], use_pinyin=False),
+        return {
+            'name': extract_components((self.attributes.get('surname', ''), 
+                                        self.attributes.get('first_name', ''))),
+            'phone_numbers': extract_components(self.attributes.get('phone_numbers', []), use_pinyin=False),
+            'identity': extract_components(self.attributes.get('identity', ''), use_pinyin=False),
+            'birthdate': extract_components(self.attributes.get('birthdate', ''), use_pinyin=False),
+            'hometowns': extract_components(self.attributes.get('hometowns', [])),
+            'places': extract_components(self.attributes.get('places', [])),
+            'social_media': extract_components(self.attributes.get('social_media', []), use_pinyin=False),
+            'workplaces': extract_components(self.attributes.get('workplaces', [])),
+            'educational_institutions': extract_components(self.attributes.get('educational_institutions', [])),
+            'accounts': extract_components(self.attributes.get('accounts', []), use_pinyin=False),
         }
-        return components
-
 
 # Password generation functions
 def generate_combinations(components, delimiters):
@@ -172,18 +166,18 @@ def main():
 
     # Create a sample person
     person = Person()
-    person.set_family_name("李")
-    person.set_given_name("二狗")
-    person.set_phone(["13512345678"])
-    person.set_card("220281198309243953")
-    person.set_birthday(("1983", "09", "24"))
-    person.set_hometown((u"四川", u"成都", u"高新区"))
-    person.set_place([(u"河北", u"秦皇岛", u"北戴河")])
-    person.set_qq(["987654321"])
-    person.set_company([(u"腾讯", "tencent")])
-    person.set_school([(u"清华大学", u"清华", "tsinghua")])
-    person.set_account(["twodogs"])
-    person.set_password(["old_password"])
+    person.set_surname("李")
+    person.set_first_name("二狗")
+    person.set_phone_numbers(["13512345678"])
+    person.set_identity("220281198309243953")
+    person.set_birthdate(("1983", "09", "24"))
+    person.set_hometowns((u"四川", u"成都", u"高新区"))
+    person.set_places([(u"河北", u"秦皇岛", u"北戴河")])
+    person.set_social_media(["987654321"])
+    person.set_workplaces([(u"腾讯", "tencent")])
+    person.set_educational_institutions([(u"清华大学", u"清华", "tsinghua")])
+    person.set_accounts(["twodogs"])
+    person.set_passwords(["old_password"])
 
     # Extract components
     components = person.get_components()
@@ -197,7 +191,7 @@ def main():
     for password in generate_passwords(args.templates, combinations, args.prefixes, args.suffixes):
         if password not in passwords:
             passwords.add(password)
-            console.print(password)
+            print(password)
 
 
 if __name__ == "__main__":
