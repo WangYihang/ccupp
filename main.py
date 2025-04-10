@@ -1,21 +1,48 @@
+import argparse
+import hashlib
+import logging
+from itertools import product, combinations
 from jinja2 import Template
 from pypinyin import lazy_pinyin, Style
-from itertools import product, combinations
-import hashlib
+from rich.logging import RichHandler
+from rich.console import Console
 
+# Initialize rich console and logging
+console = Console()
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(message)s",
+    handlers=[RichHandler(console=console)]
+)
+logger = logging.getLogger("PasswordGenerator")
+
+
+# Utility functions
 def to_pinyin(word):
+    """Convert Chinese characters to full pinyin."""
     return ''.join(lazy_pinyin(word))
 
+
 def to_pinyin_first_letter(word):
+    """Convert Chinese characters to the first letter of pinyin."""
     return ''.join(lazy_pinyin(word, style=Style.FIRST_LETTER))
 
+
 def to_title_case(word):
+    """Convert a word to title case."""
     return word[0].upper() + word[1:]
 
+
 def get_md5(password):
-    return hashlib.md5(password).hexdigest()
+    """Generate MD5 hash of a password."""
+    return hashlib.md5(password.encode()).hexdigest()
+
 
 def extract_components(data, use_pinyin=True):
+    """
+    Extract components from input data.
+    Supports tuples, lists, and strings.
+    """
     result = []
     if isinstance(data, tuple):
         for item in data:
@@ -29,7 +56,13 @@ def extract_components(data, use_pinyin=True):
         result.extend([pinyin, to_pinyin_first_letter(data), to_title_case(pinyin)])
     return result
 
+
+# Person class
 class Person:
+    """
+    Represents a person with various attributes.
+    Attributes can be used to generate password components.
+    """
     def __init__(self):
         self.attributes = {}
 
@@ -38,7 +71,7 @@ class Person:
 
     def set_family_name(self, family_name):
         self.attributes['family_name'] = family_name
-    
+
     def set_given_name(self, given_name):
         self.attributes['given_name'] = given_name
 
@@ -73,6 +106,9 @@ class Person:
         self.attributes['password'] = password
 
     def get_components(self):
+        """
+        Extract components from all attributes for password generation.
+        """
         components = {
             'name': extract_components((self.attributes['family_name'], self.attributes['given_name'])),
             'phone': extract_components(self.attributes['phone'], use_pinyin=False),
@@ -87,31 +123,12 @@ class Person:
         }
         return components
 
-def create_person() -> Person:
-    person = Person()
-    person.set_family_name("李")
-    person.set_given_name("二狗")
-    person.set_phone(["13512345678",])
-    person.set_card("220281198309243953")
-    person.set_birthday(("1983", "09", "24"))
-    person.set_hometown((u"四川", u"成都", u"高新区"))
-    person.set_place([(u"河北", u"秦皇岛", u"北戴河"),])
-    person.set_qq(["987654321",])
-    person.set_company([(u"腾讯", "tencent"),])
-    person.set_school([(u"清华大学", u"清华",  "tsinghua")])
-    person.set_account(["twodogs",])
-    person.set_password(["old_password",])
-    return person
 
-def generate_passwords(templates, components):
-    passwords = set()
-    for tmpl_str in templates:
-        template = Template(tmpl_str)
-        password = template.render(**components)
-        passwords.add(password)
-    return passwords
-
+# Password generation functions
 def generate_combinations(components, delimiters):
+    """
+    Generate all possible combinations of components with delimiters.
+    """
     for length in range(1, len(components) + 1):
         for component_group in combinations(components.values(), length):
             for delimiter_group in product(delimiters, repeat=length - 1):
@@ -121,30 +138,67 @@ def generate_combinations(components, delimiters):
                         password += delim + comp
                     yield password
 
-def generate_passwords(templates, combinations, prefixes, suffixes, delimiters):
+
+def generate_passwords(templates, combinations, prefixes, suffixes):
+    """
+    Generate passwords based on templates, combinations, prefixes, and suffixes.
+    """
     for tmpl_str in templates:
         template = Template(tmpl_str)
         for combination in combinations:
             for prefix in prefixes:
                 for suffix in suffixes:
-                    for delimiter in delimiters:
-                        yield template.render(combination=combination, prefix=prefix, suffix=suffix, delimiter=delimiter)
+                    yield template.render(combination=combination, prefix=prefix, suffix=suffix)
+
+
+# Command-line interface
+def parse_args():
+    """
+    Parse command-line arguments.
+    """
+    parser = argparse.ArgumentParser(description="Password Generator using Personal Information")
+    parser.add_argument("--prefixes", nargs="*", default=["qwert", "123"], help="List of prefixes")
+    parser.add_argument("--suffixes", nargs="*", default=["", "123", "@", "abc", ".", "123.", "!!!"], help="List of suffixes")
+    parser.add_argument("--delimiters", nargs="*", default=["", "-", ".", "|", "_", "+", "#", "@"], help="List of delimiters")
+    parser.add_argument("--templates", nargs="*", default=['{{ prefix }}{{ combination }}{{ suffix }}'], help="List of templates")
+    return parser.parse_args()
+
 
 def main():
-    person = create_person()
+    """
+    Main function to generate passwords based on user input.
+    """
+    args = parse_args()
+
+    # Create a sample person
+    person = Person()
+    person.set_family_name("李")
+    person.set_given_name("二狗")
+    person.set_phone(["13512345678"])
+    person.set_card("220281198309243953")
+    person.set_birthday(("1983", "09", "24"))
+    person.set_hometown((u"四川", u"成都", u"高新区"))
+    person.set_place([(u"河北", u"秦皇岛", u"北戴河")])
+    person.set_qq(["987654321"])
+    person.set_company([(u"腾讯", "tencent")])
+    person.set_school([(u"清华大学", u"清华", "tsinghua")])
+    person.set_account(["twodogs"])
+    person.set_password(["old_password"])
+
+    # Extract components
     components = person.get_components()
-    delimiters = ["", "-", ".", "|", "_", "+", "#", "@"]
-    prefixes = ["qwert", "123"]
-    suffixes = ["", "123", "@", "abc", ".", "123.", "!!!"]
-    templates = [
-        '{{ prefix }}{{ combination }}{{ suffix }}',
-    ]
-    combinations = generate_combinations(components, delimiters=delimiters)
+    logger.info("Extracted components: %s", components)
+
+    # Generate combinations
+    combinations = generate_combinations(components, delimiters=args.delimiters)
+
+    # Generate passwords
     passwords = set()
-    for password in generate_passwords(templates, combinations, prefixes, suffixes, delimiters):
+    for password in generate_passwords(args.templates, combinations, args.prefixes, args.suffixes):
         if password not in passwords:
             passwords.add(password)
-            print(password)
+            console.print(password)
+
 
 if __name__ == "__main__":
     main()
