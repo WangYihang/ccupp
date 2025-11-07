@@ -1,138 +1,235 @@
-# Chinese Common User Passwords Profiler
+# CCUPP - Chinese Common User Passwords Profiler
+
 > 基于社会工程学的弱口令密码字典生成工具
 
-# 使用方法 :
+[![Python Version](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-1. 第一步 : 定义已知信息
+CCUPP 是一个基于社会工程学的弱口令密码字典生成工具，通过分析用户的个人信息（姓名、生日、电话、地址等），自动生成可能的弱口令密码字典。
+
+## ✨ 特性
+
+- 🔤 **智能拼音转换**：自动将中文姓名、地名等转换为拼音、首字母等多种形式
+- 📝 **灵活配置**：支持 YAML 格式配置文件，可配置多个用户信息
+- 🔄 **组合生成**：支持前缀、后缀、分隔符、模板等多种组合方式
+- 🚀 **高性能**：使用迭代器生成，内存占用低，支持大规模密码生成
+- ✅ **数据验证**：使用 Pydantic 进行配置验证，确保数据正确性
+- 🎯 **去重处理**：自动去除重复密码，确保输出唯一
+
+## 📦 安装
+
+### 使用 uv（推荐）
+
+```bash
+# 克隆仓库
+git clone https://github.com/WangYihang/ccupp.git
+cd ccupp
+
+# 安装依赖
+uv sync
 ```
-class Person:
-    NAME = u"李二狗"
-    PHONE = ["13512345678",]
-    CARD = "220281198309243953"
-    BIRTHDAY = ("1983", "09", "24")
-    HOMETOWN = (u"四川", u"成都", u"高新区")
-    PLACE = [(u"河北", u"秦皇岛", u"北戴河"),]
-    QQ = ["987654321",]
-    COMPANY = [(u"腾讯", "tencent"),]
-    SCHOOL = [(u"清华大学", u"清华",  "tsinghua")]
-    ACCOUNT = ["twodog",]
-    PASSWORD = ["old_password",]
+
+### 使用 pip
+
+```bash
+pip install -e .
 ```
-2. 第二步 : 运行脚本
-> 暂只支持 Python2（依赖库 hanzi2pinyin 暂时没有 Python3 版）
+
+## 🚀 快速开始
+
+### 1. 准备配置文件
+
+创建 `config.yaml` 文件，配置用户信息：
+
+```yaml
+- surname: 李
+  first_name: 二狗
+  phone_numbers:
+    - '13512345678'
+  identity: '220281198309243953'
+  birthdate:
+    - '1983'
+    - '09'
+    - '24'
+  hometowns:
+    - 四川
+    - 成都
+    - 高新区
+  places:
+    - - 河北
+      - 秦皇岛
+      - 北戴河
+  social_media:
+    - '987654321'
+  workplaces:
+    - - 腾讯
+      - tencent
+  educational_institutions:
+    - - 清华大学
+      - 清华
+      - tsinghua
+  accounts:
+    - twodogs
+  passwords:
+    - old_password
+```
+
+### 2. 运行生成器
+
+```bash
+# 使用默认配置
+python -m ccupp generate
+
+# 指定配置文件
+python -m ccupp generate --config my_config.yaml
+
+# 自定义前缀和后缀
+python -m ccupp generate --prefixes qwert 123 --suffixes @ 123 !!!
+```
+
+### 3. 查看输出
+
+生成的密码会直接输出到标准输出，可以重定向到文件：
+
+```bash
+python -m ccupp generate > passwords.txt
+```
+
+## 📖 配置说明
+
+配置文件支持多个用户，每个用户包含以下字段：
+
+| 字段 | 类型 | 说明 | 示例 |
+|------|------|------|------|
+| `surname` | string | 姓氏 | `李` |
+| `first_name` | string | 名字 | `二狗` |
+| `phone_numbers` | list[string] | 电话号码列表 | `['13512345678']` |
+| `identity` | string | 身份证号 | `'220281198309243953'` |
+| `birthdate` | list[string] | 出生日期 [年, 月, 日] | `['1983', '09', '24']` |
+| `hometowns` | list[string] | 家乡列表 | `['四川', '成都']` |
+| `places` | list[list[string]] | 地点列表 | `[['河北', '秦皇岛']]` |
+| `social_media` | list[string] | 社交媒体账号 | `['987654321']` |
+| `workplaces` | list[list[string]] | 工作单位列表 | `[['腾讯', 'tencent']]` |
+| `educational_institutions` | list[list[string]] | 教育机构列表 | `[['清华大学', '清华']]` |
+| `accounts` | list[string] | 账号列表 | `['twodogs']` |
+| `passwords` | list[string] | 旧密码列表（可选） | `['old_password']` |
+
+## 🎛️ 命令行选项
+
+```bash
+python -m ccupp generate [OPTIONS]
+```
+
+### 选项说明
+
+- `--config, -c`: YAML 配置文件路径（默认: `config.yaml`）
+- `--prefixes`: 前缀列表（默认: `['qwert', '123']`）
+- `--suffixes`: 后缀列表（默认: `['', '123', '@', 'abc', '.', '123.', '!!!']`）
+- `--delimiters`: 分隔符列表（默认: `['', '-', '.', '|', '_', '+', '#', '@']`）
+- `--templates`: Jinja2 模板列表（默认: `['{{ prefix }}{{ combination }}{{ suffix }}']`）
+
+### 使用示例
+
+```bash
+# 基本使用
+python -m ccupp generate
+
+# 自定义前缀和后缀
+python -m ccupp generate \
+  --prefixes qwert 123 \
+  --suffixes @ 123 !!! \
+  --delimiters - _ .
+
+# 自定义模板
+python -m ccupp generate \
+  --templates "{{ combination }}{{ suffix }}" \
+              "{{ prefix }}{{ combination }}"
+```
+
+## 📁 项目结构
 
 ```
-python2 chinese-weak-password-generator.py
+ccupp/
+├── ccupp/                 # 主包目录
+│   ├── __init__.py       # 包初始化
+│   ├── __main__.py       # 入口点
+│   ├── cli.py            # 命令行接口
+│   ├── config.py         # 配置加载
+│   ├── generator.py      # 密码生成器
+│   ├── models.py         # 数据模型
+│   └── pinyin.py         # 拼音转换工具
+├── config.yaml           # 配置文件示例
+├── pyproject.toml        # 项目配置
+└── README.md             # 项目文档
 ```
-3. 输出生成的密码字典并保存到当前目录 password.list 文件中
+
+## 🔧 技术栈
+
+- **Python 3.12+**: 现代 Python 特性支持
+- **Typer**: 现代化的 CLI 框架
+- **Pydantic**: 数据验证和配置管理
+- **PyYAML**: YAML 配置文件解析
+- **pypinyin**: 中文拼音转换
+- **Jinja2**: 模板引擎
+- **structlog**: 结构化日志
+
+## 💡 工作原理
+
+1. **信息提取**：从配置文件中读取用户个人信息
+2. **拼音转换**：将中文信息转换为拼音、首字母等多种形式
+3. **组件组合**：使用分隔符、前缀、后缀等组合组件
+4. **模板渲染**：使用 Jinja2 模板生成最终密码
+5. **去重输出**：自动去除重复密码，确保输出唯一
+
+## 📝 示例输出
+
 ```
-[+] liergou => de1644a2551503c15176b5b8a5b27c79
-[+] Liergou => e4df76f225cae5c0681997967844e094
-[+] 13512345678 => 688c96a5bb633ab6ffb491ee6070ac27
-[+] 19830924 => 618a337ffb5525156005105b22763ee0
-[+] sichuan => 34f280dfd7f86fa505a52836fa8be720
-[+] chengdu => 354b500e3a784a489a27ee50d19ba328
-[+] gaoxinqu => f4afe70731e17fe24b94badd9d81989a
-[+] Sichuan => c01eba257b2d44afb1896051da9185b4
-[+] Chengdu => f4aa575f70b3f78887deb96ce611b187
-[+] Gaoxinqu => caec347ba4c61605c14699b0d1703d95
-[+] qinhuangdao => 34fbdaed690c48b32f07ec44936ade19
-[+] beidaihe => 96c9ca76dc81c12f6b1666c6e30004f3
-[+] Qinhuangdao => ba302e73c151f9610ca627bf1c843615
-[+] Beidaihe => 2bfeb21646a1c54e19491cb8cd7fcaaf
-[+] 987654321 => 6ebe76c9fb411be97b3b0d48b791a7c9
-[+] tengxun => 9549c286dff3eec9b3bd97ff6c199bde
-[+] Tengxun => 06aca03b11b933a52feebad6a70dba9b
-[+] tencent => 3da576879001c77b442b9f8ef95c09d6
-[+] Tencent => 9414b97199d909061ce91aeb8faa421f
-[+] tencent => 3da576879001c77b442b9f8ef95c09d6
-[+] qinghuadaxue => 07e3d184643bbb8fc19aabfdc17b5099
-[+] Qinghuadaxue => 0d0078ead5f23c6a5a3999d2678bd1b0
-[+] qinghua => 21b6fe282fd67514b7dd062ebea60cd6
-[+] Qinghua => 124ded788d9d76fee1f505660ab31b97
-[+] tsinghua => 552733250c23324e4169dfe43a4b1233
-[+] Tsinghua => 6c5c1441e3283e7543342e59277ea219
-[+] tsinghua => 552733250c23324e4169dfe43a4b1233
-[+] liergou123 => ddd377570e00c707b58fdcabc1284e07
-[+] ergou123 => 4565c4b3ff262ec3f36fa3e9236dc2f9
-[+] Liergou123 => 37b4b7f76bf5ec4e430e29f97361fc8b
-[+] Ergou123 => 24a46328a4b517eb0d19ebe137e19b37
-[+] 13512345678123 => 4bede9e906599088b2999de2723daeb3
-[+] 5678123 => 76dcf9b102efa543eecc3b9f847e0934
-[+] 243953123 => b343b11001bdabf6513ab55ca7cef889
-[+] 220281123 => 0ff5d66e1cf72d9280e7c935cd516204
-[+] 1983123 => 934cbe84b040cc8f227997c46e50825c
-[+] 0924123 => f8993670caaeac3ffec0667b20b6fae2
-[+] 19830924123 => 38bda51e49d7dbc9d05f971e708bdc12
-[+] sichuan123 => f6a04d5db1b1f61c05dab88c44babdbf
-[+] chengdu123 => b0ef8986d2a279db71cc243b45890a41
-[+] gaoxinqu123 => bad977ad7ca2ce50b4afe6c286a50f86
-[+] Sichuan123 => 46ef84063649179f96719b9e82ab7c38
-[+] Chengdu123 => 4eb7c5687a356a473794822a3b607972
-[+] Gaoxinqu123 => 6c0700d2452298ba095cca5c625dacf7
-[+] hebei123 => 0fd6af13695ce645e421d6b8ecc44afa
-[+] qinhuangdao123 => daef90327893a558e061e39deba4c438
-[+] beidaihe123 => 36b7699549da7645d34cd680ca119624
-[+] Hebei123 => e06e73ddff2b2608f021402b14b24533
-[+] Qinhuangdao123 => 5e310dac76c41f794b4dc51ddef8747e
-[+] Beidaihe123 => 0d9777ea45400e4984c1a5ddcb01c7f7
-[+] 987654321123 => 6932768a2fa35b66643d2b85f8c74f3b
-[+] tengxun123 => aaec5c7d699c131f92de802ed0e97b34
-[+] Tengxun123 => 1a4341fd6278eb27938275a9ba471942
-[+] tencent123 => 7e89ae637d34630951bb16a54eb509ad
-[+] Tencent123 => 5c1157efc98a64a758c31f839280dd32
-[+] tencent123 => 7e89ae637d34630951bb16a54eb509ad
-[+] qinghuadaxue123 => fe9e00002288176cbefc6bccf1ce5070
-[+] Qinghuadaxue123 => 5ab2a9cefe356b56cf92b1220b2ebb6a
-[+] qhdx123 => c50db9d0b488c010c6fb42b5ff011e57
-[+] qinghua123 => 85bfb8827f36a0cdea6bfbc7f1a7e640
-[+] Qinghua123 => 6e11028a878522d705a881a58f7e043a
-[+] tsinghua123 => 0c07f797cc47f333ea66914e1e942fdc
-[+] Tsinghua123 => dd4802e8f366682e64f584a124bca827
-[+] tsinghua123 => 0c07f797cc47f333ea66914e1e942fdc
-[+] twodog123 => f36bb3069a5dff1e379f6661cfc20510
-[+] Twodog123 => cd2c691843e79134a577f4e23529f096
-[+] twodog123 => f36bb3069a5dff1e379f6661cfc20510
-[+] liergou@ => 15188c6f4ecf8a75afdcc282126a3b63
-[+] Liergou@ => ae03dc5278c348d96a630e91b49a23de
-[+] 13512345678@ => c73545900759f24b7db46300f667b90e
-[+] 243953@ => 210cdf8b221a7d4085dedde2c0eec550
-[+] 220281@ => 42c90fae6b332d83727ce281fb4b8b14
-[+] 19830924@ => c302c41ecf38bfedf42cccb8c77d9d38
-[+] sichuan@ => 195eeb05c2de157df2720a1e0e814f6a
-[+] chengdu@ => a6dfb50a2d4fbae87fe599212d99c4ea
-[+] gaoxinqu@ => 8b9be9a26915265501e9bc9b283da0bc
-[+] Sichuan@ => b7c74335b988bcd0206cc13fb1a01514
-[+] Chengdu@ => 02909a156f7a95dfd02f10ce743c3061
-[+] Gaoxinqu@ => 5c96d1c46b14c1d1f02854c2f7179471
-[+] qinhuangdao@ => 3be6b307e807fb69f2a690169a72d100
-[+] beidaihe@ => c678f99cad2d8d7013ef69ad9d42a0d3
-[+] Qinhuangdao@ => d6be705e873f2c21cdca9dab7b3d6f64
-[+] Beidaihe@ => bc96c22a8276f3025e965b1b1b53d3a0
-[+] 987654321@ => 775166f0b8517d632502e5d7415376f8
-[+] tengxun@ => 2a1e9a45302a8df38adaec946737ff4c
-[+] Tengxun@ => fcc7d393f00907c9bc4e7a63cd8e1d9f
-[+] tencent@ => 52163609f75e54ee6fe9c8f76d3e04c0
-[+] Tencent@ => 7cb34e3ad7da645ade9621e6fd5cac04
-[+] tencent@ => 52163609f75e54ee6fe9c8f76d3e04c0
-[+] qinghuadaxue@ => 96d347435f231c802630b058924fdcf4
-[+] Qinghuadaxue@ => aa1fafb590a926bdf683a9a12ef49ebb
-[+] qinghua@ => 6d1e78889084335a05433b5736cbc6e4
-[+] Qinghua@ => 6f668440454daf3e135f9f1faba7d41c
-[+] tsinghua@ => c24f6d1e9635faa0a8aa81bfe7f80d57
-[+] Tsinghua@ => 9edc7ec2eb0ef43642b3b5af634afe5a
-[+] tsinghua@ => c24f6d1e9635faa0a8aa81bfe7f80d57
-[+] twodog@ => 13233f59565ca53942d54888be3ecb2c
-[+] Twodog@ => 8db63d1f815d2abbe51bf6adbf3a32d9
-[+] twodog@ => 13233f59565ca53942d54888be3ecb2c
-[+] liergouabc => 754caea1fd5c89c034ea55c0376a7fb9
+liergou
+Liergou
+13512345678
+19830924
+sichuan
+chengdu
+gaoxinqu
+Sichuan
+Chengdu
+Gaoxinqu
+qinhuangdao
+beidaihe
+Qinhuangdao
+Beidaihe
+987654321
+tengxun
+Tengxun
+tencent
+Tencent
+qinghuadaxue
+Qinghuadaxue
+qinghua
+Qinghua
+tsinghua
+Tsinghua
+twodogs
+Twodogs
+liergou123
+Liergou123
+13512345678123
 ...
 ```
 
-# 参考资料
+## 🤝 贡献
 
-```
-http://www.moonsec.com/post-181.html
-```
+欢迎提交 Issue 和 Pull Request！
 
-* https://arxiv.org/abs/2306.01545
+## 📄 许可证
+
+本项目采用 MIT 许可证。详见 [LICENSE](LICENSE) 文件。
+
+## 🙏 致谢
+
+- 参考了 [chinese-weak-password-generator](http://www.moonsec.com/post-181.html) 的设计思路
+- 相关研究：[arXiv:2306.01545](https://arxiv.org/abs/2306.01545)
+
+## ⚠️ 免责声明
+
+本工具仅用于安全研究和授权的安全测试。使用者需遵守相关法律法规，不得用于非法用途。作者不对任何误用行为承担责任。
