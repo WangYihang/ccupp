@@ -18,21 +18,15 @@ CCUPP 是一个基于社会工程学的弱口令密码字典生成工具，通�
 
 ## 📦 安装
 
-### 使用 uv（推荐）
-
 ```bash
-# 克隆仓库
-git clone https://github.com/WangYihang/ccupp.git
-cd ccupp
-
-# 安装依赖
-uv sync
+pip install ccupp
 ```
 
-### 使用 pip
-
 ```bash
-pip install -e .
+git clone https://github.com/WangYihang/ccupp.git
+cd ccupp
+uv sync
+uv run python -m ccupp
 ```
 
 ## 🚀 快速开始
@@ -77,14 +71,7 @@ pip install -e .
 ### 2. 运行生成器
 
 ```bash
-# 使用默认配置
 python -m ccupp generate
-
-# 指定配置文件
-python -m ccupp generate --config my_config.yaml
-
-# 自定义前缀和后缀
-python -m ccupp generate --prefixes qwert 123 --suffixes @ 123 !!!
 ```
 
 ### 3. 查看输出
