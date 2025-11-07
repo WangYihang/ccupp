@@ -1,0 +1,64 @@
+# 用户信息配置文件
+# User Information Configuration File
+# 支持多个用户，每个用户是一个列表项
+
+- # 第一个用户
+  surname: 李
+  first_name: 二狗
+  phone_numbers:
+    - '13512345678'
+  identity: '220281198309243953'
+  birthdate:
+    - '1983'
+    - '09'
+    - '24'
+  hometowns:
+    - 四川
+    - 成都
+    - 高新区
+  places:
+    - - 河北
+      - 秦皇岛
+      - 北戴河
+  social_media:
+    - '987654321'
+  workplaces:
+    - - 腾讯
+      - tencent
+  educational_institutions:
+    - - 清华大学
+      - 清华
+      - tsinghua
+  accounts:
+    - twodogs
+  passwords:
+    - old_password
+
+- # 第二个用户（示例）
+  surname: 王
+  first_name: 小明
+  phone_numbers:
+    - '13800138000'
+  identity: '110101199001011234'
+  birthdate:
+    - '1990'
+    - '01'
+    - '01'
+  hometowns:
+    - 北京
+    - 海淀区
+  places:
+    - - 上海
+      - 浦东新区
+  social_media:
+    - '123456789'
+  workplaces:
+    - - 阿里巴巴
+      - alibaba
+  educational_institutions:
+    - - 北京大学
+      - 北大
+      - pku
+  accounts:
+    - xiaoming
+  passwords: []
