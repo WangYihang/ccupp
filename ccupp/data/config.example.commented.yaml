@@ -1,0 +1,35 @@
+# 用户信息配置文件示例（带注释）
+# User Information Configuration File Example (with comments)
+# 支持多个用户，每个用户是一个列表项
+
+- # 用户配置示例
+  surname: 李                    # 姓氏
+  first_name: 二狗               # 名字
+  phone_numbers:                 # 电话号码列表
+    - '13512345678'
+  identity: '220281198309243953' # 身份证号
+  birthdate:                     # 出生日期 [年, 月, 日]
+    - '1983'
+    - '09'
+    - '24'
+  hometowns:                     # 家乡列表
+    - 四川
+    - 成都
+    - 高新区
+  places:                        # 地点列表（每个地点可以是列表）
+    - - 河北
+      - 秦皇岛
+      - 北戴河
+  social_media:                  # 社交媒体账号列表
+    - '987654321'
+  workplaces:                    # 工作单位列表（每个单位可以是列表）
+    - - 腾讯
+      - tencent
+  educational_institutions:      # 教育机构列表（每个机构可以是列表）
+    - - 清华大学
+      - 清华
+      - tsinghua
+  accounts:                      # 账号列表
+    - twodogs
+  passwords:                     # 旧密码列表（可选）
+    - old_password
