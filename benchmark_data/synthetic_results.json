@@ -1,0 +1,153 @@
+{
+  "zh_full": {
+    "results": {
+      "CCUPP": {
+        "count": 12335,
+        "duration_seconds": 0.005120754241943359,
+        "error": null
+      },
+      "CUPP": {
+        "count": 28527,
+        "duration_seconds": 0.06730413436889648,
+        "error": null
+      }
+    },
+    "dataset_evals": {
+      "CCUPP": {
+        "common-passwords": {
+          "dataset_size": 122,
+          "hits": 10,
+          "hit_rate": 0.08196721311475409,
+          "hit_passwords": [
+            "1q2w3e4r",
+            "1qaz2wsx",
+            "987654321",
+            "asd123",
+            "asdfgh",
+            "qazwsx",
+            "qwe123",
+            "qwerty",
+            "qwertyuiop",
+            "zxcvbn"
+          ]
+        }
+      },
+      "CUPP": {
+        "common-passwords": {
+          "dataset_size": 122,
+          "hits": 0,
+          "hit_rate": 0.0,
+          "hit_passwords": []
+        }
+      }
+    },
+    "pii_embedding_rate": {
+      "CCUPP": {
+        "name": 0.22423996757194975,
+        "date": 0.20802594244021078,
+        "phone": 0.08925820835022294,
+        "account": 0.05139845966761249,
+        "overall": 0.48244831779489256
+      },
+      "CUPP": {
+        "name": 0.2709713604655239,
+        "date": 0.04571108073053598,
+        "phone": 0.0,
+        "account": 0.0733340344235286,
+        "overall": 0.331825989413538
+      }
+    }
+  },
+  "_academic_paired": {
+    "CCUPP": {
+      "synthetic_200": {
+        "num_targets": 200,
+        "success_rates": {
+          "10": 0.0,
+          "100": 0.01,
+          "1000": 0.455,
+          "10000": 0.84
+        },
+        "coverage": 0.84,
+        "guess_numbers": {
+          "found": 168,
+          "total": 200,
+          "min_rank": 24,
+          "max_rank": 5993,
+          "median_rank": 686.0,
+          "mean_rank": 1774.720238095238
+        },
+        "guess_curve": [
+          [
+            1,
+            0.0
+          ],
+          [
+            2,
+            0.0
+          ],
+          [
+            5,
+            0.0
+          ],
+          [
+            10,
+            0.0
+          ],
+          [
+            20,
+            0.0
+          ],
+          [
+            50,
+            0.0
+          ],
+          [
+            100,
+            0.0
+          ],
+          [
+            200,
+            0.005263157894736842
+          ],
+          [
+            500,
+            0.005263157894736842
+          ],
+          [
+            1000,
+            0.005263157894736842
+          ],
+          [
+            2000,
+            0.005263157894736842
+          ],
+          [
+            5000,
+            0.010526315789473684
+          ],
+          [
+            6471,
+            0.02631578947368421
+          ]
+        ]
+      }
+    },
+    "CUPP": {
+      "synthetic_200": {
+        "num_targets": 200,
+        "success_rates": {},
+        "coverage": 0.225,
+        "guess_numbers": {
+          "found": 0,
+          "total": 200,
+          "min_rank": 0,
+          "max_rank": 0,
+          "median_rank": 0,
+          "mean_rank": 0
+        },
+        "guess_curve": []
+      }
+    }
+  }
+}

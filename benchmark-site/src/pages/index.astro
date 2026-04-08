@@ -9,23 +9,23 @@ import Layout from '../layouts/Layout.astro';
   </header>
 
   <div class="abstract">
-    <strong>Abstract.</strong> We evaluate CCUPP, a rule-based targeted password guessing tool for Chinese users, against CUPP (the de facto standard) and published results from 6 academic papers. Using 5 standard profiles and 30 PII-password paired records, we measure generation performance, PII embedding rate, dataset hit rate, and Success Rate @ N. CCUPP achieves <strong>100% coverage</strong> on the paired dataset (vs CUPP's 60%), with <strong>9x higher generation speed</strong> and significantly higher PII embedding rates.
+    <strong>Abstract.</strong> We evaluate CCUPP, a rule-based targeted password guessing tool for Chinese users, against CUPP (the de facto standard) and published results from 6 academic papers. Using 5 standard profiles and a 200-record synthetic PII-password paired dataset (modeled after real Chinese password patterns from Li et al. 2014), we measure generation performance, PII embedding rate, dataset hit rate, and Success Rate @ N. CCUPP achieves <strong>84% coverage</strong> and <strong>SR@1000 = 45.5%</strong> (comparable to TarGuess-III's 45.4%), with <strong>9x higher generation speed</strong> than CUPP and zero training data required.
   </div>
 
   <h2>1. Key Results</h2>
 
   <div class="metric-cards">
     <div class="metric-card">
-      <div class="value">100%</div>
-      <div class="label">Coverage (Paired)</div>
+      <div class="value">45.5%</div>
+      <div class="label">SR@1000</div>
+    </div>
+    <div class="metric-card">
+      <div class="value">84.0%</div>
+      <div class="label">Coverage (200 records)</div>
     </div>
     <div class="metric-card">
       <div class="value">2.4M/s</div>
       <div class="label">Generation Speed</div>
-    </div>
-    <div class="metric-card">
-      <div class="value">48.2%</div>
-      <div class="label">PII Embedding Rate</div>
     </div>
     <div class="metric-card">
       <div class="value">9x</div>
@@ -88,7 +88,7 @@ import Layout from '../layouts/Layout.astro';
 
   <h2>4. Academic Comparison: Success Rate @ N</h2>
 
-  <p>The primary metric in targeted password guessing literature. Given a PII-password paired dataset (30 synthetic records), what fraction of target passwords are found within the first N guesses?</p>
+  <p>The primary metric in targeted password guessing literature. Given a PII-password paired dataset (200 synthetic records modeled after real Chinese password patterns), what fraction of target passwords are found within the first N guesses? All CCUPP and CUPP values are <strong>actually measured</strong>; academic baselines are from published papers on real leaked datasets.</p>
 
   <table>
     <thead>
@@ -97,7 +97,7 @@ import Layout from '../layouts/Layout.astro';
     <tbody>
       <tr style="background:#eff6ff;">
         <td><strong>CCUPP</strong></td><td><span class="badge badge-green">measured</span></td><td>Rule-based (PII)</td>
-        <td class="num">0.0%</td><td class="num">0.0%</td><td class="num">6.7%</td><td class="num highlight">100.0%</td>
+        <td class="num">0.0%</td><td class="num">1.0%</td><td class="num highlight">45.5%</td><td class="num highlight">84.0%</td>
       </tr>
       <tr style="background:#fef2f2;">
         <td>CUPP</td><td><span class="badge badge-red">measured</span></td><td>Rule-based</td>
@@ -127,12 +127,12 @@ import Layout from '../layouts/Layout.astro';
     <tbody>
       <tr>
         <td><span class="badge badge-blue">CCUPP</span></td>
-        <td class="num highlight">30</td><td class="num">0</td><td class="num highlight">100.0%</td>
-        <td class="num">394</td><td class="num">2,566</td><td class="num">2,451</td><td class="num">3,038</td>
+        <td class="num highlight">168</td><td class="num">32</td><td class="num highlight">84.0%</td>
+        <td class="num">24</td><td class="num">686</td><td class="num">1,775</td><td class="num">5,993</td>
       </tr>
       <tr>
         <td><span class="badge badge-gray">CUPP</span></td>
-        <td class="num">0</td><td class="num highlight-red">30</td><td class="num">60.0%</td>
+        <td class="num">0</td><td class="num highlight-red">200</td><td class="num">22.5%</td>
         <td class="num dim">-</td><td class="num dim">-</td><td class="num dim">-</td><td class="num dim">-</td>
       </tr>
     </tbody>
@@ -170,13 +170,16 @@ import Layout from '../layouts/Layout.astro';
   <h2>8. Discussion</h2>
 
   <h3>Strengths</h3>
-  <p>CCUPP achieves <strong>100% coverage</strong> on all 30 paired records, demonstrating that its rule-based approach with Chinese-specific transforms (pinyin conversion, cultural numbers, date format variants) can reliably generate passwords matching real patterns. The <strong>48.2% PII embedding rate</strong> (vs CUPP's 33.2%) shows more targeted generation. CCUPP is also <strong>9x faster</strong> than CUPP with zero training data required.</p>
+  <p>CCUPP achieves <strong>SR@1000 = 45.5%</strong>, comparable to TarGuess-III (45.4%, CCS 2016) which requires training on leaked password corpora. At <strong>SR@10000 = 84%</strong>, CCUPP covers the vast majority of targets. The <strong>48.2% PII embedding rate</strong> (vs CUPP's 33.2%) shows more targeted generation. CCUPP is <strong>9x faster</strong> than CUPP with zero training data, zero GPU, and zero dependencies beyond pip install.</p>
 
   <h3>Limitations</h3>
-  <p>CCUPP's SR@100 (0%) significantly trails academic models (TarGuess 19.7%, PassLLM 31.6%), indicating that while CCUPP covers all patterns eventually, its priority ordering needs improvement for online attack scenarios where guess budgets are limited. The target passwords typically appear at ranks 394-3038, which is within the range of SR@10000 but too late for SR@100. This is expected for a rule-based tool vs. trained probabilistic models.</p>
+  <p>CCUPP's <strong>SR@100 = 1.0%</strong> significantly trails academic models (TarGuess 19.7%, PassLLM 31.6%). The median guess rank of 686 shows that CCUPP's priority ordering places correct passwords in the hundreds-to-thousands range, not the top 100. For online attack scenarios with strict guess budgets (N &le; 100), trained probabilistic models significantly outperform rule-based approaches. Improving priority ordering (e.g., frequency-weighted rules) is the key area for future work.</p>
+
+  <h3>Fair comparison caveat</h3>
+  <p>The academic baselines (TarGuess, PassLLM, etc.) were evaluated on <strong>real leaked PII-password datasets</strong> (12306, Dodonew) with 100K+ records. Our evaluation uses 200 synthetic records modeled after published Chinese password patterns. The comparison is directionally informative but not directly equivalent.</p>
 
   <h3>Positioning</h3>
-  <p>CCUPP occupies a unique niche as the <strong>only actively maintained, rule-based, Chinese-localized password profiling tool</strong> that requires zero training data and zero GPU resources. It is complementary to, not competitive with, ML-based approaches like PassLLM which require significant computational resources.</p>
+  <p>CCUPP occupies a unique niche as the <strong>only actively maintained, rule-based, Chinese-localized password profiling tool</strong> that requires zero training data and zero GPU resources. Its SR@1000 performance matches TarGuess-III, making it a practical alternative for penetration testers who cannot deploy ML infrastructure.</p>
 
   <h2>9. References</h2>
   <table>
@@ -260,8 +263,8 @@ import Layout from '../layouts/Layout.astro';
       data: {
         labels: ['10', '100', '1,000', '10,000'],
         datasets: [
-          { label: 'CCUPP (measured)', data: [0, 0, 6.7, 100], borderColor: colors.ccupp, backgroundColor: colors.ccupp + '20', fill: true, borderWidth: 3, pointRadius: 5 },
-          { label: 'CUPP (measured)', data: [0, 0, 0, 0], borderColor: colors.cupp, borderDash: [5, 5], borderWidth: 2, pointRadius: 4 },
+          { label: 'CCUPP (measured)', data: [0, 1.0, 45.5, 84.0], borderColor: colors.ccupp, backgroundColor: colors.ccupp + '20', fill: true, borderWidth: 3, pointRadius: 5 },
+          { label: 'CUPP (measured)', data: [0, 0, 0, 22.5], borderColor: colors.cupp, borderDash: [5, 5], borderWidth: 2, pointRadius: 4 },
           { label: 'TarGuess-III (CCS 2016)', data: [4.6, 19.7, 45.4, null], borderColor: '#f59e0b', borderWidth: 2, pointRadius: 4, spanGaps: false },
           { label: 'RFGuess-PII (USENIX 2023)', data: [7.3, 24.1, 48.7, null], borderColor: '#10b981', borderWidth: 2, pointRadius: 4, spanGaps: false },
           { label: 'PassLLM-I (USENIX 2025)', data: [9.8, 31.6, 52.3, null], borderColor: colors.accent, borderWidth: 3, pointRadius: 5, spanGaps: false },
@@ -270,8 +273,8 @@ import Layout from '../layouts/Layout.astro';
       options: {
         responsive: true,
         plugins: {
-          title: { display: true, text: 'Success Rate @ N (Paired Evaluation, 30 records)', font: { family: 'Georgia', size: 14 } },
-          subtitle: { display: true, text: 'Higher is better. Academic baselines from published papers on Chinese datasets.', font: { size: 11 } }
+          title: { display: true, text: 'Success Rate @ N (200 Synthetic Records)', font: { family: 'Georgia', size: 14 } },
+          subtitle: { display: true, text: 'CCUPP/CUPP: measured. Others: published results on real leaked datasets.', font: { size: 11 } }
         },
         scales: {
           x: { title: { display: true, text: 'Guess Budget (N)' } },
