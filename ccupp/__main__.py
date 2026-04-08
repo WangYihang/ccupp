@@ -252,5 +252,87 @@ def interactive() -> None:
     console.print(f'[cyan]Run:[/cyan] [bold]ccupp generate -c {path}[/bold]')
 
 
+@app.command()
+def benchmark(
+    profiles: list[str] = typer.Option(
+        None, '--profiles', '-p',
+        help='Profile names to benchmark (default: all). Options: zh_full, zh_minimal, zh_medium, en_full, en_minimal',
+    ),
+    datasets: list[str] = typer.Option(
+        None, '--dataset', '-d',
+        help='Path to password list file(s) for evaluation (one password per line, supports .gz)',
+    ),
+    cupp_path: str = typer.Option(
+        None, '--cupp-path',
+        help='Path to cupp.py (default: auto-detect from /tmp/cupp/cupp.py)',
+    ),
+    output: str = typer.Option(
+        None, '--output', '-o',
+        help='Export results as JSON to this path',
+    ),
+) -> None:
+    """Benchmark CCUPP against other tools (CUPP, etc.) using standard profiles and datasets.
+
+    Examples:
+
+        ccupp benchmark
+
+        ccupp benchmark -d /path/to/rockyou.txt
+
+        ccupp benchmark -p zh_full -p en_full -d rockyou.txt.gz
+    """
+    from ccupp.benchmark.datasets import find_password_lists
+    from ccupp.benchmark.profiles import BENCHMARK_PROFILES
+    from ccupp.benchmark.profiles import get_profile
+    from ccupp.benchmark.runner import BenchmarkRunner
+    from ccupp.benchmark.tools import get_available_tools
+
+    # Get tools
+    tools = get_available_tools(cupp_path=cupp_path)
+    tool_names = [t.name for t in tools]
+    console.print(f'[dim]Available tools: {", ".join(tool_names)}[/dim]')
+
+    if len(tools) < 2:
+        console.print(
+            '[yellow]Hint:[/yellow] To compare with CUPP, clone it first:\n'
+            '  [cyan]git clone https://github.com/Mebus/cupp.git /tmp/cupp[/cyan]'
+        )
+
+    # Set up runner
+    runner = BenchmarkRunner(tools=tools, console=console)
+
+    # Load datasets
+    if datasets:
+        for ds_path in datasets:
+            ds_name = Path(ds_path).stem
+            try:
+                runner.add_dataset_file(ds_name, ds_path)
+            except FileNotFoundError:
+                console.print(f'[red]Warning:[/red] Dataset not found: {ds_path}')
+    else:
+        # Auto-detect system password lists
+        found = find_password_lists()
+        for f in found:
+            console.print(f'[dim]Found system wordlist: {f}[/dim]')
+            runner.add_dataset_file(f.stem, f)
+
+    # Select profiles
+    if profiles:
+        selected = {name: get_profile(name) for name in profiles}
+    else:
+        selected = BENCHMARK_PROFILES
+
+    # Run benchmark
+    report = runner.run(profiles=selected)
+
+    # Print results
+    runner.print_report(report)
+
+    # Export JSON if requested
+    if output:
+        runner.export_json(report, output)
+        console.print(f'\n[green]Results exported to {output}[/green]')
+
+
 if __name__ == '__main__':
     app()
