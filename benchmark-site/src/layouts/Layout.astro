@@ -1,0 +1,172 @@
+---
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <style>
+    :root {
+      --bg: #fafafa;
+      --fg: #1a1a2e;
+      --accent: #2563eb;
+      --accent2: #dc2626;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --card: #ffffff;
+      --font-serif: 'Georgia', 'Times New Roman', serif;
+      --font-sans: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .container { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+    header {
+      border-bottom: 2px solid var(--fg);
+      padding-bottom: 2rem;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+    header h1 {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+    header .subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    header .authors {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    h2 {
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      font-weight: 700;
+      margin: 2.5rem 0 1rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.75rem;
+    }
+    p { margin-bottom: 1rem; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 2rem;
+      font-size: 0.88rem;
+    }
+    thead th {
+      background: var(--fg);
+      color: white;
+      font-weight: 600;
+      text-align: left;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    tbody td {
+      padding: 0.5rem 0.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+    tbody tr:hover { background: #f1f5f9; }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .highlight { color: var(--accent); font-weight: 700; }
+    .highlight-red { color: var(--accent2); font-weight: 700; }
+    .dim { color: var(--muted); }
+    .chart-container {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1rem 0 2rem;
+    }
+    .chart-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1rem 0 2rem;
+    }
+    @media (max-width: 768px) {
+      .chart-row { grid-template-columns: 1fr; }
+    }
+    .metric-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0 2rem;
+    }
+    .metric-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .metric-card .value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1.2;
+    }
+    .metric-card .label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.25rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-blue { background: #dbeafe; color: #1d4ed8; }
+    .badge-green { background: #dcfce7; color: #15803d; }
+    .badge-red { background: #fee2e2; color: #b91c1c; }
+    .badge-gray { background: #f1f5f9; color: #475569; }
+    footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .abstract {
+      background: #f8fafc;
+      border-left: 3px solid var(--accent);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0 2rem;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <slot />
+  </div>
+</body>
+</html>

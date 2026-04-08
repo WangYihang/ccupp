@@ -445,7 +445,7 @@ class BenchmarkRunner:
                 },
                 'pii_embedding_rate': {
                     tool_name: (
-                        pb.academic_evals.get(tool_name, {}).get('pii_embedding', AcademicEvaluation(dataset_name='')).pii_embedding_rate
+                        pb.academic_evals.get(tool_name, {}).get('pii_embedding', AcademicEvaluation(dataset_name='', num_targets=0)).pii_embedding_rate
                     )
                     for tool_name in pb.results
                 },

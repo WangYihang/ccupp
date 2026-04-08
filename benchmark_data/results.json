@@ -1,0 +1,388 @@
+{
+  "zh_full": {
+    "results": {
+      "CCUPP": {
+        "count": 12335,
+        "duration_seconds": 0.00532984733581543,
+        "error": null
+      },
+      "CUPP": {
+        "count": 28527,
+        "duration_seconds": 0.09534978866577148,
+        "error": null
+      }
+    },
+    "dataset_evals": {
+      "CCUPP": {
+        "common-passwords": {
+          "dataset_size": 122,
+          "hits": 10,
+          "hit_rate": 0.08196721311475409,
+          "hit_passwords": [
+            "1q2w3e4r",
+            "1qaz2wsx",
+            "987654321",
+            "asd123",
+            "asdfgh",
+            "qazwsx",
+            "qwe123",
+            "qwerty",
+            "qwertyuiop",
+            "zxcvbn"
+          ]
+        }
+      },
+      "CUPP": {
+        "common-passwords": {
+          "dataset_size": 122,
+          "hits": 0,
+          "hit_rate": 0.0,
+          "hit_passwords": []
+        }
+      }
+    },
+    "pii_embedding_rate": {
+      "CCUPP": {
+        "name": 0.22423996757194975,
+        "date": 0.20802594244021078,
+        "phone": 0.08925820835022294,
+        "account": 0.05139845966761249,
+        "overall": 0.48244831779489256
+      },
+      "CUPP": {
+        "name": 0.2709713604655239,
+        "date": 0.04571108073053598,
+        "phone": 0.0,
+        "account": 0.0733340344235286,
+        "overall": 0.331825989413538
+      }
+    }
+  },
+  "zh_minimal": {
+    "results": {
+      "CCUPP": {
+        "count": 4244,
+        "duration_seconds": 0.0016245841979980469,
+        "error": null
+      },
+      "CUPP": {
+        "count": 5230,
+        "duration_seconds": 0.016627788543701172,
+        "error": null
+      }
+    },
+    "dataset_evals": {
+      "CCUPP": {
+        "common-passwords": {
+          "dataset_size": 122,
+          "hits": 11,
+          "hit_rate": 0.09016393442622951,
+          "hit_passwords": [
+            "1111",
+            "111111",
+            "1q2w3e4r",
+            "1qaz2wsx",
+            "asd123",
+            "asdfgh",
+            "qazwsx",
+            "qwe123",
+            "qwerty",
+            "qwertyuiop",
+            "zxcvbn"
+          ]
+        }
+      },
+      "CUPP": {
+        "common-passwords": {
+          "dataset_size": 122,
+          "hits": 0,
+          "hit_rate": 0.0,
+          "hit_passwords": []
+        }
+      }
+    },
+    "pii_embedding_rate": {
+      "CCUPP": {
+        "name": 0.4637134778510839,
+        "date": 0.3360037700282752,
+        "phone": 0.1449104618284637,
+        "account": 0.0,
+        "overall": 0.7368049010367578
+      },
+      "CUPP": {
+        "name": 0.38279158699808796,
+        "date": 0.048948374760994263,
+        "phone": 0.0,
+        "account": 0.0,
+        "overall": 0.4164435946462715
+      }
+    }
+  },
+  "zh_medium": {
+    "results": {
+      "CCUPP": {
+        "count": 9007,
+        "duration_seconds": 0.0032651424407958984,
+        "error": null
+      },
+      "CUPP": {
+        "count": 18594,
+        "duration_seconds": 0.04067516326904297,
+        "error": null
+      }
+    },
+    "dataset_evals": {
+      "CCUPP": {
+        "common-passwords": {
+          "dataset_size": 122,
+          "hits": 9,
+          "hit_rate": 0.07377049180327869,
+          "hit_passwords": [
+            "1q2w3e4r",
+            "1qaz2wsx",
+            "asd123",
+            "asdfgh",
+            "qazwsx",
+            "qwe123",
+            "qwerty",
+            "qwertyuiop",
+            "zxcvbn"
+          ]
+        }
+      },
+      "CUPP": {
+        "common-passwords": {
+          "dataset_size": 122,
+          "hits": 0,
+          "hit_rate": 0.0,
+          "hit_passwords": []
+        }
+      }
+    },
+    "pii_embedding_rate": {
+      "CCUPP": {
+        "name": 0.3490618407904963,
+        "date": 0.24869545908737647,
+        "phone": 0.13545020539580327,
+        "account": 0.058843122016209615,
+        "overall": 0.600199844565338
+      },
+      "CUPP": {
+        "name": 0.30396902226524686,
+        "date": 0.05227492739593417,
+        "phone": 0.0,
+        "account": 0.0020436700010756158,
+        "overall": 0.34376680649671937
+      }
+    }
+  },
+  "en_full": {
+    "results": {
+      "CCUPP": {
+        "count": 4432,
+        "duration_seconds": 0.0017294883728027344,
+        "error": null
+      },
+      "CUPP": {
+        "count": 22304,
+        "duration_seconds": 0.04325389862060547,
+        "error": null
+      }
+    },
+    "dataset_evals": {
+      "CCUPP": {
+        "common-passwords": {
+          "dataset_size": 122,
+          "hits": 10,
+          "hit_rate": 0.08196721311475409,
+          "hit_passwords": [
+            "1234",
+            "1q2w3e4r",
+            "1qaz2wsx",
+            "asd123",
+            "asdfgh",
+            "qazwsx",
+            "qwe123",
+            "qwerty",
+            "qwertyuiop",
+            "zxcvbn"
+          ]
+        }
+      },
+      "CUPP": {
+        "common-passwords": {
+          "dataset_size": 122,
+          "hits": 0,
+          "hit_rate": 0.0,
+          "hit_passwords": []
+        }
+      }
+    },
+    "pii_embedding_rate": {
+      "CCUPP": {
+        "name": 0.3822202166064982,
+        "date": 0.28046028880866425,
+        "phone": 0.16922382671480143,
+        "account": 0.09115523465703972,
+        "overall": 0.6886281588447654
+      },
+      "CUPP": {
+        "name": 0.2725071736011478,
+        "date": 0.0468974175035868,
+        "phone": 0.0,
+        "account": 0.06796987087517933,
+        "overall": 0.30738880918220945
+      }
+    }
+  },
+  "en_minimal": {
+    "results": {
+      "CCUPP": {
+        "count": 2076,
+        "duration_seconds": 0.0007596015930175781,
+        "error": null
+      },
+      "CUPP": {
+        "count": 9546,
+        "duration_seconds": 0.0214383602142334,
+        "error": null
+      }
+    },
+    "dataset_evals": {
+      "CCUPP": {
+        "common-passwords": {
+          "dataset_size": 122,
+          "hits": 9,
+          "hit_rate": 0.07377049180327869,
+          "hit_passwords": [
+            "1q2w3e4r",
+            "1qaz2wsx",
+            "asd123",
+            "asdfgh",
+            "qazwsx",
+            "qwe123",
+            "qwerty",
+            "qwertyuiop",
+            "zxcvbn"
+          ]
+        }
+      },
+      "CUPP": {
+        "common-passwords": {
+          "dataset_size": 122,
+          "hits": 0,
+          "hit_rate": 0.0,
+          "hit_passwords": []
+        }
+      }
+    },
+    "pii_embedding_rate": {
+      "CCUPP": {
+        "name": 0.4653179190751445,
+        "date": 0.4234104046242775,
+        "phone": 0.0,
+        "account": 0.0,
+        "overall": 0.75
+      },
+      "CUPP": {
+        "name": 0.3379425937565472,
+        "date": 0.06201550387596899,
+        "phone": 0.0,
+        "account": 0.0,
+        "overall": 0.38654934003771213
+      }
+    }
+  },
+  "_academic_paired": {
+    "CCUPP": {
+      "paired_test": {
+        "num_targets": 30,
+        "success_rates": {
+          "10": 0.0,
+          "100": 0.0,
+          "1000": 0.06666666666666667,
+          "10000": 1.0
+        },
+        "coverage": 1.0,
+        "guess_numbers": {
+          "found": 30,
+          "total": 30,
+          "min_rank": 394,
+          "max_rank": 3038,
+          "median_rank": 2566.0,
+          "mean_rank": 2450.8
+        },
+        "guess_curve": [
+          [
+            1,
+            0.0
+          ],
+          [
+            2,
+            0.0
+          ],
+          [
+            5,
+            0.0
+          ],
+          [
+            10,
+            0.0
+          ],
+          [
+            20,
+            0.0
+          ],
+          [
+            50,
+            0.0
+          ],
+          [
+            100,
+            0.0
+          ],
+          [
+            200,
+            0.0
+          ],
+          [
+            500,
+            0.0
+          ],
+          [
+            1000,
+            0.0
+          ],
+          [
+            2000,
+            0.0
+          ],
+          [
+            5000,
+            0.03333333333333333
+          ],
+          [
+            5188,
+            0.03333333333333333
+          ]
+        ]
+      }
+    },
+    "CUPP": {
+      "paired_test": {
+        "num_targets": 30,
+        "success_rates": {},
+        "coverage": 0.6,
+        "guess_numbers": {
+          "found": 0,
+          "total": 30,
+          "min_rank": 0,
+          "max_rank": 0,
+          "median_rank": 0,
+          "mean_rank": 0
+        },
+        "guess_curve": []
+      }
+    }
+  }
+}
