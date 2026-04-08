@@ -1,15 +1,13 @@
-"""CCUPP - Chinese Character-based User Password Generator."""
+"""CCUPP - Chinese Common User Passwords Profiler."""
 
 __version__ = '0.1.0'
 
-from ccupp.config import load_person_from_yaml, load_persons_from_yaml
+from ccupp.config import load_profiles
 from ccupp.generator import PasswordGenerator
-from ccupp.models import Person, PersonConfig
+from ccupp.models import Profile
 
 __all__ = [
-    'Person',
-    'PersonConfig',
+    'Profile',
     'PasswordGenerator',
-    'load_person_from_yaml',
-    'load_persons_from_yaml',
+    'load_profiles',
 ]

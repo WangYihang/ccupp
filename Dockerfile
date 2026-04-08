@@ -3,4 +3,4 @@ RUN pip install uv
 WORKDIR /app
 COPY . .
 RUN uv sync
-ENTRYPOINT ["uv", "run", "githacker"]
+ENTRYPOINT ["uv", "run", "python", "-m", "ccupp"]
