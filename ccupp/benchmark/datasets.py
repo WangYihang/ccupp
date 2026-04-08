@@ -4,11 +4,24 @@ Supports loading password lists from:
 - Local files (one password per line)
 - Built-in common password lists
 - SecLists (if available)
+- PII-password paired datasets (JSONL/CSV) for academic evaluation
 """
 from __future__ import annotations
 
+import csv
 import gzip
+import json
+from dataclasses import dataclass
 from pathlib import Path
+
+from ccupp.models import Profile
+
+
+@dataclass
+class PairedRecord:
+    """A PII-password pair for targeted evaluation."""
+    profile: Profile
+    target_password: str
 
 # Top common passwords (from public research, NOT from leaked data)
 # These are widely published in security reports and academic papers
@@ -82,6 +95,97 @@ def load_password_set(path: str | Path) -> set[str]:
 def get_builtin_common_passwords() -> set[str]:
     """Get the built-in set of common passwords."""
     return set(TOP_COMMON_PASSWORDS)
+
+
+def load_paired_dataset(path: str | Path) -> list[PairedRecord]:
+    """Load a PII-password paired dataset for academic evaluation.
+
+    Supports two formats:
+    - JSONL (.jsonl): One JSON object per line with Profile fields + "target_password"
+    - CSV (.csv): Header row with Profile field names + "target_password" column
+
+    Example JSONL line:
+        {"surname":"李","first_name":"伟","birthdate":["1990","01","15"],"target_password":"liwei1990"}
+
+    Args:
+        path: Path to the paired dataset file.
+
+    Returns:
+        List of PairedRecord objects.
+
+    Raises:
+        FileNotFoundError: If the file doesn't exist.
+        ValueError: If the file format is not supported.
+    """
+    path = Path(path)
+    if not path.exists():
+        raise FileNotFoundError(f'Paired dataset not found: {path}')
+
+    suffix = path.suffix.lower()
+    if suffix == '.jsonl':
+        return _load_paired_jsonl(path)
+    elif suffix == '.csv':
+        return _load_paired_csv(path)
+    else:
+        raise ValueError(f'Unsupported paired dataset format: {suffix} (use .jsonl or .csv)')
+
+
+def _load_paired_jsonl(path: Path) -> list[PairedRecord]:
+    """Load paired data from JSONL file."""
+    records: list[PairedRecord] = []
+    with open(path, encoding='utf-8') as f:
+        for line_num, line in enumerate(f, 1):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                data = json.loads(line)
+                target = data.pop('target_password', None)
+                if not target:
+                    continue
+                profile = Profile(**data)
+                records.append(PairedRecord(profile=profile, target_password=target))
+            except (json.JSONDecodeError, Exception):
+                continue
+    return records
+
+
+def _load_paired_csv(path: Path) -> list[PairedRecord]:
+    """Load paired data from CSV file."""
+    records: list[PairedRecord] = []
+    with open(path, encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            target = row.pop('target_password', None)
+            if not target:
+                continue
+            # Convert CSV string fields to expected types
+            data: dict = {}
+            for key, value in row.items():
+                if not value:
+                    continue
+                # List fields: split by semicolon
+                if key in ('phone_numbers', 'hometowns', 'social_media', 'accounts', 'passwords'):
+                    data[key] = [v.strip() for v in value.split(';') if v.strip()]
+                elif key == 'birthdate':
+                    data[key] = [v.strip() for v in value.split(';') if v.strip()]
+                elif key in ('places', 'workplaces', 'educational_institutions'):
+                    # Nested: groups separated by | , items within group by ;
+                    groups = []
+                    for group in value.split('|'):
+                        items = [v.strip() for v in group.split(';') if v.strip()]
+                        if items:
+                            groups.append(items)
+                    data[key] = groups
+                else:
+                    data[key] = value
+
+            try:
+                profile = Profile(**data)
+                records.append(PairedRecord(profile=profile, target_password=target))
+            except Exception:
+                continue
+    return records
 
 
 def find_password_lists() -> list[Path]:
