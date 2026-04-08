@@ -243,12 +243,106 @@ class CUPPTool(BaseTool):
         return passwords
 
 
-def get_available_tools(cupp_path: str | None = None) -> list[BaseTool]:
+class BopscrkTool(BaseTool):
+    """Adapter for bopscrk (Before Outset PaSsword CRacKing).
+
+    Uses subprocess to call bopscrk CLI with -w flag for non-interactive mode.
+    Install: pip install bopscrk  OR  git clone https://github.com/r3nt0n/bopscrk.git
+    """
+
+    def __init__(self, bopscrk_path: str | Path | None = None):
+        self._bopscrk_path = Path(bopscrk_path) if bopscrk_path else None
+
+    @property
+    def name(self) -> str:
+        return 'bopscrk'
+
+    def is_available(self) -> bool:
+        # Check if bopscrk can be found
+        try:
+            result = subprocess.run(
+                ['python3', '-m', 'bopscrk', '--help'],
+                capture_output=True, text=True, timeout=10,
+                env={**__import__('os').environ, 'PYTHONPATH': str(self._bopscrk_path or '')},
+            )
+            return result.returncode == 0
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            return False
+
+    def generate(self, profile: Profile) -> ToolResult:
+        from ccupp.transforms.pinyin import to_pinyin
+
+        start = time.time()
+        try:
+            # Collect keywords from profile
+            words = []
+            if profile.first_name:
+                words.append(to_pinyin(profile.first_name))
+            if profile.surname:
+                words.append(to_pinyin(profile.surname))
+            if profile.birthdate and len(profile.birthdate) >= 3:
+                words.append(profile.birthdate[0])  # year
+            for acc in profile.accounts:
+                words.append(acc)
+            for wp in profile.workplaces:
+                words.extend(wp)
+            for ht in profile.hometowns:
+                words.append(to_pinyin(ht))
+
+            if not words:
+                return ToolResult(self.name, set(), 0, 0, error='No words for bopscrk')
+
+            with tempfile.NamedTemporaryFile(suffix='.txt', delete=False) as tmp:
+                tmp_path = tmp.name
+
+            env = __import__('os').environ.copy()
+            if self._bopscrk_path:
+                env['PYTHONPATH'] = str(self._bopscrk_path)
+
+            cmd = [
+                'python3', '-m', 'bopscrk',
+                '-w', ','.join(words),
+                '-c', '-l',
+                '--min', '4', '--max', '24',
+                '-o', tmp_path,
+            ]
+
+            subprocess.run(
+                cmd, capture_output=True, text=True,
+                timeout=60, env=env,
+            )
+
+            passwords: set[str] = set()
+            out_path = Path(tmp_path)
+            if out_path.exists():
+                with open(out_path, encoding='utf-8', errors='ignore') as f:
+                    for line in f:
+                        pw = line.strip()
+                        if pw:
+                            passwords.add(pw)
+                out_path.unlink()
+
+            duration = time.time() - start
+            return ToolResult(self.name, passwords, len(passwords), duration)
+
+        except Exception as e:
+            duration = time.time() - start
+            return ToolResult(self.name, set(), 0, duration, error=str(e))
+
+
+def get_available_tools(
+    cupp_path: str | None = None,
+    bopscrk_path: str | None = None,
+) -> list[BaseTool]:
     """Get all available password generation tools."""
     tools: list[BaseTool] = [CCUPPTool()]
 
     cupp = CUPPTool(cupp_path=cupp_path)
     if cupp.is_available():
         tools.append(cupp)
+
+    bopscrk = BopscrkTool(bopscrk_path=bopscrk_path)
+    if bopscrk.is_available():
+        tools.append(bopscrk)
 
     return tools

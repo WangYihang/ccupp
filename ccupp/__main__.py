@@ -20,6 +20,48 @@ app = typer.Typer(
     name='ccupp',
     help='Chinese Common User Passwords Profiler — generate weak password dictionaries from personal information.',
 )
+
+BENCHMARK_SETUP_GUIDE = """[bold cyan]Benchmark Setup Guide[/bold cyan]
+
+[bold]1. Comparison Tools[/bold]
+
+  [cyan]CUPP[/cyan] (Common User Passwords Profiler):
+    git clone https://github.com/Mebus/cupp.git /tmp/cupp
+
+  [cyan]bopscrk[/cyan] (Before Outset PaSsword CRacKing):
+    pip install bopscrk
+    # or: git clone https://github.com/r3nt0n/bopscrk.git /tmp/bopscrk
+
+[bold]2. Password Datasets[/bold]
+
+  [cyan]RockYou[/cyan] (14M passwords, gold standard):
+    wget http://downloads.skullsecurity.org/passwords/rockyou.txt.bz2
+    bunzip2 rockyou.txt.bz2
+
+  [cyan]SecLists[/cyan] (curated collections):
+    git clone --depth 1 https://github.com/danielmiessler/SecLists.git
+
+  [cyan]SkullSecurity[/cyan] (multiple breach datasets):
+    wget http://downloads.skullsecurity.org/passwords/skullsecurity-lists.tar.bz2
+    tar xjf skullsecurity-lists.tar.bz2
+
+  [cyan]Weakpass[/cyan] (massive collections):
+    Visit https://weakpass.com/wordlist
+
+[bold]3. Run Benchmark[/bold]
+
+  # Basic (CCUPP only, built-in common passwords):
+  ccupp benchmark
+
+  # With RockYou dataset:
+  ccupp benchmark -d rockyou.txt
+
+  # Full comparison with specific profile:
+  ccupp benchmark -p zh_full -d rockyou.txt -o results.json
+
+  # Multiple datasets:
+  ccupp benchmark -d rockyou.txt -d phpbb.txt -d myspace.txt
+"""
 logger = structlog.get_logger()
 console = Console(stderr=True)
 
@@ -266,21 +308,34 @@ def benchmark(
         None, '--cupp-path',
         help='Path to cupp.py (default: auto-detect from /tmp/cupp/cupp.py)',
     ),
+    bopscrk_path: str = typer.Option(
+        None, '--bopscrk-path',
+        help='Path to bopscrk package directory',
+    ),
     output: str = typer.Option(
         None, '--output', '-o',
         help='Export results as JSON to this path',
     ),
+    setup_help: bool = typer.Option(
+        False, '--setup',
+        help='Show setup instructions for tools and datasets',
+    ),
 ) -> None:
-    """Benchmark CCUPP against other tools (CUPP, etc.) using standard profiles and datasets.
+    """Benchmark CCUPP against other tools using standard profiles and datasets.
 
     Examples:
 
         ccupp benchmark
 
-        ccupp benchmark -d /path/to/rockyou.txt
+        ccupp benchmark -d rockyou.txt
 
-        ccupp benchmark -p zh_full -p en_full -d rockyou.txt.gz
+        ccupp benchmark -p zh_full -d rockyou.txt.gz -o results.json
+
+        ccupp benchmark --setup
     """
+    if setup_help:
+        Console().print(BENCHMARK_SETUP_GUIDE)
+        return
     from ccupp.benchmark.datasets import find_password_lists
     from ccupp.benchmark.profiles import BENCHMARK_PROFILES
     from ccupp.benchmark.profiles import get_profile
@@ -288,7 +343,7 @@ def benchmark(
     from ccupp.benchmark.tools import get_available_tools
 
     # Get tools
-    tools = get_available_tools(cupp_path=cupp_path)
+    tools = get_available_tools(cupp_path=cupp_path, bopscrk_path=bopscrk_path)
     tool_names = [t.name for t in tools]
     console.print(f'[dim]Available tools: {", ".join(tool_names)}[/dim]')
 
