@@ -61,6 +61,18 @@ BENCHMARK_SETUP_GUIDE = """[bold cyan]Benchmark Setup Guide[/bold cyan]
 
   # Multiple datasets:
   ccupp benchmark -d rockyou.txt -d phpbb.txt -d myspace.txt
+
+[bold]4. Paired Dataset (Academic Evaluation)[/bold]
+
+  Create a JSONL file with PII + target password per line:
+    {"surname":"李","first_name":"伟","birthdate":["1990","01","15"],"target_password":"liwei1990"}
+    {"surname":"张","first_name":"明","phone_numbers":["13800138000"],"target_password":"zm138000"}
+
+  Then run:
+    ccupp benchmark -pd paired_data.jsonl
+
+  This computes Success Rate @ N, Guess Number, Guess Curve,
+  and compares with published results from TarGuess, RFGuess, PassLLM, etc.
 """
 logger = structlog.get_logger()
 console = Console(stderr=True)
@@ -312,6 +324,14 @@ def benchmark(
         None, '--bopscrk-path',
         help='Path to bopscrk package directory',
     ),
+    paired_datasets: list[str] = typer.Option(
+        None, '--paired-dataset', '-pd',
+        help='Path to PII-password paired dataset (JSONL/CSV) for academic evaluation',
+    ),
+    max_paired_records: int = typer.Option(
+        0, '--max-paired-records',
+        help='Max paired records to evaluate (0 = all). Limits runtime for large datasets',
+    ),
     output: str = typer.Option(
         None, '--output', '-o',
         help='Export results as JSON to this path',
@@ -323,13 +343,18 @@ def benchmark(
 ) -> None:
     """Benchmark CCUPP against other tools using standard profiles and datasets.
 
+    Includes academic metrics (Success Rate @ N, Guess Number, PII Embedding Rate)
+    and comparison with published results from TarGuess, RFGuess, PassLLM, etc.
+
     Examples:
 
         ccupp benchmark
 
         ccupp benchmark -d rockyou.txt
 
-        ccupp benchmark -p zh_full -d rockyou.txt.gz -o results.json
+        ccupp benchmark -pd paired_data.jsonl
+
+        ccupp benchmark -p zh_full -pd data.jsonl -o results.json
 
         ccupp benchmark --setup
     """
@@ -371,6 +396,15 @@ def benchmark(
             console.print(f'[dim]Found system wordlist: {f}[/dim]')
             runner.add_dataset_file(f.stem, f)
 
+    # Load paired datasets
+    if paired_datasets:
+        for pd_path in paired_datasets:
+            pd_name = Path(pd_path).stem
+            try:
+                runner.add_paired_dataset(pd_name, pd_path)
+            except (FileNotFoundError, ValueError) as e:
+                console.print(f'[red]Warning:[/red] {e}')
+
     # Select profiles
     if profiles:
         selected = {name: get_profile(name) for name in profiles}
@@ -378,7 +412,7 @@ def benchmark(
         selected = BENCHMARK_PROFILES
 
     # Run benchmark
-    report = runner.run(profiles=selected)
+    report = runner.run(profiles=selected, max_paired_records=max_paired_records)
 
     # Print results
     runner.print_report(report)

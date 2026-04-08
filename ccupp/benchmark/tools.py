@@ -28,6 +28,9 @@ class ToolResult:
     count: int
     duration_seconds: float
     error: str | None = None
+    ordered_passwords: list[str] = field(default_factory=list)
+    # Ordered list preserving generation priority. Empty for tools
+    # that don't support ordering (CUPP, bopscrk).
 
 
 class BaseTool(ABC):
@@ -68,7 +71,8 @@ class CCUPPTool(BaseTool):
         start = time.time()
         components = extract_components(profile)
         gen = PasswordGenerator(components=components)
-        passwords = set(gen.generate())
+        ordered = list(gen.generate())
+        passwords = set(ordered)
         duration = time.time() - start
 
         return ToolResult(
@@ -76,6 +80,7 @@ class CCUPPTool(BaseTool):
             passwords=passwords,
             count=len(passwords),
             duration_seconds=duration,
+            ordered_passwords=ordered,
         )
 
 
