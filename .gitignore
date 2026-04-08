@@ -139,3 +139,14 @@ cython_debug/
 
 # Visual Studio Code
 .vscode/
+
+# Node.js / Astro
+node_modules/
+.astro/
+benchmark-site/.astro/
+benchmark-site/node_modules/
+benchmark-site/dist/
+
+# Root-level npm artifacts (from npx)
+/package.json
+/package-lock.json
