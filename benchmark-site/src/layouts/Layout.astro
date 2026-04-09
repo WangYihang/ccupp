@@ -162,9 +162,28 @@ const { title } = Astro.props;
       margin: 1rem 0 2rem;
       font-size: 0.95rem;
     }
+    #lang-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 100;
+      background: var(--fg);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      font-family: var(--font-sans);
+      transition: opacity 0.15s;
+    }
+    #lang-toggle:hover { opacity: 0.8; }
   </style>
 </head>
 <body>
+  <button id="lang-toggle" aria-label="Switch language" onclick="toggleLang()">ZH</button>
   <div class="container">
     <slot />
   </div>
