@@ -14,5 +14,303 @@ const { title } = Astro.props;
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <style>
+    :root {
+      --fg: #1a1a1a;
+      --muted: #5a5a5a;
+      --faint: #8a8a8a;
+      --rule: #cfcfcf;
+      --rule-soft: #e8e8e8;
+      --bg: #ffffff;
+      --tint: #f6f6f3;
+      --accent: #8b1a1a;
+      --accent-soft: #fdf3f3;
+      --link: #1c4587;
+      --serif: 'Source Serif 4', 'Charter', 'Bitstream Charter', 'Sitka Text', Cambria, 'Times New Roman', Times, serif;
+      --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      --mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--serif);
+      background: var(--bg);
+      color: var(--fg);
+      font-size: 16px;
+      line-height: 1.55;
+      font-feature-settings: "kern", "liga", "onum";
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+    .paper {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem 6rem;
+    }
+
+    /* ---------- Title block ---------- */
+    .title-block { text-align: center; margin-bottom: 2.5rem; }
+    .title-block .eyebrow {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 1rem;
+    }
+    .title-block h1 {
+      font-family: var(--serif);
+      font-size: 1.85rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      margin-bottom: 0.6rem;
+    }
+    .title-block .subtitle {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .title-block .meta {
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      color: var(--faint);
+      letter-spacing: 0.02em;
+    }
+    .title-block .meta a { color: var(--link); text-decoration: none; }
+    .title-block .meta a:hover { text-decoration: underline; }
+
+    /* ---------- Abstract ---------- */
+    .abstract {
+      font-size: 0.93rem;
+      line-height: 1.6;
+      padding: 0 1.5rem;
+      margin: 0 0 2.5rem;
+      color: #2a2a2a;
+      text-align: justify;
+      hyphens: auto;
+    }
+    .abstract .label {
+      font-weight: 600;
+      font-variant: small-caps;
+      letter-spacing: 0.04em;
+      margin-right: 0.3em;
+    }
+
+    /* ---------- Section headings ---------- */
+    h2 {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      margin: 2.4rem 0 0.9rem;
+    }
+    h2 .num { color: var(--fg); margin-right: 0.45em; font-weight: 700; }
+    h3 {
+      font-family: var(--serif);
+      font-size: 0.98rem;
+      font-weight: 600;
+      font-style: italic;
+      margin: 1.4rem 0 0.45rem;
+      color: #2a2a2a;
+    }
+    p { margin-bottom: 0.85rem; text-align: justify; hyphens: auto; }
+    p + p { text-indent: 1.2em; }
+
+    a { color: var(--link); text-decoration: none; border-bottom: 1px solid transparent; }
+    a:hover { border-bottom-color: var(--link); }
+
+    strong { font-weight: 600; }
+
+    /* ---------- Key results strip ---------- */
+    .keystrip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1.5px solid var(--fg);
+      border-bottom: 1.5px solid var(--fg);
+      padding: 0.85rem 0;
+      margin: 0.6rem 0 1.5rem;
+      text-align: center;
+    }
+    .keystrip .cell + .cell { border-left: 1px solid var(--rule-soft); }
+    .keystrip .value {
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+      color: var(--fg);
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+    .keystrip .label {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.35rem;
+    }
+    @media (max-width: 600px) {
+      .keystrip { grid-template-columns: repeat(2, 1fr); gap: 0.6rem 0; }
+      .keystrip .cell:nth-child(3) { border-left: none; }
+      .keystrip .cell:nth-child(odd) { border-left: none !important; }
+    }
+
+    /* ---------- Tables (booktabs style) ---------- */
+    .table-wrap { margin: 0.6rem 0 1.6rem; overflow-x: auto; }
+    .caption {
+      font-family: var(--serif);
+      font-size: 0.85rem;
+      color: #333;
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+    }
+    .caption .num {
+      font-variant: small-caps;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin-right: 0.35em;
+    }
+    .caption.below { margin-top: 0.6rem; margin-bottom: 0; text-align: center; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--serif);
+      font-size: 0.85rem;
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+    table thead th {
+      border-top: 1.5px solid var(--fg);
+      border-bottom: 0.5px solid var(--fg);
+      padding: 0.45rem 0.6rem;
+      font-weight: 600;
+      text-align: left;
+      background: transparent;
+      color: var(--fg);
+      vertical-align: bottom;
+      white-space: nowrap;
+    }
+    table tbody td {
+      padding: 0.32rem 0.6rem;
+      border: none;
+      vertical-align: baseline;
+    }
+    table tbody tr.group-start td { border-top: 0.5px solid var(--rule); }
+    table tbody tr:first-child td { border-top: none; }
+    table tbody tr:last-child td { border-bottom: 1.5px solid var(--fg); }
+    table tbody tr:hover { background: transparent; }
+    th.num, td.num { text-align: right; }
+    td .sub { color: var(--muted); font-style: italic; }
+    td.label-col { white-space: nowrap; }
+
+    .best { font-weight: 600; color: var(--fg); }
+    .best::after { content: "*"; color: var(--accent); margin-left: 0.05em; }
+    .accent { color: var(--accent); font-weight: 600; }
+    .dim { color: var(--faint); }
+    .row-mine td { background: #fbfaf6; }
+
+    .tool-tag {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.03em;
+      font-weight: 500;
+      padding: 0 0.35em;
+      border: 0.5px solid var(--rule);
+      border-radius: 2px;
+      display: inline-block;
+      line-height: 1.4;
+      color: #333;
+      background: #fff;
+    }
+    .tool-tag.ours { background: var(--accent-soft); border-color: #e6c8c8; color: var(--accent); }
+    .venue {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .pill {
+      font-family: var(--sans);
+      font-size: 0.68rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.05em 0.4em;
+      border-radius: 2px;
+      background: var(--tint);
+      color: var(--muted);
+    }
+    .pill.measured { background: #f0eee7; color: #5b4a1a; }
+    .pill.cited { background: #eef1f7; color: #1c4587; }
+
+    /* ---------- Figures ---------- */
+    .figure { margin: 0.6rem 0 1.6rem; }
+    .figure .canvas-wrap {
+      background: #fff;
+      border: 0.5px solid var(--rule);
+      padding: 0.9rem 1rem 0.6rem;
+    }
+    .figure-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 0.6rem 0 1.6rem;
+    }
+    .figure-row .figure { margin: 0; }
+    @media (max-width: 720px) {
+      .figure-row { grid-template-columns: 1fr; }
+    }
+
+    /* ---------- Footer ---------- */
+    footer.paper-foot {
+      margin-top: 3.5rem;
+      padding-top: 1rem;
+      border-top: 0.5px solid var(--rule);
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.7;
+    }
+    footer.paper-foot a { color: var(--link); }
+
+    /* ---------- Inline math-ish numerals ---------- */
+    .nv { font-variant-numeric: tabular-nums lining-nums; }
+
+    /* ---------- Language toggle ---------- */
+    .lang-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 10;
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: rgba(255,255,255,0.92);
+      border: 0.5px solid var(--rule);
+      padding: 0.35rem 0.75rem;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: color 0.12s, border-color 0.12s;
+    }
+    .lang-toggle:hover { color: var(--fg); border-color: var(--fg); }
+    html[lang="zh"] body {
+      font-feature-settings: "kern", "liga";
+      hyphens: none;
+    }
+    html[lang="zh"] p,
+    html[lang="zh"] .abstract { text-align: justify; }
+  </style>
 </head>
+<body>
+  <button class="lang-toggle" id="lang-toggle" aria-label="Switch language" onclick="toggleLang()">中文</button>
+  <main class="paper">
+    <slot />
+  </main>
+</body>
 </html>
