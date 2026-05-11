@@ -1,0 +1,26 @@
+---
+import Caption from './Caption.astro';
+
+/**
+ * Bordered canvas + figure caption underneath.
+ */
+interface Props {
+  /** DOM id for the canvas (used by charts.client.ts to target it). */
+  id: string;
+  /** Label, e.g. "Figure 1a". */
+  label: string;
+  /** i18n key for the caption body. */
+  k: string;
+  /** Canvas height in pixels (the width is responsive). Defaults to 180. */
+  height?: number;
+}
+const { id, label, k, height = 180 } = Astro.props;
+---
+<div class="figure">
+  <div class="canvas-wrap">
+    <canvas id={id} height={height}></canvas>
+  </div>
+  <Caption label={label} k={k} kind="below">
+    <slot />
+  </Caption>
+</div>

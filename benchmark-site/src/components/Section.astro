@@ -1,0 +1,20 @@
+---
+/**
+ * Numbered section heading: "1. Key Results".
+ *
+ * The translatable text lives in a child span so the runtime i18n swap
+ * never touches the static section number.
+ */
+interface Props {
+  /** Section number (rendered as "n."). */
+  n: number;
+  /** i18n key for the section title. */
+  k: string;
+  /** English fallback title (SSR output and EN snapshot). */
+  title: string;
+}
+const { n, k, title } = Astro.props;
+---
+<h2>
+  <span class="num">{n}.</span><span data-i18n={k}>{title}</span>
+</h2>

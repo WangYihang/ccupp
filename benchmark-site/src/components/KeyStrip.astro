@@ -1,0 +1,28 @@
+---
+/**
+ * Inline four-cell strip used in §1 to surface the headline metrics.
+ * Rendered between two thick rules to evoke a paper key-result box.
+ */
+interface Cell {
+  /** Numeric value, rendered as serif tabular figures. */
+  value: string;
+  /** Optional unit suffix (rendered smaller, muted). */
+  unit?: string;
+  /** i18n key for the metric label underneath. */
+  labelKey: string;
+  /** English fallback label. */
+  label: string;
+}
+interface Props { cells: Cell[]; }
+const { cells } = Astro.props;
+---
+<div class="keystrip">
+  {cells.map(({ value, unit, labelKey, label }) => (
+    <div class="cell">
+      <div class="value">
+        {value}{unit && <span class="u">{unit}</span>}
+      </div>
+      <div class="label" data-i18n={labelKey}>{label}</div>
+    </div>
+  ))}
+</div>

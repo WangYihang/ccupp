@@ -1,0 +1,425 @@
+/* =====================================================================
+ * CCUPP benchmark site — global stylesheet
+ *
+ * Visual reference: 三线表 (booktabs) + Source Serif 4 body, modelled
+ * after USENIX / ACM single-column papers.  Variables are tuned for
+ * white-paper printability (deep crimson accent, paper-warm zebra).
+ * ===================================================================== */
+
+:root {
+  /* ----- Colour ------------------------------------------------------ */
+  --fg:          #1a1a1a;
+  --muted:       #5a5a5a;
+  --faint:       #8a8a8a;
+  --rule:        #1a1a1a;            /* rules use --fg shade */
+  --rule-soft:   #d8d8d8;
+  --bg:          #ffffff;
+  --paper:       #fafaf6;            /* zebra tint, warm */
+  --paper-deep:  #f4f3ec;
+  --tint:        #f6f6f3;
+  --accent:      #8b1a1a;
+  --accent-soft: #fdf2f0;
+  --accent-edge: #e6c8c8;
+  --link:        #1c4587;
+
+  /* ----- Typography -------------------------------------------------- */
+  --serif: 'Source Serif 4', 'Source Serif Pro', 'Charter',
+           'Bitstream Charter', 'Sitka Text', Cambria,
+           'Times New Roman', Times, serif;
+  --sans:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+           Helvetica, Arial, sans-serif;
+  --mono:  'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+
+  /* ----- Geometry ---------------------------------------------------- */
+  --col-w:       760px;
+  --gap-y:       1.6rem;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html,
+body { margin: 0; padding: 0; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---------------------------------------------------------------------
+ * Layout shell
+ * ------------------------------------------------------------------- */
+.paper {
+  max-width: var(--col-w);
+  margin: 0 auto;
+  padding: 4rem 1.5rem 6rem;
+}
+
+/* ---------------------------------------------------------------------
+ * Title block
+ * ------------------------------------------------------------------- */
+.title-block { text-align: center; margin-bottom: 2.5rem; }
+
+.title-block .eyebrow {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 1rem;
+}
+
+.title-block h1 {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 0 0 0.6rem;
+}
+
+.title-block .subtitle {
+  font-style: italic;
+  font-size: 1.02rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.title-block .meta {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  color: var(--faint);
+  letter-spacing: 0.02em;
+}
+.title-block .meta a { color: var(--link); text-decoration: none; }
+.title-block .meta a:hover { text-decoration: underline; }
+
+/* ---------------------------------------------------------------------
+ * Abstract
+ * ------------------------------------------------------------------- */
+.abstract {
+  font-size: 0.94rem;
+  line-height: 1.6;
+  margin: 0 0 2.5rem;
+  padding: 0 1.5rem;
+  color: #2a2a2a;
+  text-align: justify;
+  hyphens: auto;
+}
+.abstract .label {
+  font-weight: 600;
+  font-variant: small-caps;
+  letter-spacing: 0.04em;
+  margin-right: 0.3em;
+}
+
+/* ---------------------------------------------------------------------
+ * Section headings
+ * ------------------------------------------------------------------- */
+h2 {
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: 0.005em;
+  margin: 2.6rem 0 1rem;
+}
+h2 .num {
+  color: var(--fg);
+  margin-right: 0.5em;
+  font-weight: 700;
+}
+
+h3 {
+  font-family: var(--serif);
+  font-size: 0.98rem;
+  font-weight: 600;
+  font-style: italic;
+  margin: 1.4rem 0 0.45rem;
+  color: #2a2a2a;
+}
+
+p {
+  margin: 0 0 0.85rem;
+  text-align: justify;
+  hyphens: auto;
+}
+p + p { text-indent: 1.2em; }
+
+a {
+  color: var(--link);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+a:hover { border-bottom-color: var(--link); }
+
+strong { font-weight: 600; }
+
+.nv { font-variant-numeric: tabular-nums lining-nums; }
+
+/* ---------------------------------------------------------------------
+ * Key-results strip
+ * ------------------------------------------------------------------- */
+.keystrip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1.5px solid var(--rule);
+  border-bottom: 1.5px solid var(--rule);
+  padding: 1rem 0;
+  margin: 0.6rem 0 1.8rem;
+  text-align: center;
+}
+.keystrip .cell {
+  padding: 0 0.6rem;
+}
+.keystrip .cell + .cell { border-left: 1px solid var(--rule-soft); }
+.keystrip .value {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.keystrip .value .u { font-size: 0.6em; color: var(--muted); margin-left: 0.05em; }
+.keystrip .label {
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.4rem;
+}
+
+@media (max-width: 600px) {
+  .keystrip { grid-template-columns: repeat(2, 1fr); row-gap: 0.8rem; }
+  .keystrip .cell:nth-child(odd) { border-left: none; }
+  .keystrip .cell:nth-child(3) { border-top: 1px solid var(--rule-soft); padding-top: 0.8rem; }
+  .keystrip .cell:nth-child(4) { border-top: 1px solid var(--rule-soft); padding-top: 0.8rem; }
+}
+
+/* ---------------------------------------------------------------------
+ * Captions (table & figure)
+ * ------------------------------------------------------------------- */
+.caption {
+  font-family: var(--serif);
+  font-size: 0.84rem;
+  color: #2c2c2c;
+  line-height: 1.55;
+  margin-bottom: 0.55rem;
+}
+.caption .num {
+  font-variant: small-caps;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin-right: 0.4em;
+}
+.caption.below {
+  margin: 0.65rem 0 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* ---------------------------------------------------------------------
+ * Tables — pure 三线表 (booktabs) with optional zebra
+ *
+ *   .t-pair      → zebra every 2 rows (for grouped data with rowspan)
+ *   .t-row       → zebra every row
+ * ------------------------------------------------------------------- */
+.table-wrap {
+  margin: 0.4rem 0 1.8rem;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--serif);
+  font-size: 0.86rem;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+table thead th {
+  padding: 0.55rem 0.7rem 0.45rem;
+  font-weight: 600;
+  text-align: left;
+  color: var(--fg);
+  vertical-align: bottom;
+  white-space: nowrap;
+  border-top:    1.4px solid var(--rule);   /* top rule */
+  border-bottom: 0.6px solid var(--rule);   /* mid rule */
+}
+
+table tbody td {
+  padding: 0.42rem 0.7rem;
+  border: none;
+  vertical-align: baseline;
+}
+
+/* bottom rule */
+table tbody tr:last-child td { border-bottom: 1.4px solid var(--rule); }
+
+/* numeric alignment */
+th.num, td.num { text-align: right; }
+
+/* rowspan label cell: vertically centred, extra padding for breathing */
+td.label-col {
+  white-space: nowrap;
+  vertical-align: middle;
+  padding-top: 0.55rem;
+  padding-bottom: 0.55rem;
+}
+
+/* ---- Zebra ---------------------------------------------------------- */
+table.t-pair tbody tr:nth-child(4n + 1) td,
+table.t-pair tbody tr:nth-child(4n + 2) td { background: var(--paper); }
+
+table.t-row tbody tr:nth-child(odd) td { background: var(--paper); }
+
+/* Our-method highlight always wins over zebra */
+table tbody tr.row-mine td { background: var(--accent-soft); }
+
+/* Per-column or per-cell best marker */
+.best { font-weight: 600; color: var(--fg); }
+.best::after {
+  content: "*";
+  color: var(--accent);
+  margin-left: 0.08em;
+  font-weight: 700;
+}
+
+.dim   { color: var(--faint); }
+.accent { color: var(--accent); font-weight: 600; }
+
+/* ---------------------------------------------------------------------
+ * Small in-table chips
+ * ------------------------------------------------------------------- */
+.tool-tag {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  font-weight: 500;
+  padding: 0 0.4em;
+  border: 0.5px solid var(--rule-soft);
+  border-radius: 2px;
+  display: inline-block;
+  line-height: 1.5;
+  color: #333;
+  background: #fff;
+}
+.tool-tag.ours {
+  background: var(--accent-soft);
+  border-color: var(--accent-edge);
+  color: var(--accent);
+}
+
+.venue {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.pill {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.1em 0.45em;
+  border-radius: 2px;
+  background: var(--tint);
+  color: var(--muted);
+  display: inline-block;
+  line-height: 1.45;
+}
+.pill.measured { background: #efece3; color: #5b4a1a; }
+.pill.cited    { background: #eef1f7; color: #1c4587; }
+
+/* ---------------------------------------------------------------------
+ * Figures
+ * ------------------------------------------------------------------- */
+.figure { margin: 0.6rem 0 1.8rem; }
+
+.figure .canvas-wrap {
+  background: #fff;
+  border: 0.5px solid var(--rule-soft);
+  padding: 1rem 1.1rem 0.7rem;
+}
+
+.figure-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.1rem;
+  margin: 0.6rem 0 1.8rem;
+}
+.figure-row .figure { margin: 0; }
+
+@media (max-width: 720px) {
+  .figure-row { grid-template-columns: 1fr; }
+}
+
+/* ---------------------------------------------------------------------
+ * Footer
+ * ------------------------------------------------------------------- */
+footer.paper-foot {
+  margin-top: 3.5rem;
+  padding-top: 1.2rem;
+  border-top: 0.5px solid var(--rule-soft);
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.7;
+}
+footer.paper-foot a { color: var(--link); }
+
+/* ---------------------------------------------------------------------
+ * Language toggle
+ * ------------------------------------------------------------------- */
+.lang-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.92);
+  border: 0.5px solid var(--rule-soft);
+  padding: 0.35rem 0.75rem;
+  border-radius: 2px;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: color 0.12s, border-color 0.12s;
+}
+.lang-toggle:hover {
+  color: var(--fg);
+  border-color: var(--fg);
+}
+
+/* ---------------------------------------------------------------------
+ * Chinese-mode adjustments
+ * ------------------------------------------------------------------- */
+html[lang="zh"] body {
+  font-feature-settings: "kern", "liga";
+  hyphens: none;
+}
+html[lang="zh"] p,
+html[lang="zh"] .abstract {
+  text-align: justify;
+  text-justify: inter-character;
+}

@@ -1,0 +1,21 @@
+---
+/**
+ * Table or figure caption: "Table 1. <text>" or "Figure 1a. <text>".
+ *
+ * `kind="below"` floats the caption underneath a figure (smaller,
+ * centred, muted) instead of above a table.
+ */
+interface Props {
+  /** Label that prefixes the caption, e.g. "Table 1" or "Figure 3". */
+  label: string;
+  /** i18n key for the caption body. */
+  k: string;
+  /** Position relative to its target — `above` for tables, `below` for figures. */
+  kind?: 'above' | 'below';
+}
+const { label, k, kind = 'above' } = Astro.props;
+const cls = kind === 'below' ? 'caption below' : 'caption';
+---
+<div class={cls}>
+  <span class="num">{label}.</span><span data-i18n-html={k}><slot /></span>
+</div>
