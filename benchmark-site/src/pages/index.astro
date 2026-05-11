@@ -1,319 +1,677 @@
 ---
 import Layout from '../layouts/Layout.astro';
 ---
-<Layout title="CCUPP Benchmark Results">
-  <header>
-    <h1>CCUPP: Chinese Common User Passwords Profiler</h1>
-    <p class="subtitle">Benchmark Evaluation Report</p>
-    <p class="authors">Comparative analysis against CUPP and academic baselines</p>
-  </header>
-
-  <div class="abstract">
-    <strong>Abstract.</strong> We evaluate CCUPP, a rule-based targeted password guessing tool for Chinese users, against CUPP (the de facto standard) and published results from 6 academic papers. Using 5 standard profiles and a 200-record synthetic PII-password paired dataset (modeled after real Chinese password patterns from Li et al. 2014), we measure generation performance, PII embedding rate, dataset hit rate, and Success Rate @ N. CCUPP achieves <strong>84% coverage</strong> and <strong>SR@1000 = 45.5%</strong> (comparable to TarGuess-III's 45.4%), with <strong>9x higher generation speed</strong> than CUPP and zero training data required.
-  </div>
-
-  <h2>1. Key Results</h2>
-
-  <div class="metric-cards">
-    <div class="metric-card">
-      <div class="value">45.5%</div>
-      <div class="label">SR@1000</div>
+<Layout title="CCUPP — Benchmark Evaluation Report">
+  <section class="title-block">
+    <div class="eyebrow" data-i18n="eyebrow">Benchmark Evaluation Report</div>
+    <h1 data-i18n="heading">CCUPP: Chinese Common User Passwords Profiler</h1>
+    <div class="subtitle" data-i18n="subtitle">A rule-based, training-data-free targeted password guesser for Chinese users</div>
+    <div class="meta" data-i18n-html="meta">
+      <a href="https://github.com/WangYihang/ccupp">github.com/WangYihang/ccupp</a>
+      &nbsp;·&nbsp; April&nbsp;2026
+      &nbsp;·&nbsp; Comparative analysis against CUPP and six academic baselines
     </div>
-    <div class="metric-card">
-      <div class="value">84.0%</div>
-      <div class="label">Coverage (200 records)</div>
-    </div>
-    <div class="metric-card">
-      <div class="value">2.4M/s</div>
-      <div class="label">Generation Speed</div>
-    </div>
-    <div class="metric-card">
-      <div class="value">9x</div>
-      <div class="label">Faster than CUPP</div>
-    </div>
-  </div>
+  </section>
 
-  <h2>2. Generation Performance</h2>
+  <p class="abstract" data-i18n-html="abstract">
+    <span class="label">Abstract.</span>
+    We evaluate <span class="nv">CCUPP</span>, a rule-based targeted password guessing tool for
+    Chinese users, against <span class="nv">CUPP</span> (the de-facto standard) and published
+    results from six academic papers spanning CCS&nbsp;2016 to S&amp;P&nbsp;2025. Using five
+    standard profiles and a 200-record synthetic PII–password paired dataset modelled after
+    real Chinese password patterns (Li et&nbsp;al., USENIX Security&nbsp;2014), we measure
+    generation performance, PII embedding rate, dataset hit rate, and Success Rate&nbsp;@&nbsp;N.
+    CCUPP achieves <strong>84% coverage</strong> and <strong>SR@1000 = 45.5%</strong>
+    — comparable to TarGuess-III's 45.4% — with <strong>9× higher generation speed</strong>
+    than CUPP and zero training data, GPU, or external dependencies.
+  </p>
 
-  <p>Password generation statistics across 5 standard benchmark profiles (3 Chinese, 2 English).</p>
+  <h2 data-i18n-html="s1"><span class="num">1.</span>Key Results</h2>
 
-  <table>
-    <thead>
-      <tr><th>Profile</th><th>Tool</th><th class="num">Passwords</th><th class="num">Time (s)</th><th class="num">Passwords/s</th></tr>
-    </thead>
-    <tbody>
-      <tr><td rowspan="2">zh_full</td><td><span class="badge badge-blue">CCUPP</span></td><td class="num highlight">12,335</td><td class="num">0.006</td><td class="num highlight">2,216,275</td></tr>
-      <tr><td><span class="badge badge-gray">CUPP</span></td><td class="num">28,527</td><td class="num">0.103</td><td class="num">277,964</td></tr>
-      <tr><td rowspan="2">zh_minimal</td><td><span class="badge badge-blue">CCUPP</span></td><td class="num highlight">4,244</td><td class="num">0.002</td><td class="num highlight">2,582,046</td></tr>
-      <tr><td><span class="badge badge-gray">CUPP</span></td><td class="num">5,230</td><td class="num">0.018</td><td class="num">292,689</td></tr>
-      <tr><td rowspan="2">zh_medium</td><td><span class="badge badge-blue">CCUPP</span></td><td class="num highlight">9,007</td><td class="num">0.004</td><td class="num highlight">2,349,384</td></tr>
-      <tr><td><span class="badge badge-gray">CUPP</span></td><td class="num">18,594</td><td class="num">0.043</td><td class="num">430,639</td></tr>
-      <tr><td rowspan="2">en_full</td><td><span class="badge badge-blue">CCUPP</span></td><td class="num">4,432</td><td class="num">0.002</td><td class="num highlight">2,915,031</td></tr>
-      <tr><td><span class="badge badge-gray">CUPP</span></td><td class="num">22,304</td><td class="num">0.045</td><td class="num">496,836</td></tr>
-      <tr><td rowspan="2">en_minimal</td><td><span class="badge badge-blue">CCUPP</span></td><td class="num">2,076</td><td class="num">0.001</td><td class="num highlight">2,913,166</td></tr>
-      <tr><td><span class="badge badge-gray">CUPP</span></td><td class="num">9,546</td><td class="num">0.022</td><td class="num">431,200</td></tr>
-    </tbody>
-  </table>
-
-  <div class="chart-row">
-    <div class="chart-container">
-      <canvas id="speedChart"></canvas>
+  <div class="keystrip">
+    <div class="cell">
+      <div class="value">45.5<span style="font-size:0.7em">%</span></div>
+      <div class="label" data-i18n="ks_sr">SR@1000</div>
     </div>
-    <div class="chart-container">
-      <canvas id="countChart"></canvas>
+    <div class="cell">
+      <div class="value">84.0<span style="font-size:0.7em">%</span></div>
+      <div class="label" data-i18n="ks_cov">Coverage / 200</div>
+    </div>
+    <div class="cell">
+      <div class="value">2.4<span style="font-size:0.7em">&thinsp;M/s</span></div>
+      <div class="label" data-i18n="ks_gen">Generation</div>
+    </div>
+    <div class="cell">
+      <div class="value">9<span style="font-size:0.7em">×</span></div>
+      <div class="label" data-i18n="ks_vs">vs.&nbsp;CUPP</div>
     </div>
   </div>
 
-  <h2>3. PII Embedding Rate</h2>
+  <h2 data-i18n-html="s2"><span class="num">2.</span>Generation Performance</h2>
 
-  <p>Fraction of generated passwords containing personal information fragments. Higher rates indicate more targeted generation. Personal-PCFG (USENIX Security 2014) found 60.1% of Chinese users embed PII in passwords.</p>
+  <p data-i18n-html="s2_p">
+    We measure password generation throughput across five standard benchmark profiles
+    — three Chinese (<em>zh_full</em>, <em>zh_minimal</em>, <em>zh_medium</em>) and two English
+    (<em>en_full</em>, <em>en_minimal</em>). All measurements are wall-clock on a single CPU thread.
+  </p>
 
-  <table>
-    <thead>
-      <tr><th>Profile</th><th>Tool</th><th class="num">Name</th><th class="num">Date</th><th class="num">Phone</th><th class="num">Account</th><th class="num">Overall</th></tr>
-    </thead>
-    <tbody>
-      <tr><td rowspan="2">zh_full</td><td><span class="badge badge-blue">CCUPP</span></td><td class="num">22.4%</td><td class="num highlight">20.8%</td><td class="num highlight">8.9%</td><td class="num">5.1%</td><td class="num highlight">48.2%</td></tr>
-      <tr><td><span class="badge badge-gray">CUPP</span></td><td class="num">27.1%</td><td class="num">4.6%</td><td class="num">0.0%</td><td class="num">7.3%</td><td class="num">33.2%</td></tr>
-      <tr><td rowspan="2">zh_minimal</td><td><span class="badge badge-blue">CCUPP</span></td><td class="num highlight">46.4%</td><td class="num highlight">33.6%</td><td class="num highlight">14.5%</td><td class="num">0.0%</td><td class="num highlight">73.7%</td></tr>
-      <tr><td><span class="badge badge-gray">CUPP</span></td><td class="num">38.3%</td><td class="num">4.9%</td><td class="num">0.0%</td><td class="num">0.0%</td><td class="num">41.6%</td></tr>
-      <tr><td rowspan="2">zh_medium</td><td><span class="badge badge-blue">CCUPP</span></td><td class="num">28.3%</td><td class="num highlight">22.2%</td><td class="num highlight">11.1%</td><td class="num">4.3%</td><td class="num highlight">54.3%</td></tr>
-      <tr><td><span class="badge badge-gray">CUPP</span></td><td class="num">30.4%</td><td class="num">4.8%</td><td class="num">0.0%</td><td class="num">3.6%</td><td class="num">35.2%</td></tr>
-    </tbody>
-  </table>
+  <div class="caption" data-i18n-html="tbl1_cap"><span class="num">Table 1.</span>Password generation statistics. Bold values mark per-row maxima. CCUPP generates fewer total candidates but at a substantially higher rate.</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th data-i18n="th_profile">Profile</th>
+          <th data-i18n="th_tool">Tool</th>
+          <th class="num" data-i18n="th_passwords">Passwords</th>
+          <th class="num" data-i18n-html="th_time">Time&nbsp;(s)</th>
+          <th class="num" data-i18n="th_pps">Passwords / s</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="group-start"><td rowspan="2" class="label-col">zh_full</td><td><span class="tool-tag ours">CCUPP</span></td><td class="num">12,335</td><td class="num">0.006</td><td class="num best">2,216,275</td></tr>
+        <tr><td><span class="tool-tag">CUPP</span></td><td class="num">28,527</td><td class="num">0.103</td><td class="num">277,964</td></tr>
 
-  <div class="chart-container">
-    <canvas id="piiChart"></canvas>
+        <tr class="group-start"><td rowspan="2" class="label-col">zh_minimal</td><td><span class="tool-tag ours">CCUPP</span></td><td class="num">4,244</td><td class="num">0.002</td><td class="num best">2,582,046</td></tr>
+        <tr><td><span class="tool-tag">CUPP</span></td><td class="num">5,230</td><td class="num">0.018</td><td class="num">292,689</td></tr>
+
+        <tr class="group-start"><td rowspan="2" class="label-col">zh_medium</td><td><span class="tool-tag ours">CCUPP</span></td><td class="num">9,007</td><td class="num">0.004</td><td class="num best">2,349,384</td></tr>
+        <tr><td><span class="tool-tag">CUPP</span></td><td class="num">18,594</td><td class="num">0.043</td><td class="num">430,639</td></tr>
+
+        <tr class="group-start"><td rowspan="2" class="label-col">en_full</td><td><span class="tool-tag ours">CCUPP</span></td><td class="num">4,432</td><td class="num">0.002</td><td class="num best">2,915,031</td></tr>
+        <tr><td><span class="tool-tag">CUPP</span></td><td class="num">22,304</td><td class="num">0.045</td><td class="num">496,836</td></tr>
+
+        <tr class="group-start"><td rowspan="2" class="label-col">en_minimal</td><td><span class="tool-tag ours">CCUPP</span></td><td class="num">2,076</td><td class="num">0.001</td><td class="num best">2,913,166</td></tr>
+        <tr><td><span class="tool-tag">CUPP</span></td><td class="num">9,546</td><td class="num">0.022</td><td class="num">431,200</td></tr>
+      </tbody>
+    </table>
   </div>
 
-  <h2>4. Academic Comparison: Success Rate @ N</h2>
-
-  <p>The primary metric in targeted password guessing literature. Given a PII-password paired dataset (200 synthetic records modeled after real Chinese password patterns), what fraction of target passwords are found within the first N guesses? All CCUPP and CUPP values are <strong>actually measured</strong>; academic baselines are from published papers on real leaked datasets.</p>
-
-  <table>
-    <thead>
-      <tr><th>Method</th><th>Venue</th><th>Approach</th><th class="num">SR@10</th><th class="num">SR@100</th><th class="num">SR@1000</th><th class="num">SR@10000</th></tr>
-    </thead>
-    <tbody>
-      <tr style="background:#eff6ff;">
-        <td><strong>CCUPP</strong></td><td><span class="badge badge-green">measured</span></td><td>Rule-based (PII)</td>
-        <td class="num">0.0%</td><td class="num">1.0%</td><td class="num highlight">45.5%</td><td class="num highlight">84.0%</td>
-      </tr>
-      <tr style="background:#fef2f2;">
-        <td>CUPP</td><td><span class="badge badge-red">measured</span></td><td>Rule-based</td>
-        <td class="num">0.0%</td><td class="num">0.0%</td><td class="num">0.0%</td><td class="num">0.0%</td>
-      </tr>
-      <tr><td>TarGuess-III</td><td class="dim">CCS 2016</td><td>PII-tagged PCFG</td><td class="num">4.6%</td><td class="num">19.7%</td><td class="num">45.4%</td><td class="num dim">-</td></tr>
-      <tr><td>Personal-PCFG</td><td class="dim">USENIX Sec 2014</td><td>PCFG + PII tags</td><td class="num dim">-</td><td class="num">12.8%</td><td class="num">29.5%</td><td class="num dim">-</td></tr>
-      <tr><td>RFGuess-PII</td><td class="dim">USENIX Sec 2023</td><td>Random Forest</td><td class="num">7.3%</td><td class="num">24.1%</td><td class="num">48.7%</td><td class="num dim">-</td></tr>
-      <tr><td>PointerGuess</td><td class="dim">USENIX Sec 2024</td><td>Seq2Seq + Pointer</td><td class="num">8.2%</td><td class="num">25.2%</td><td class="num dim">-</td><td class="num dim">-</td></tr>
-      <tr><td>PassLLM-I</td><td class="dim">USENIX Sec 2025</td><td>LLM (7B) + LoRA</td><td class="num">9.8%</td><td class="num highlight-red">31.6%</td><td class="num highlight-red">52.3%</td><td class="num dim">-</td></tr>
-      <tr><td>RankGuess-PII</td><td class="dim">S&P 2025</td><td>RL + Ranking</td><td class="num dim">-</td><td class="num">27.8%</td><td class="num">50.1%</td><td class="num dim">-</td></tr>
-    </tbody>
-  </table>
-
-  <div class="chart-container">
-    <canvas id="srChart"></canvas>
-  </div>
-
-  <h2>5. Guess Number Statistics</h2>
-
-  <p>For passwords that were found, at what rank (position) in the generated list did they appear? Lower ranks indicate higher priority placement.</p>
-
-  <table>
-    <thead>
-      <tr><th>Tool</th><th class="num">Found</th><th class="num">Not Found</th><th class="num">Coverage</th><th class="num">Min Rank</th><th class="num">Median</th><th class="num">Mean</th><th class="num">Max Rank</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="badge badge-blue">CCUPP</span></td>
-        <td class="num highlight">168</td><td class="num">32</td><td class="num highlight">84.0%</td>
-        <td class="num">24</td><td class="num">686</td><td class="num">1,775</td><td class="num">5,993</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-gray">CUPP</span></td>
-        <td class="num">0</td><td class="num highlight-red">200</td><td class="num">22.5%</td>
-        <td class="num dim">-</td><td class="num dim">-</td><td class="num dim">-</td><td class="num dim">-</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h2>6. Tool Overlap Analysis</h2>
-
-  <p>How much do CCUPP and CUPP outputs overlap? Low overlap indicates complementary generation strategies.</p>
-
-  <div class="chart-row">
-    <div class="chart-container">
-      <canvas id="overlapChart"></canvas>
+  <div class="figure-row">
+    <div class="figure">
+      <div class="canvas-wrap"><canvas id="speedChart" height="180"></canvas></div>
+      <div class="caption below" data-i18n-html="fig1a"><span class="num">Figure 1a.</span>Generation throughput (pwd/s).</div>
     </div>
-    <div class="chart-container">
-      <canvas id="lengthChart"></canvas>
+    <div class="figure">
+      <div class="canvas-wrap"><canvas id="countChart" height="180"></canvas></div>
+      <div class="caption below" data-i18n-html="fig1b"><span class="num">Figure 1b.</span>Total candidates generated.</div>
     </div>
   </div>
 
-  <h2>7. Length Distribution</h2>
+  <h2 data-i18n-html="s3"><span class="num">3.</span>PII Embedding Rate</h2>
 
-  <table>
-    <thead>
-      <tr><th>Length</th><th class="num">CCUPP</th><th class="num">CCUPP %</th><th class="num">CUPP</th><th class="num">CUPP %</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>1-6</td><td class="num">2,407</td><td class="num">20%</td><td class="num">478</td><td class="num">2%</td></tr>
-      <tr><td>7-8</td><td class="num">2,080</td><td class="num">17%</td><td class="num">4,518</td><td class="num">16%</td></tr>
-      <tr><td>9-12</td><td class="num">4,388</td><td class="num">36%</td><td class="num">23,531</td><td class="num">82%</td></tr>
-      <tr><td>13-16</td><td class="num">2,268</td><td class="num">18%</td><td class="num">0</td><td class="num">0%</td></tr>
-      <tr><td>17-24</td><td class="num">1,044</td><td class="num">8%</td><td class="num">0</td><td class="num">0%</td></tr>
-      <tr><td>25+</td><td class="num">148</td><td class="num">1%</td><td class="num">0</td><td class="num">0%</td></tr>
-    </tbody>
-  </table>
+  <p data-i18n-html="s3_p">
+    Fraction of generated candidates that contain a fragment of the target's personal
+    information. Higher rates indicate more targeted generation. The Personal-PCFG study
+    (Li et&nbsp;al., USENIX Security 2014) observed that <span class="nv">60.1%</span> of
+    Chinese users embed PII in their passwords.
+  </p>
 
-  <h2>8. Discussion</h2>
+  <div class="caption" data-i18n-html="tbl2_cap"><span class="num">Table 2.</span>PII embedding rate by category. Bold values mark per-profile maxima.</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th data-i18n="th_profile">Profile</th><th data-i18n="th_tool">Tool</th>
+          <th class="num" data-i18n="th_name">Name</th><th class="num" data-i18n="th_date">Date</th><th class="num" data-i18n="th_phone">Phone</th><th class="num" data-i18n="th_account">Account</th><th class="num" data-i18n="th_overall">Overall</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="group-start"><td rowspan="2" class="label-col">zh_full</td><td><span class="tool-tag ours">CCUPP</span></td><td class="num">22.4%</td><td class="num best">20.8%</td><td class="num best">8.9%</td><td class="num">5.1%</td><td class="num best">48.2%</td></tr>
+        <tr><td><span class="tool-tag">CUPP</span></td><td class="num">27.1%</td><td class="num">4.6%</td><td class="num">0.0%</td><td class="num">7.3%</td><td class="num">33.2%</td></tr>
 
-  <h3>Strengths</h3>
-  <p>CCUPP achieves <strong>SR@1000 = 45.5%</strong>, comparable to TarGuess-III (45.4%, CCS 2016) which requires training on leaked password corpora. At <strong>SR@10000 = 84%</strong>, CCUPP covers the vast majority of targets. The <strong>48.2% PII embedding rate</strong> (vs CUPP's 33.2%) shows more targeted generation. CCUPP is <strong>9x faster</strong> than CUPP with zero training data, zero GPU, and zero dependencies beyond pip install.</p>
+        <tr class="group-start"><td rowspan="2" class="label-col">zh_minimal</td><td><span class="tool-tag ours">CCUPP</span></td><td class="num best">46.4%</td><td class="num best">33.6%</td><td class="num best">14.5%</td><td class="num">0.0%</td><td class="num best">73.7%</td></tr>
+        <tr><td><span class="tool-tag">CUPP</span></td><td class="num">38.3%</td><td class="num">4.9%</td><td class="num">0.0%</td><td class="num">0.0%</td><td class="num">41.6%</td></tr>
 
-  <h3>Limitations</h3>
-  <p>CCUPP's <strong>SR@100 = 1.0%</strong> significantly trails academic models (TarGuess 19.7%, PassLLM 31.6%). The median guess rank of 686 shows that CCUPP's priority ordering places correct passwords in the hundreds-to-thousands range, not the top 100. For online attack scenarios with strict guess budgets (N &le; 100), trained probabilistic models significantly outperform rule-based approaches. Improving priority ordering (e.g., frequency-weighted rules) is the key area for future work.</p>
+        <tr class="group-start"><td rowspan="2" class="label-col">zh_medium</td><td><span class="tool-tag ours">CCUPP</span></td><td class="num">28.3%</td><td class="num best">22.2%</td><td class="num best">11.1%</td><td class="num">4.3%</td><td class="num best">54.3%</td></tr>
+        <tr><td><span class="tool-tag">CUPP</span></td><td class="num">30.4%</td><td class="num">4.8%</td><td class="num">0.0%</td><td class="num">3.6%</td><td class="num">35.2%</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <h3>Fair comparison caveat</h3>
-  <p>The academic baselines (TarGuess, PassLLM, etc.) were evaluated on <strong>real leaked PII-password datasets</strong> (12306, Dodonew) with 100K+ records. Our evaluation uses 200 synthetic records modeled after published Chinese password patterns. The comparison is directionally informative but not directly equivalent.</p>
+  <div class="figure">
+    <div class="canvas-wrap"><canvas id="piiChart" height="140"></canvas></div>
+    <div class="caption below" data-i18n-html="fig2"><span class="num">Figure 2.</span>PII embedding rate by category on the <em>zh_full</em> profile.</div>
+  </div>
 
-  <h3>Positioning</h3>
-  <p>CCUPP occupies a unique niche as the <strong>only actively maintained, rule-based, Chinese-localized password profiling tool</strong> that requires zero training data and zero GPU resources. Its SR@1000 performance matches TarGuess-III, making it a practical alternative for penetration testers who cannot deploy ML infrastructure.</p>
+  <h2 data-i18n-html="s4"><span class="num">4.</span>Academic Comparison: Success Rate @ N</h2>
 
-  <h2>9. References</h2>
-  <table>
-    <thead><tr><th>#</th><th>Paper</th><th>Venue</th></tr></thead>
-    <tbody>
-      <tr><td>1</td><td>Wang et al., "Targeted Online Password Guessing: An Underestimated Threat"</td><td>ACM CCS 2016</td></tr>
-      <tr><td>2</td><td>Li et al., "A Large-Scale Empirical Analysis of Chinese Web Passwords"</td><td>USENIX Security 2014</td></tr>
-      <tr><td>3</td><td>Wang & Zou, "Password Guessing Using Random Forest"</td><td>USENIX Security 2023</td></tr>
-      <tr><td>4</td><td>Xiu & Wang, "PointerGuess: Targeted Password Guessing Using Pointer Mechanism"</td><td>USENIX Security 2024</td></tr>
-      <tr><td>5</td><td>Zou & Wang, "Password Guessing Using Large Language Models"</td><td>USENIX Security 2025</td></tr>
-      <tr><td>6</td><td>Yang & Wang, "RankGuess: Password Guessing Using Adversarial Ranking"</td><td>IEEE S&P 2025</td></tr>
-    </tbody>
-  </table>
+  <p data-i18n-html="s4_p">
+    The primary metric in the targeted password guessing literature. Given a PII–password
+    paired dataset, what fraction of target passwords appears within the first <span class="nv">N</span>
+    guesses? CCUPP and CUPP rows are measured on 200 synthetic records modelled after
+    real Chinese password patterns; the remaining baselines are reported numbers from their
+    respective papers on real leaked corpora — see <em>fair-comparison caveat</em> in §6.
+  </p>
 
-  <footer>
-    <p>Generated by <a href="https://github.com/WangYihang/ccupp">CCUPP</a> benchmark framework. Data collected on April 2026.</p>
+  <div class="caption" data-i18n-html="tbl3_cap"><span class="num">Table 3.</span>Success rate at guess budget&nbsp;N. Asterisks mark per-column maxima; em dashes indicate values not reported in source.</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th data-i18n="th_method">Method</th><th data-i18n="th_venue">Venue</th><th data-i18n="th_approach">Approach</th>
+          <th class="num">SR@10</th><th class="num">SR@100</th><th class="num">SR@1000</th><th class="num">SR@10⁴</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-mine group-start">
+          <td><strong>CCUPP</strong></td>
+          <td><span class="pill measured" data-i18n="lbl_measured">measured</span></td>
+          <td data-i18n="apr_rb_pii">Rule-based (PII)</td>
+          <td class="num">0.0%</td><td class="num">1.0%</td><td class="num">45.5%</td><td class="num best">84.0%</td>
+        </tr>
+        <tr>
+          <td>CUPP</td>
+          <td><span class="pill measured" data-i18n="lbl_measured">measured</span></td>
+          <td data-i18n="apr_rb">Rule-based</td>
+          <td class="num">0.0%</td><td class="num">0.0%</td><td class="num">0.0%</td><td class="num">0.0%</td>
+        </tr>
+        <tr class="group-start">
+          <td>TarGuess-III</td>
+          <td><span class="venue">CCS&nbsp;2016</span></td>
+          <td data-i18n="apr_pcfg_pii">PII-tagged PCFG</td>
+          <td class="num">4.6%</td><td class="num">19.7%</td><td class="num">45.4%</td><td class="num dim">—</td>
+        </tr>
+        <tr>
+          <td>Personal-PCFG</td>
+          <td><span class="venue">USENIX Sec.&nbsp;2014</span></td>
+          <td data-i18n="apr_pcfg">PCFG + PII tags</td>
+          <td class="num dim">—</td><td class="num">12.8%</td><td class="num">29.5%</td><td class="num dim">—</td>
+        </tr>
+        <tr>
+          <td>RFGuess-PII</td>
+          <td><span class="venue">USENIX Sec.&nbsp;2023</span></td>
+          <td data-i18n="apr_rf">Random forest</td>
+          <td class="num">7.3%</td><td class="num">24.1%</td><td class="num">48.7%</td><td class="num dim">—</td>
+        </tr>
+        <tr>
+          <td>PointerGuess</td>
+          <td><span class="venue">USENIX Sec.&nbsp;2024</span></td>
+          <td data-i18n="apr_seq">Seq2Seq + pointer</td>
+          <td class="num">8.2%</td><td class="num">25.2%</td><td class="num dim">—</td><td class="num dim">—</td>
+        </tr>
+        <tr>
+          <td>PassLLM-I</td>
+          <td><span class="venue">USENIX Sec.&nbsp;2025</span></td>
+          <td data-i18n="apr_llm">LLM (7B) + LoRA</td>
+          <td class="num best">9.8%</td><td class="num best">31.6%</td><td class="num best">52.3%</td><td class="num dim">—</td>
+        </tr>
+        <tr>
+          <td>RankGuess-PII</td>
+          <td><span class="venue">S&amp;P&nbsp;2025</span></td>
+          <td data-i18n="apr_rl">RL + ranking</td>
+          <td class="num dim">—</td><td class="num">27.8%</td><td class="num">50.1%</td><td class="num dim">—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="figure">
+    <div class="canvas-wrap"><canvas id="srChart" height="200"></canvas></div>
+    <div class="caption below" data-i18n-html="fig3"><span class="num">Figure 3.</span>Success rate at guess budget&nbsp;N. CCUPP closes the gap with trained models around N&nbsp;=&nbsp;1000 and dominates at N&nbsp;=&nbsp;10⁴ where no other measurement is reported.</div>
+  </div>
+
+  <h2 data-i18n-html="s5"><span class="num">5.</span>Guess-Number and Distribution Statistics</h2>
+
+  <p data-i18n-html="s5_p">
+    For passwords that were ultimately found, at what rank in the generated list did they
+    appear? Lower ranks indicate better priority ordering.
+  </p>
+
+  <div class="caption" data-i18n-html="tbl4_cap"><span class="num">Table 4.</span>Hit-rank statistics on 200 synthetic targets.</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th data-i18n="th_tool">Tool</th>
+          <th class="num" data-i18n="th_found">Found</th><th class="num" data-i18n="th_missed">Missed</th><th class="num" data-i18n="th_coverage">Coverage</th>
+          <th class="num" data-i18n="th_min">Min</th><th class="num" data-i18n="th_median">Median</th><th class="num" data-i18n="th_mean">Mean</th><th class="num" data-i18n="th_max">Max</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-mine">
+          <td><span class="tool-tag ours">CCUPP</span></td>
+          <td class="num best">168</td><td class="num">32</td><td class="num best">84.0%</td>
+          <td class="num">24</td><td class="num">686</td><td class="num">1,775</td><td class="num">5,993</td>
+        </tr>
+        <tr>
+          <td><span class="tool-tag">CUPP</span></td>
+          <td class="num">0</td><td class="num">200</td><td class="num">0.0%</td>
+          <td class="num dim">—</td><td class="num dim">—</td><td class="num dim">—</td><td class="num dim">—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p data-i18n-html="s5_p2">
+    The two tools also produce nearly disjoint candidate sets, suggesting they could be
+    productively combined. Length distributions differ markedly: CUPP concentrates 82% of
+    its output in the 9–12 character range, while CCUPP spreads across 1–24 characters in
+    line with observed Chinese password length distributions.
+  </p>
+
+  <div class="caption" data-i18n-html="tbl5_cap"><span class="num">Table 5.</span>Length distribution on the <em>zh_full</em> profile.</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th data-i18n="th_length">Length</th>
+          <th class="num">CCUPP</th><th class="num" data-i18n-html="th_ccupp_pct">CCUPP&nbsp;%</th>
+          <th class="num">CUPP</th><th class="num" data-i18n-html="th_cupp_pct">CUPP&nbsp;%</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1–6</td><td class="num">2,407</td><td class="num">20%</td><td class="num">478</td><td class="num">2%</td></tr>
+        <tr><td>7–8</td><td class="num">2,080</td><td class="num">17%</td><td class="num">4,518</td><td class="num">16%</td></tr>
+        <tr><td>9–12</td><td class="num">4,388</td><td class="num">36%</td><td class="num">23,531</td><td class="num">82%</td></tr>
+        <tr><td>13–16</td><td class="num">2,268</td><td class="num">18%</td><td class="num">0</td><td class="num">0%</td></tr>
+        <tr><td>17–24</td><td class="num">1,044</td><td class="num">8%</td><td class="num">0</td><td class="num">0%</td></tr>
+        <tr><td>25+</td><td class="num">148</td><td class="num">1%</td><td class="num">0</td><td class="num">0%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="figure-row">
+    <div class="figure">
+      <div class="canvas-wrap"><canvas id="overlapChart" height="180"></canvas></div>
+      <div class="caption below" data-i18n-html="fig4a"><span class="num">Figure 4a.</span>Candidate-set overlap (<em>zh_full</em>).</div>
+    </div>
+    <div class="figure">
+      <div class="canvas-wrap"><canvas id="lengthChart" height="180"></canvas></div>
+      <div class="caption below" data-i18n-html="fig4b"><span class="num">Figure 4b.</span>Length distribution (<em>zh_full</em>, % of output).</div>
+    </div>
+  </div>
+
+  <h2 data-i18n-html="s6"><span class="num">6.</span>Discussion</h2>
+
+  <h3 data-i18n="s6_str">Strengths.</h3>
+  <p data-i18n-html="s6_str_p">
+    CCUPP achieves <strong>SR@1000 = 45.5%</strong>, on par with TarGuess-III
+    (45.4%, CCS&nbsp;2016) which requires training on leaked password corpora. At
+    <strong>SR@10⁴ = 84.0%</strong>, CCUPP covers the vast majority of targets in our set.
+    Its <strong>48.2% PII embedding rate</strong> on <em>zh_full</em> — versus CUPP's 33.2%
+    — confirms more targeted candidate generation. CCUPP is roughly 9× faster than CUPP
+    with zero training data, zero GPU, and no dependency beyond a <span class="nv">pip install</span>.
+  </p>
+
+  <h3 data-i18n="s6_lim">Limitations.</h3>
+  <p data-i18n-html="s6_lim_p">
+    CCUPP's <strong>SR@100 = 1.0%</strong> trails academic models substantially
+    (TarGuess&nbsp;19.7%, PassLLM&nbsp;31.6%). The median hit-rank of 686 indicates that
+    CCUPP places correct passwords in the hundreds-to-thousands range rather than within
+    the top 100. For online-attack scenarios with strict guess budgets
+    (<span class="nv">N&nbsp;≤&nbsp;100</span>), trained probabilistic models remain
+    decisively ahead. Improving priority ordering — for instance via frequency-weighted
+    rules — is the most promising direction for future work.
+  </p>
+
+  <h3 data-i18n="s6_cav">Fair-comparison caveat.</h3>
+  <p data-i18n-html="s6_cav_p">
+    The academic baselines (TarGuess, PassLLM, etc.) were evaluated on
+    <em>real leaked PII–password datasets</em> — typically 12306, Dodonew — with 10⁵-plus
+    records. Our evaluation uses 200 synthetic records modelled after published Chinese
+    password patterns. The comparison is therefore directionally informative but not
+    strictly equivalent.
+  </p>
+
+  <h3 data-i18n="s6_pos">Positioning.</h3>
+  <p data-i18n-html="s6_pos_p">
+    CCUPP occupies a distinct niche: to our knowledge it is the only actively maintained,
+    rule-based, Chinese-localised password profiling tool that requires neither training
+    data nor GPU. Its SR@1000 matches TarGuess-III, making it a pragmatic alternative for
+    penetration testers who cannot deploy machine-learning infrastructure.
+  </p>
+
+  <h2 data-i18n-html="s7"><span class="num">7.</span>References</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th style="width:2.5em;">#</th><th data-i18n="th_ref">Reference</th><th data-i18n="th_venue">Venue</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="num dim">[1]</td><td data-i18n-html="ref1">Wang et&nbsp;al., <em>Targeted Online Password Guessing: An Underestimated Threat</em>.</td><td><span class="venue">ACM CCS&nbsp;2016</span></td></tr>
+        <tr><td class="num dim">[2]</td><td data-i18n-html="ref2">Li et&nbsp;al., <em>A Large-Scale Empirical Analysis of Chinese Web Passwords</em>.</td><td><span class="venue">USENIX Sec.&nbsp;2014</span></td></tr>
+        <tr><td class="num dim">[3]</td><td data-i18n-html="ref3">Wang &amp; Zou, <em>Password Guessing Using Random Forest</em>.</td><td><span class="venue">USENIX Sec.&nbsp;2023</span></td></tr>
+        <tr><td class="num dim">[4]</td><td data-i18n-html="ref4">Xiu &amp; Wang, <em>PointerGuess: Targeted Password Guessing Using Pointer Mechanism</em>.</td><td><span class="venue">USENIX Sec.&nbsp;2024</span></td></tr>
+        <tr><td class="num dim">[5]</td><td data-i18n-html="ref5">Zou &amp; Wang, <em>Password Guessing Using Large Language Models</em>.</td><td><span class="venue">USENIX Sec.&nbsp;2025</span></td></tr>
+        <tr><td class="num dim">[6]</td><td data-i18n-html="ref6">Yang &amp; Wang, <em>RankGuess: Password Guessing Using Adversarial Ranking</em>.</td><td><span class="venue">IEEE S&amp;P&nbsp;2025</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="paper-foot" data-i18n-html="footer">
+    Report generated by the <a href="https://github.com/WangYihang/ccupp">CCUPP</a> benchmark framework.
+    Data collected April&nbsp;2026. Typeset with Source&nbsp;Serif&nbsp;4.
   </footer>
 
   <script>
-    // Chart.js configuration
-    const colors = {
-      ccupp: '#2563eb',
-      cupp: '#94a3b8',
-      accent: '#dc2626',
+    /* ===================================================================
+     *  i18n: Chinese translation dictionary
+     *  =================================================================== */
+    const ZH = {
+      eyebrow: '基准评估报告',
+      heading: 'CCUPP：中文用户常见密码画像工具',
+      subtitle: '面向中文用户的基于规则、无需训练数据的定向密码猜测工具',
+      meta: '<a href="https://github.com/WangYihang/ccupp">github.com/WangYihang/ccupp</a>&nbsp;·&nbsp; 2026 年 4 月 &nbsp;·&nbsp; 与 CUPP 及六篇学术基线的对比分析',
+      abstract: '<span class="label">摘要。</span>本文评估了 <span class="nv">CCUPP</span>——一款面向中文用户的基于规则的定向密码猜测工具——并将其与业界事实标准 <span class="nv">CUPP</span> 以及覆盖 CCS&nbsp;2016 至 S&amp;P&nbsp;2025 的六篇学术工作进行对比。我们在 5 个标准画像与一份包含 200 条合成 PII–密码配对记录（基于 Li 等人 USENIX Security&nbsp;2014 的真实中国密码模式建模）的数据集上，测量了生成性能、PII 嵌入率、命中率与 Success Rate&nbsp;@&nbsp;N。CCUPP 实现了 <strong>84% 覆盖率</strong>与 <strong>SR@1000 = 45.5%</strong>——与 TarGuess-III 的 45.4% 相当——同时生成速度比 CUPP <strong>快 9 倍</strong>，并且不依赖任何训练数据、GPU 或外部依赖。',
+
+      s1: '<span class="num">1.</span>核心结果',
+      ks_sr: 'SR@1000',
+      ks_cov: '覆盖率 / 200',
+      ks_gen: '生成速度',
+      ks_vs: '相对 CUPP',
+
+      s2: '<span class="num">2.</span>生成性能',
+      s2_p: '我们在五个标准基准画像下测量密码生成吞吐量——三个中文画像（<em>zh_full</em>、<em>zh_minimal</em>、<em>zh_medium</em>）与两个英文画像（<em>en_full</em>、<em>en_minimal</em>）。所有测量均为单 CPU 线程的真实墙钟时间。',
+      tbl1_cap: '<span class="num">表 1。</span>密码生成统计。粗体标注每组（profile）内的最大值。CCUPP 候选总数更少，但生成速率显著更高。',
+      th_profile: '画像',
+      th_tool: '工具',
+      th_passwords: '候选数',
+      th_time: '耗时（秒）',
+      th_pps: '候选 / 秒',
+
+      fig1a: '<span class="num">图 1a。</span>生成吞吐量（密码 / 秒）。',
+      fig1b: '<span class="num">图 1b。</span>生成候选总数。',
+
+      s3: '<span class="num">3.</span>PII 嵌入率',
+      s3_p: '生成候选中包含目标个人信息片段的比例。比例越高表示生成越具针对性。Personal-PCFG（Li 等人，USENIX Security 2014）观察到 <span class="nv">60.1%</span> 的中文用户在密码中嵌入了 PII。',
+      tbl2_cap: '<span class="num">表 2。</span>各类 PII 嵌入率。粗体标注每个 profile 内的最大值。',
+      th_name: '姓名',
+      th_date: '日期',
+      th_phone: '电话',
+      th_account: '账号',
+      th_overall: '整体',
+      fig2: '<span class="num">图 2。</span><em>zh_full</em> 画像下各类 PII 的嵌入率。',
+
+      s4: '<span class="num">4.</span>学术对比：Success Rate @ N',
+      s4_p: '定向密码猜测领域的核心指标。给定一份 PII–密码配对数据集，前 <span class="nv">N</span> 次猜测内能命中多少比例的目标密码？CCUPP 与 CUPP 的数值在 200 条合成中文密码记录上实测得到；其余基线为各自论文在真实泄露语料上报告的结果——参见 §6 中的<em>公平性说明</em>。',
+      tbl3_cap: '<span class="num">表 3。</span>不同猜测预算 N 下的成功率。星号标注列内最大值；破折号表示原文未给出该数值。',
+      th_method: '方法',
+      th_venue: '出处',
+      th_approach: '技术路线',
+      lbl_measured: '实测',
+      apr_rb_pii: '基于规则（带 PII）',
+      apr_rb: '基于规则',
+      apr_pcfg_pii: '带 PII 标签的 PCFG',
+      apr_pcfg: 'PCFG + PII 标签',
+      apr_rf: '随机森林',
+      apr_seq: 'Seq2Seq + 指针机制',
+      apr_llm: 'LLM（7B）+ LoRA',
+      apr_rl: '强化学习 + 排序',
+      fig3: '<span class="num">图 3。</span>不同猜测预算下的成功率。CCUPP 在 N&nbsp;=&nbsp;1000 附近追平已训练模型，并在尚无其他工作报告的 N&nbsp;=&nbsp;10⁴ 处取得最佳值。',
+
+      s5: '<span class="num">5.</span>猜测次序与分布统计',
+      s5_p: '对于最终被命中的密码，它们在生成列表中位列第几？排名越低，说明优先级排序越好。',
+      tbl4_cap: '<span class="num">表 4。</span>200 条合成目标下的命中排名统计。',
+      th_found: '命中',
+      th_missed: '未命中',
+      th_coverage: '覆盖率',
+      th_min: '最小',
+      th_median: '中位',
+      th_mean: '均值',
+      th_max: '最大',
+      s5_p2: '两款工具的候选集几乎不相交，说明二者具有互补潜力。长度分布差异显著：CUPP 有 82% 的输出集中在 9–12 字符区间，而 CCUPP 分布在 1–24 字符，更贴合实际观察到的中文密码长度分布。',
+      tbl5_cap: '<span class="num">表 5。</span><em>zh_full</em> 画像下的长度分布。',
+      th_length: '长度',
+      th_ccupp_pct: 'CCUPP&nbsp;%',
+      th_cupp_pct: 'CUPP&nbsp;%',
+      fig4a: '<span class="num">图 4a。</span>候选集合重叠（<em>zh_full</em>）。',
+      fig4b: '<span class="num">图 4b。</span>长度分布（<em>zh_full</em>，占输出比例）。',
+
+      s6: '<span class="num">6.</span>讨论',
+      s6_str: '优势。',
+      s6_str_p: 'CCUPP 实现了 <strong>SR@1000 = 45.5%</strong>，与需要在泄露密码语料上训练的 TarGuess-III（45.4%，CCS&nbsp;2016）持平。在 <strong>SR@10⁴ = 84.0%</strong> 时，CCUPP 覆盖了测试集中的绝大多数目标。<em>zh_full</em> 画像下 <strong>48.2% 的 PII 嵌入率</strong>（CUPP 仅 33.2%）进一步印证了其更强的针对性。CCUPP 比 CUPP 快约 9 倍，且不依赖任何训练数据或 GPU，仅需 <span class="nv">pip install</span> 即可使用。',
+      s6_lim: '局限性。',
+      s6_lim_p: 'CCUPP 的 <strong>SR@100 = 1.0%</strong> 明显落后于学术模型（TarGuess&nbsp;19.7%、PassLLM&nbsp;31.6%）。命中排名中位数 686 表明 CCUPP 倾向于把正确密码放在百位到千位区间，而非前 100 位。对于猜测预算严格受限（<span class="nv">N&nbsp;≤&nbsp;100</span>）的在线攻击场景，经过训练的概率模型仍占明显优势。改进优先级排序（如基于频率加权的规则）是未来工作中最有前景的方向。',
+      s6_cav: '公平性说明。',
+      s6_cav_p: '学术基线（TarGuess、PassLLM 等）是在<em>真实泄露的 PII–密码数据集</em>（典型为 12306、Dodonew，规模 10⁵ 量级）上评估的。我们使用的是基于已发表中文密码模式建模的 200 条合成记录，因此该对比具有方向性参考价值，但并不严格等价。',
+      s6_pos: '生态位。',
+      s6_pos_p: 'CCUPP 占据了一个独特位置：据我们所知，它是唯一活跃维护、基于规则、面向中文用户的密码画像工具，且既不需要训练数据也不需要 GPU。其 SR@1000 与 TarGuess-III 持平，为无法部署机器学习基础设施的渗透测试人员提供了实用替代方案。',
+
+      s7: '<span class="num">7.</span>参考文献',
+      th_ref: '文献',
+      ref1: 'Wang 等人，<em>Targeted Online Password Guessing: An Underestimated Threat</em>。',
+      ref2: 'Li 等人，<em>A Large-Scale Empirical Analysis of Chinese Web Passwords</em>。',
+      ref3: 'Wang &amp; Zou，<em>Password Guessing Using Random Forest</em>。',
+      ref4: 'Xiu &amp; Wang，<em>PointerGuess: Targeted Password Guessing Using Pointer Mechanism</em>。',
+      ref5: 'Zou &amp; Wang，<em>Password Guessing Using Large Language Models</em>。',
+      ref6: 'Yang &amp; Wang，<em>RankGuess: Password Guessing Using Adversarial Ranking</em>。',
+
+      footer: '本报告由 <a href="https://github.com/WangYihang/ccupp">CCUPP</a> 基准框架自动生成。数据采集于 2026 年 4 月。正文采用 Source&nbsp;Serif&nbsp;4 排版。',
     };
 
-    // Speed comparison chart
-    new Chart(document.getElementById('speedChart'), {
+    /* Chart text dictionaries (English originals + Chinese) */
+    const CHART_EN = {
+      ds_ccupp: 'CCUPP', ds_cupp: 'CUPP',
+      ds_ccupp_m: 'CCUPP (measured)', ds_cupp_m: 'CUPP (measured)',
+      y_pps: 'passwords / second',
+      y_count: '# candidates generated',
+      y_pii: 'embedding rate (%)',
+      x_n: 'guess budget N',
+      y_sr: 'success rate (%)',
+      x_len: 'length (chars)',
+      y_share: 'share of output (%)',
+      pii_labels: ['Name', 'Date', 'Phone', 'Account', 'Overall'],
+      overlap_labels: ['CCUPP only', 'Overlap', 'CUPP only'],
+    };
+    const CHART_ZH = {
+      ds_ccupp: 'CCUPP', ds_cupp: 'CUPP',
+      ds_ccupp_m: 'CCUPP（实测）', ds_cupp_m: 'CUPP（实测）',
+      y_pps: '候选 / 秒',
+      y_count: '候选总数',
+      y_pii: '嵌入率（%）',
+      x_n: '猜测预算 N',
+      y_sr: '成功率（%）',
+      x_len: '长度（字符）',
+      y_share: '输出占比（%）',
+      pii_labels: ['姓名', '日期', '电话', '账号', '整体'],
+      overlap_labels: ['仅 CCUPP', '重叠', '仅 CUPP'],
+    };
+
+    let currentLang = 'en';
+
+    /* Save originals on load */
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.dataset.orig = el.textContent; });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => { el.dataset.origHtml = el.innerHTML; });
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const k = el.dataset.i18n;
+        el.textContent = (lang === 'zh' && ZH[k]) ? ZH[k] : el.dataset.orig;
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const k = el.dataset.i18nHtml;
+        el.innerHTML = (lang === 'zh' && ZH[k]) ? ZH[k] : el.dataset.origHtml;
+      });
+      const t = lang === 'zh' ? CHART_ZH : CHART_EN;
+      if (window._charts) {
+        const c = window._charts;
+        c.speed.data.datasets[0].label = t.ds_ccupp;
+        c.speed.data.datasets[1].label = t.ds_cupp;
+        c.speed.options.scales.y.title.text = t.y_pps;
+        c.speed.update();
+
+        c.count.data.datasets[0].label = t.ds_ccupp;
+        c.count.data.datasets[1].label = t.ds_cupp;
+        c.count.options.scales.y.title.text = t.y_count;
+        c.count.update();
+
+        c.pii.data.datasets[0].label = t.ds_ccupp;
+        c.pii.data.datasets[1].label = t.ds_cupp;
+        c.pii.data.labels = t.pii_labels;
+        c.pii.options.scales.y.title.text = t.y_pii;
+        c.pii.update();
+
+        c.sr.data.datasets[0].label = t.ds_ccupp_m;
+        c.sr.data.datasets[1].label = t.ds_cupp_m;
+        c.sr.options.scales.x.title.text = t.x_n;
+        c.sr.options.scales.y.title.text = t.y_sr;
+        c.sr.update();
+
+        c.overlap.data.labels = t.overlap_labels;
+        c.overlap.update();
+
+        c.length.data.datasets[0].label = t.ds_ccupp;
+        c.length.data.datasets[1].label = t.ds_cupp;
+        c.length.options.scales.x.title.text = t.x_len;
+        c.length.options.scales.y.title.text = t.y_share;
+        c.length.update();
+      }
+      document.getElementById('lang-toggle').textContent = lang === 'zh' ? 'EN' : '中文';
+      document.documentElement.lang = lang;
+      document.title = lang === 'zh' ? 'CCUPP — 基准评估报告' : 'CCUPP — Benchmark Evaluation Report';
+      localStorage.setItem('ccupp-lang', lang);
+    }
+
+    window.toggleLang = function() { setLang(currentLang === 'en' ? 'zh' : 'en'); };
+
+    /* ===================================================================
+     *  Chart.js: academic style
+     *  =================================================================== */
+    const ACADEMIC_PALETTE = {
+      ours:   '#8b1a1a',
+      baseline: '#555555',
+      neutral: '#999999',
+      a:      '#1c4587',
+      b:      '#4a7a4a',
+      c:      '#a07a1a',
+      d:      '#6a3a8a',
+      grid:   '#e6e6e6',
+      axis:   '#333333',
+    };
+    const SERIF = "'Source Serif 4', Charter, Cambria, Georgia, serif";
+    const SANS  = "'Inter', -apple-system, system-ui, sans-serif";
+
+    Chart.defaults.font.family = SANS;
+    Chart.defaults.font.size = 11;
+    Chart.defaults.color = '#333';
+    Chart.defaults.borderColor = ACADEMIC_PALETTE.grid;
+    Chart.defaults.plugins.legend.labels.boxWidth = 10;
+    Chart.defaults.plugins.legend.labels.boxHeight = 10;
+    Chart.defaults.plugins.legend.labels.font = { family: SANS, size: 11 };
+    Chart.defaults.plugins.legend.position = 'top';
+    Chart.defaults.plugins.legend.align = 'end';
+    Chart.defaults.plugins.tooltip.titleFont = { family: SANS, weight: '600' };
+    Chart.defaults.plugins.tooltip.bodyFont = { family: SANS };
+
+    const axisOpts = (titleText) => ({
+      grid: { color: ACADEMIC_PALETTE.grid, drawTicks: false, drawBorder: false, lineWidth: 0.5 },
+      border: { display: false },
+      ticks: { color: '#555', padding: 4, font: { family: SANS, size: 10 } },
+      title: titleText ? { display: true, text: titleText, color: '#333', font: { family: SERIF, size: 11, style: 'italic' } } : { display: false },
+    });
+
+    window._charts = {};
+
+    window._charts.speed = new Chart(document.getElementById('speedChart'), {
       type: 'bar',
       data: {
         labels: ['zh_full', 'zh_minimal', 'zh_medium', 'en_full', 'en_minimal'],
         datasets: [
-          { label: 'CCUPP', data: [2216275, 2582046, 2349384, 2915031, 2913166], backgroundColor: colors.ccupp },
-          { label: 'CUPP', data: [277964, 292689, 430639, 496836, 431200], backgroundColor: colors.cupp },
+          { label: 'CCUPP', data: [2216275, 2582046, 2349384, 2915031, 2913166], backgroundColor: ACADEMIC_PALETTE.ours, borderWidth: 0, barPercentage: 0.7, categoryPercentage: 0.7 },
+          { label: 'CUPP',  data: [277964,  292689,  430639,  496836,  431200],  backgroundColor: ACADEMIC_PALETTE.baseline, borderWidth: 0, barPercentage: 0.7, categoryPercentage: 0.7 },
         ]
       },
       options: {
-        responsive: true,
-        plugins: { title: { display: true, text: 'Generation Speed (passwords/sec)', font: { family: 'Georgia' } } },
-        scales: { y: { title: { display: true, text: 'passwords/sec' } } }
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: true } },
+        scales: { x: axisOpts(), y: axisOpts('passwords / second') }
       }
     });
 
-    // Count comparison chart
-    new Chart(document.getElementById('countChart'), {
+    window._charts.count = new Chart(document.getElementById('countChart'), {
       type: 'bar',
       data: {
         labels: ['zh_full', 'zh_minimal', 'zh_medium', 'en_full', 'en_minimal'],
         datasets: [
-          { label: 'CCUPP', data: [12335, 4244, 9007, 4432, 2076], backgroundColor: colors.ccupp },
-          { label: 'CUPP', data: [28527, 5230, 18594, 22304, 9546], backgroundColor: colors.cupp },
+          { label: 'CCUPP', data: [12335, 4244, 9007, 4432, 2076], backgroundColor: ACADEMIC_PALETTE.ours, borderWidth: 0, barPercentage: 0.7, categoryPercentage: 0.7 },
+          { label: 'CUPP',  data: [28527, 5230, 18594, 22304, 9546], backgroundColor: ACADEMIC_PALETTE.baseline, borderWidth: 0, barPercentage: 0.7, categoryPercentage: 0.7 },
         ]
       },
       options: {
-        responsive: true,
-        plugins: { title: { display: true, text: 'Passwords Generated', font: { family: 'Georgia' } } },
-        scales: { y: { title: { display: true, text: 'count' } } }
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: true } },
+        scales: { x: axisOpts(), y: axisOpts('# candidates generated') }
       }
     });
 
-    // PII Embedding Rate chart
-    new Chart(document.getElementById('piiChart'), {
+    window._charts.pii = new Chart(document.getElementById('piiChart'), {
       type: 'bar',
       data: {
         labels: ['Name', 'Date', 'Phone', 'Account', 'Overall'],
         datasets: [
-          { label: 'CCUPP (zh_full)', data: [22.4, 20.8, 8.9, 5.1, 48.2], backgroundColor: colors.ccupp },
-          { label: 'CUPP (zh_full)', data: [27.1, 4.6, 0.0, 7.3, 33.2], backgroundColor: colors.cupp },
+          { label: 'CCUPP', data: [22.4, 20.8, 8.9, 5.1, 48.2], backgroundColor: ACADEMIC_PALETTE.ours, borderWidth: 0, barPercentage: 0.65, categoryPercentage: 0.7 },
+          { label: 'CUPP',  data: [27.1, 4.6, 0.0, 7.3, 33.2],  backgroundColor: ACADEMIC_PALETTE.baseline, borderWidth: 0, barPercentage: 0.65, categoryPercentage: 0.7 },
         ]
       },
       options: {
-        responsive: true,
-        plugins: { title: { display: true, text: 'PII Embedding Rate (zh_full profile)', font: { family: 'Georgia' } } },
-        scales: { y: { title: { display: true, text: '%' }, max: 60 } }
-      }
-    });
-
-    // Success Rate @ N chart (log scale)
-    new Chart(document.getElementById('srChart'), {
-      type: 'line',
-      data: {
-        labels: ['10', '100', '1,000', '10,000'],
-        datasets: [
-          { label: 'CCUPP (measured)', data: [0, 1.0, 45.5, 84.0], borderColor: colors.ccupp, backgroundColor: colors.ccupp + '20', fill: true, borderWidth: 3, pointRadius: 5 },
-          { label: 'CUPP (measured)', data: [0, 0, 0, 22.5], borderColor: colors.cupp, borderDash: [5, 5], borderWidth: 2, pointRadius: 4 },
-          { label: 'TarGuess-III (CCS 2016)', data: [4.6, 19.7, 45.4, null], borderColor: '#f59e0b', borderWidth: 2, pointRadius: 4, spanGaps: false },
-          { label: 'RFGuess-PII (USENIX 2023)', data: [7.3, 24.1, 48.7, null], borderColor: '#10b981', borderWidth: 2, pointRadius: 4, spanGaps: false },
-          { label: 'PassLLM-I (USENIX 2025)', data: [9.8, 31.6, 52.3, null], borderColor: colors.accent, borderWidth: 3, pointRadius: 5, spanGaps: false },
-        ]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: { display: true, text: 'Success Rate @ N (200 Synthetic Records)', font: { family: 'Georgia', size: 14 } },
-          subtitle: { display: true, text: 'CCUPP/CUPP: measured. Others: published results on real leaked datasets.', font: { size: 11 } }
-        },
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: true } },
         scales: {
-          x: { title: { display: true, text: 'Guess Budget (N)' } },
-          y: { title: { display: true, text: 'Success Rate (%)' }, min: 0, max: 105 }
+          x: axisOpts(),
+          y: { ...axisOpts('embedding rate (%)'), suggestedMax: 60, beginAtZero: true }
         }
       }
     });
 
-    // Overlap Venn-like chart
-    new Chart(document.getElementById('overlapChart'), {
+    window._charts.sr = new Chart(document.getElementById('srChart'), {
+      type: 'line',
+      data: {
+        labels: ['10', '10²', '10³', '10⁴'],
+        datasets: [
+          { label: 'CCUPP (measured)',  data: [0,   1.0,  45.5, 84.0], borderColor: ACADEMIC_PALETTE.ours, backgroundColor: ACADEMIC_PALETTE.ours + '18', borderWidth: 2.5, pointRadius: 4, pointHoverRadius: 6, tension: 0.18, fill: false },
+          { label: 'CUPP (measured)',   data: [0,   0,    0,    0.0],  borderColor: ACADEMIC_PALETTE.baseline, borderWidth: 1.5, borderDash: [4,3], pointRadius: 3, tension: 0 },
+          { label: 'TarGuess-III · CCS 2016',     data: [4.6, 19.7, 45.4, null], borderColor: ACADEMIC_PALETTE.a, borderWidth: 1.5, pointRadius: 3, tension: 0.15, spanGaps: false },
+          { label: 'RFGuess-PII · Sec. 2023',     data: [7.3, 24.1, 48.7, null], borderColor: ACADEMIC_PALETTE.b, borderWidth: 1.5, pointRadius: 3, tension: 0.15, spanGaps: false },
+          { label: 'PointerGuess · Sec. 2024',    data: [8.2, 25.2, null, null], borderColor: ACADEMIC_PALETTE.c, borderWidth: 1.5, pointRadius: 3, tension: 0.15, spanGaps: false },
+          { label: 'PassLLM-I · Sec. 2025',       data: [9.8, 31.6, 52.3, null], borderColor: ACADEMIC_PALETTE.d, borderWidth: 1.5, pointRadius: 3, tension: 0.15, spanGaps: false },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: true, position: 'bottom', align: 'center', labels: { boxWidth: 18, boxHeight: 2, font: { family: SANS, size: 10 } } } },
+        scales: {
+          x: axisOpts('guess budget N'),
+          y: { ...axisOpts('success rate (%)'), min: 0, max: 100 }
+        }
+      }
+    });
+
+    window._charts.overlap = new Chart(document.getElementById('overlapChart'), {
       type: 'doughnut',
       data: {
         labels: ['CCUPP only', 'Overlap', 'CUPP only'],
         datasets: [{
           data: [12085, 250, 28277],
-          backgroundColor: [colors.ccupp, '#8b5cf6', colors.cupp],
+          backgroundColor: [ACADEMIC_PALETTE.ours, '#a07a1a', ACADEMIC_PALETTE.baseline],
+          borderColor: '#fff', borderWidth: 1.5,
         }]
       },
       options: {
-        responsive: true,
-        plugins: { title: { display: true, text: 'Tool Output Overlap (zh_full)', font: { family: 'Georgia' } } }
+        responsive: true, maintainAspectRatio: false,
+        cutout: '55%',
+        plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, boxHeight: 10, font: { family: SANS, size: 10 } } } }
       }
     });
 
-    // Length distribution chart
-    new Chart(document.getElementById('lengthChart'), {
+    window._charts.length = new Chart(document.getElementById('lengthChart'), {
       type: 'bar',
       data: {
-        labels: ['1-6', '7-8', '9-12', '13-16', '17-24', '25+'],
+        labels: ['1–6', '7–8', '9–12', '13–16', '17–24', '25+'],
         datasets: [
-          { label: 'CCUPP', data: [20, 17, 36, 18, 8, 1], backgroundColor: colors.ccupp },
-          { label: 'CUPP', data: [2, 16, 82, 0, 0, 0], backgroundColor: colors.cupp },
+          { label: 'CCUPP', data: [20, 17, 36, 18, 8, 1], backgroundColor: ACADEMIC_PALETTE.ours, borderWidth: 0, barPercentage: 0.7, categoryPercentage: 0.7 },
+          { label: 'CUPP',  data: [2, 16, 82, 0, 0, 0],   backgroundColor: ACADEMIC_PALETTE.baseline, borderWidth: 0, barPercentage: 0.7, categoryPercentage: 0.7 },
         ]
       },
       options: {
-        responsive: true,
-        plugins: { title: { display: true, text: 'Length Distribution (zh_full, %)', font: { family: 'Georgia' } } },
-        scales: { y: { title: { display: true, text: '%' } } }
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: true } },
+        scales: { x: axisOpts('length (chars)'), y: axisOpts('share of output (%)') }
       }
     });
+
+    /* Restore saved language preference */
+    if (localStorage.getItem('ccupp-lang') === 'zh') setLang('zh');
   </script>
 </Layout>
