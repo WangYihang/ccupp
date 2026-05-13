@@ -25,6 +25,27 @@ from ccupp.benchmark.tools import ToolResult
 from ccupp.models import Profile
 
 
+LENGTH_BUCKETS = ['1-6', '7-8', '9-12', '13-16', '17-24', '25+']
+
+
+def length_bucket(length: int) -> str:
+    """Categorize a password length into a fixed bucket label."""
+    if length <= 6: return '1-6'
+    elif length <= 8: return '7-8'
+    elif length <= 12: return '9-12'
+    elif length <= 16: return '13-16'
+    elif length <= 24: return '17-24'
+    else: return '25+'
+
+
+def length_distribution(passwords: set[str] | list[str]) -> dict[str, int]:
+    """Compute the {bucket: count} distribution for a set or list of passwords."""
+    dist = {b: 0 for b in LENGTH_BUCKETS}
+    for pw in passwords:
+        dist[length_bucket(len(pw))] += 1
+    return dist
+
+
 @dataclass
 class DatasetEvaluation:
     """Evaluation result against a single dataset."""
@@ -304,18 +325,14 @@ class BenchmarkRunner:
             for tool_name in pb.results:
                 len_table.add_column(tool_name, justify='right')
 
-            def _bucket(length: int) -> str:
-                if length <= 6: return '1-6'
-                elif length <= 8: return '7-8'
-                elif length <= 12: return '9-12'
-                elif length <= 16: return '13-16'
-                elif length <= 24: return '17-24'
-                else: return '25+'
-
-            for bucket in ['1-6', '7-8', '9-12', '13-16', '17-24', '25+']:
+            tool_dists = {
+                name: length_distribution(r.passwords)
+                for name, r in pb.results.items()
+            }
+            for bucket in LENGTH_BUCKETS:
                 row = [bucket]
                 for tool_name, result in pb.results.items():
-                    count = sum(1 for pw in result.passwords if _bucket(len(pw)) == bucket)
+                    count = tool_dists[tool_name][bucket]
                     pct = count / result.count * 100 if result.count else 0
                     row.append(f'{count:,} ({pct:.0f}%)')
                 len_table.add_row(*row)
@@ -427,6 +444,10 @@ class BenchmarkRunner:
                     tool_name: {
                         'count': r.count,
                         'duration_seconds': r.duration_seconds,
+                        'pwd_per_s': (
+                            r.count / r.duration_seconds
+                            if r.duration_seconds > 0 else 0
+                        ),
                         'error': r.error,
                     }
                     for tool_name, r in pb.results.items()
@@ -448,6 +469,10 @@ class BenchmarkRunner:
                         pb.academic_evals.get(tool_name, {}).get('pii_embedding', AcademicEvaluation(dataset_name='', num_targets=0)).pii_embedding_rate
                     )
                     for tool_name in pb.results
+                },
+                'length_distribution': {
+                    tool_name: length_distribution(r.passwords)
+                    for tool_name, r in pb.results.items()
                 },
             }
 

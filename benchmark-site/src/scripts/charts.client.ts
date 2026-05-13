@@ -1,16 +1,28 @@
 /**
  * Chart.js initialisation for the benchmark report.
  *
- * Exposes `initCharts()` which builds every chart on the page using a
- * shared academic palette + axis-options helper, and returns a map of
- * `{ chartId → Chart instance }` so the i18n runtime can re-label
- * axes / datasets on language switch.
+ * Every chart is built from the JSON-driven data exposed by `../data/loader`;
+ * the same numbers feed the tables in `index.astro`. Chart.js itself is loaded
+ * via a `<script src>` tag in `Layout.astro`, so the global `Chart` symbol is
+ * referenced at runtime here.
  *
- * Chart.js is loaded via a separate `<script src>` in the HTML head;
- * this module references the global `Chart` constructor at runtime.
+ * `initCharts()` returns `{ chartId → Chart instance }` so the i18n runtime
+ * can re-label axes and legends on language switch.
  */
 
 declare const Chart: any;
+
+import { academicBaselines } from '../data/benchmark';
+import type { Tool } from '../data/benchmark';
+import {
+  PROFILE_ORDER,
+  getGenerationStats,
+  getPiiEmbedding,
+  getSuccessRates,
+  getRankStats,
+  getLengthDist,
+  getMeasuredTools,
+} from '../data/loader';
 
 const palette = {
   ours:     '#8b1a1a',
@@ -22,6 +34,15 @@ const palette = {
   overlap:  '#a07a1a',
   grid:     '#e6e6e6',
 } as const;
+
+/* Stable color per measured tool. CCUPP keeps the ours hue; others take
+ * neutral / accent colors. */
+const TOOL_COLOR: Record<string, string> = {
+  CCUPP:   palette.ours,
+  CUPP:    palette.baseline,
+  bopscrk: palette.b,
+  PassLLM: palette.d,
+};
 
 const SERIF = "'Source Serif 4', Charter, Cambria, Georgia, serif";
 const SANS  = "'Inter', -apple-system, system-ui, sans-serif";
@@ -51,17 +72,26 @@ function axis(title?: string) {
   };
 }
 
-function bar(canvasId: string, labels: string[], ccupp: number[], cupp: number[], yTitle: string) {
+function multiBar(
+  canvasId: string,
+  labels: string[],
+  series: { label: string; data: number[]; color: string }[],
+  yTitle: string,
+) {
   const el = document.getElementById(canvasId);
   if (!el) return null;
   return new Chart(el as HTMLCanvasElement, {
     type: 'bar',
     data: {
       labels,
-      datasets: [
-        { label: 'CCUPP', data: ccupp, backgroundColor: palette.ours,     borderWidth: 0, barPercentage: 0.7, categoryPercentage: 0.72 },
-        { label: 'CUPP',  data: cupp,  backgroundColor: palette.baseline, borderWidth: 0, barPercentage: 0.7, categoryPercentage: 0.72 },
-      ],
+      datasets: series.map((s) => ({
+        label: s.label,
+        data: s.data,
+        backgroundColor: s.color,
+        borderWidth: 0,
+        barPercentage: 0.78,
+        categoryPercentage: 0.78,
+      })),
     },
     options: {
       responsive: true,
@@ -78,32 +108,47 @@ export function initCharts(): Charts {
   applyDefaults();
   const charts: Charts = {};
 
-  charts.speed = bar(
+  const measuredTools = getMeasuredTools();
+  const toolColor = (t: Tool) => TOOL_COLOR[t] ?? palette.a;
+  const perProfile = PROFILE_ORDER.map((p) => ({ profile: p, rows: getGenerationStats(p) }));
+
+  charts.speed = multiBar(
     'speedChart',
-    ['zh_full', 'zh_minimal', 'zh_medium', 'en_full', 'en_minimal'],
-    [2_216_275, 2_582_046, 2_349_384, 2_915_031, 2_913_166],
-    [  277_964,   292_689,   430_639,   496_836,   431_200],
+    perProfile.map((p) => p.profile),
+    measuredTools.map((t) => ({
+      label: t,
+      color: toolColor(t),
+      data: perProfile.map((p) => p.rows.find((r) => r.tool === t)?.pwd_per_s ?? 0),
+    })),
     'passwords / second',
   );
 
-  charts.count = bar(
+  charts.count = multiBar(
     'countChart',
-    ['zh_full', 'zh_minimal', 'zh_medium', 'en_full', 'en_minimal'],
-    [12_335, 4_244, 9_007, 4_432, 2_076],
-    [28_527, 5_230, 18_594, 22_304, 9_546],
+    perProfile.map((p) => p.profile),
+    measuredTools.map((t) => ({
+      label: t,
+      color: toolColor(t),
+      data: perProfile.map((p) => p.rows.find((r) => r.tool === t)?.passwords ?? 0),
+    })),
     '# candidates generated',
   );
 
+  const piiZh = getPiiEmbedding('zh_full');
   const piiEl = document.getElementById('piiChart');
   if (piiEl) {
     charts.pii = new Chart(piiEl as HTMLCanvasElement, {
       type: 'bar',
       data: {
         labels: ['Name', 'Date', 'Phone', 'Account', 'Overall'],
-        datasets: [
-          { label: 'CCUPP', data: [22.4, 20.8, 8.9, 5.1, 48.2], backgroundColor: palette.ours,     borderWidth: 0, barPercentage: 0.66, categoryPercentage: 0.72 },
-          { label: 'CUPP',  data: [27.1, 4.6, 0.0, 7.3, 33.2],  backgroundColor: palette.baseline, borderWidth: 0, barPercentage: 0.66, categoryPercentage: 0.72 },
-        ],
+        datasets: piiZh.map((row) => ({
+          label: row.tool,
+          data: [row.name, row.date, row.phone, row.account, row.overall],
+          backgroundColor: toolColor(row.tool),
+          borderWidth: 0,
+          barPercentage: 0.78,
+          categoryPercentage: 0.72,
+        })),
       },
       options: {
         responsive: true,
@@ -116,17 +161,38 @@ export function initCharts(): Charts {
 
   const srEl = document.getElementById('srChart');
   if (srEl) {
+    const srRows = getSuccessRates();
+    const measuredRows = srRows.filter((r) => r.measured);
     charts.sr = new Chart(srEl as HTMLCanvasElement, {
       type: 'line',
       data: {
         labels: ['10', '10²', '10³', '10⁴'],
         datasets: [
-          { label: 'CCUPP (measured)', data: [0,   1.0,  45.5, 84.0], borderColor: palette.ours,     backgroundColor: palette.ours + '18', borderWidth: 2.5, pointRadius: 4, pointHoverRadius: 6, tension: 0.18, fill: false },
-          { label: 'CUPP (measured)',  data: [0,   0,    0,    0.0],  borderColor: palette.baseline, borderWidth: 1.5, borderDash: [4, 3], pointRadius: 3, tension: 0 },
-          { label: 'TarGuess-III · CCS 2016',  data: [4.6, 19.7, 45.4, null], borderColor: palette.a, borderWidth: 1.5, pointRadius: 3, tension: 0.15, spanGaps: false },
-          { label: 'RFGuess-PII · Sec. 2023',  data: [7.3, 24.1, 48.7, null], borderColor: palette.b, borderWidth: 1.5, pointRadius: 3, tension: 0.15, spanGaps: false },
-          { label: 'PointerGuess · Sec. 2024', data: [8.2, 25.2, null, null], borderColor: palette.c, borderWidth: 1.5, pointRadius: 3, tension: 0.15, spanGaps: false },
-          { label: 'PassLLM-I · Sec. 2025',    data: [9.8, 31.6, 52.3, null], borderColor: palette.d, borderWidth: 1.5, pointRadius: 3, tension: 0.15, spanGaps: false },
+          ...measuredRows.map((r) => ({
+            label: `${r.method} (measured)`,
+            data: [r.sr10, r.sr100, r.sr1k, r.sr10k],
+            borderColor: toolColor(r.method as Tool),
+            backgroundColor: (toolColor(r.method as Tool)) + '18',
+            borderWidth: r.ours ? 2.5 : 1.5,
+            borderDash: r.ours ? undefined : [4, 3],
+            pointRadius: r.ours ? 4 : 3,
+            pointHoverRadius: 6,
+            tension: r.ours ? 0.18 : 0,
+            spanGaps: false,
+            fill: false,
+          })),
+          ...academicBaselines.map((r, i) => {
+            const colors = [palette.a, palette.b, palette.c, palette.d, palette.overlap, '#555'];
+            return {
+              label: `${r.method} · ${r.venueKey}`,
+              data: [r.sr10, r.sr100, r.sr1k, r.sr10k],
+              borderColor: colors[i % colors.length],
+              borderWidth: 1.2,
+              pointRadius: 3,
+              tension: 0.15,
+              spanGaps: false,
+            };
+          }),
         ],
       },
       options: {
@@ -148,15 +214,18 @@ export function initCharts(): Charts {
     });
   }
 
+  // Overlap doughnut — covered total candidates per tool from zh_full.
+  // Exact intersection isn't in the JSON, so this falls back to count-only.
   const overlapEl = document.getElementById('overlapChart');
   if (overlapEl) {
+    const zhFull = getGenerationStats('zh_full');
     charts.overlap = new Chart(overlapEl as HTMLCanvasElement, {
       type: 'doughnut',
       data: {
-        labels: ['CCUPP only', 'Overlap', 'CUPP only'],
+        labels: zhFull.map((r) => r.tool),
         datasets: [{
-          data: [12_085, 250, 28_277],
-          backgroundColor: [palette.ours, palette.overlap, palette.baseline],
+          data: zhFull.map((r) => r.passwords),
+          backgroundColor: zhFull.map((r) => toolColor(r.tool)),
           borderColor: '#fff',
           borderWidth: 1.5,
         }],
@@ -175,13 +244,21 @@ export function initCharts(): Charts {
     });
   }
 
-  charts.length = bar(
+  const lengthRows = getLengthDist('zh_full');
+  charts.length = multiBar(
     'lengthChart',
-    ['1–6', '7–8', '9–12', '13–16', '17–24', '25+'],
-    [20, 17, 36, 18, 8, 1],
-    [ 2, 16, 82,  0, 0, 0],
+    lengthRows.map((r) => r.bin),
+    measuredTools.map((t) => ({
+      label: t,
+      color: toolColor(t),
+      data: lengthRows.map((r) => r.pcts[t] ?? 0),
+    })),
     'share of output (%)',
   );
+
+  // Expose ranked stats unused-but-loaded so tree-shaking keeps the function call
+  // around for future charts; cheap.
+  void getRankStats;
 
   return charts;
 }

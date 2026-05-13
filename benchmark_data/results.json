@@ -3,12 +3,20 @@
     "results": {
       "CCUPP": {
         "count": 12335,
-        "duration_seconds": 0.00532984733581543,
+        "duration_seconds": 0.01157832145690918,
+        "pwd_per_s": 1065353.0432633897,
         "error": null
       },
       "CUPP": {
         "count": 28527,
-        "duration_seconds": 0.09534978866577148,
+        "duration_seconds": 0.12215280532836914,
+        "pwd_per_s": 233535.36517900013,
+        "error": null
+      },
+      "bopscrk": {
+        "count": 19675,
+        "duration_seconds": 1.1368649005889893,
+        "pwd_per_s": 17306.36594533505,
         "error": null
       }
     },
@@ -39,6 +47,14 @@
           "hit_rate": 0.0,
           "hit_passwords": []
         }
+      },
+      "bopscrk": {
+        "common-passwords": {
+          "dataset_size": 122,
+          "hits": 0,
+          "hit_rate": 0.0,
+          "hit_passwords": []
+        }
       }
     },
     "pii_embedding_rate": {
@@ -55,6 +71,39 @@
         "phone": 0.0,
         "account": 0.0733340344235286,
         "overall": 0.331825989413538
+      },
+      "bopscrk": {
+        "name": 0.10332909783989835,
+        "date": 0.03888182973316391,
+        "phone": 0.0,
+        "account": 0.055756035578144854,
+        "overall": 0.19176620076238882
+      }
+    },
+    "length_distribution": {
+      "CCUPP": {
+        "1-6": 2407,
+        "7-8": 2080,
+        "9-12": 4388,
+        "13-16": 2268,
+        "17-24": 1044,
+        "25+": 148
+      },
+      "CUPP": {
+        "1-6": 478,
+        "7-8": 4518,
+        "9-12": 23531,
+        "13-16": 0,
+        "17-24": 0,
+        "25+": 0
+      },
+      "bopscrk": {
+        "1-6": 64,
+        "7-8": 592,
+        "9-12": 5747,
+        "13-16": 13272,
+        "17-24": 0,
+        "25+": 0
       }
     }
   },
@@ -62,12 +111,20 @@
     "results": {
       "CCUPP": {
         "count": 4244,
-        "duration_seconds": 0.0016245841979980469,
+        "duration_seconds": 0.0023415088653564453,
+        "pwd_per_s": 1812506.4836574686,
         "error": null
       },
       "CUPP": {
         "count": 5230,
-        "duration_seconds": 0.016627788543701172,
+        "duration_seconds": 0.03598380088806152,
+        "pwd_per_s": 145343.1786227779,
+        "error": null
+      },
+      "bopscrk": {
+        "count": 1576,
+        "duration_seconds": 0.8963172435760498,
+        "pwd_per_s": 1758.3060141878004,
         "error": null
       }
     },
@@ -99,6 +156,14 @@
           "hit_rate": 0.0,
           "hit_passwords": []
         }
+      },
+      "bopscrk": {
+        "common-passwords": {
+          "dataset_size": 122,
+          "hits": 0,
+          "hit_rate": 0.0,
+          "hit_passwords": []
+        }
       }
     },
     "pii_embedding_rate": {
@@ -115,6 +180,39 @@
         "phone": 0.0,
         "account": 0.0,
         "overall": 0.4164435946462715
+      },
+      "bopscrk": {
+        "name": 0.3889593908629442,
+        "date": 0.25317258883248733,
+        "phone": 0.0,
+        "account": 0.0,
+        "overall": 0.6129441624365483
+      }
+    },
+    "length_distribution": {
+      "CCUPP": {
+        "1-6": 829,
+        "7-8": 788,
+        "9-12": 1161,
+        "13-16": 903,
+        "17-24": 563,
+        "25+": 0
+      },
+      "CUPP": {
+        "1-6": 537,
+        "7-8": 1189,
+        "9-12": 3504,
+        "13-16": 0,
+        "17-24": 0,
+        "25+": 0
+      },
+      "bopscrk": {
+        "1-6": 16,
+        "7-8": 214,
+        "9-12": 1346,
+        "13-16": 0,
+        "17-24": 0,
+        "25+": 0
       }
     }
   },
@@ -122,12 +220,20 @@
     "results": {
       "CCUPP": {
         "count": 9007,
-        "duration_seconds": 0.0032651424407958984,
+        "duration_seconds": 0.005440473556518555,
+        "pwd_per_s": 1655554.4120250668,
         "error": null
       },
       "CUPP": {
         "count": 18594,
-        "duration_seconds": 0.04067516326904297,
+        "duration_seconds": 0.07043170928955078,
+        "pwd_per_s": 264000.40816215996,
+        "error": null
+      },
+      "bopscrk": {
+        "count": 25157,
+        "duration_seconds": 2.12404465675354,
+        "pwd_per_s": 11843.912942231069,
         "error": null
       }
     },
@@ -157,6 +263,14 @@
           "hit_rate": 0.0,
           "hit_passwords": []
         }
+      },
+      "bopscrk": {
+        "common-passwords": {
+          "dataset_size": 122,
+          "hits": 0,
+          "hit_rate": 0.0,
+          "hit_passwords": []
+        }
       }
     },
     "pii_embedding_rate": {
@@ -173,6 +287,39 @@
         "phone": 0.0,
         "account": 0.0020436700010756158,
         "overall": 0.34376680649671937
+      },
+      "bopscrk": {
+        "name": 0.35067774376912986,
+        "date": 0.03676909011408355,
+        "phone": 0.0,
+        "account": 0.0556505147672616,
+        "overall": 0.3810072743172874
+      }
+    },
+    "length_distribution": {
+      "CCUPP": {
+        "1-6": 1898,
+        "7-8": 1730,
+        "9-12": 2634,
+        "13-16": 1770,
+        "17-24": 877,
+        "25+": 98
+      },
+      "CUPP": {
+        "1-6": 1979,
+        "7-8": 4808,
+        "9-12": 11807,
+        "13-16": 0,
+        "17-24": 0,
+        "25+": 0
+      },
+      "bopscrk": {
+        "1-6": 92,
+        "7-8": 803,
+        "9-12": 5852,
+        "13-16": 11132,
+        "17-24": 7278,
+        "25+": 0
       }
     }
   },
@@ -180,12 +327,20 @@
     "results": {
       "CCUPP": {
         "count": 4432,
-        "duration_seconds": 0.0017294883728027344,
+        "duration_seconds": 0.0023043155670166016,
+        "pwd_per_s": 1923347.6800827729,
         "error": null
       },
       "CUPP": {
         "count": 22304,
-        "duration_seconds": 0.04325389862060547,
+        "duration_seconds": 0.07048392295837402,
+        "pwd_per_s": 316440.95651673875,
+        "error": null
+      },
+      "bopscrk": {
+        "count": 14206,
+        "duration_seconds": 1.054912805557251,
+        "pwd_per_s": 13466.515834449247,
         "error": null
       }
     },
@@ -216,6 +371,14 @@
           "hit_rate": 0.0,
           "hit_passwords": []
         }
+      },
+      "bopscrk": {
+        "common-passwords": {
+          "dataset_size": 122,
+          "hits": 0,
+          "hit_rate": 0.0,
+          "hit_passwords": []
+        }
       }
     },
     "pii_embedding_rate": {
@@ -232,6 +395,39 @@
         "phone": 0.0,
         "account": 0.06796987087517933,
         "overall": 0.30738880918220945
+      },
+      "bopscrk": {
+        "name": 0.18991975221737295,
+        "date": 0.04413628044488244,
+        "phone": 0.0,
+        "account": 0.06609883147965648,
+        "overall": 0.22983246515556807
+      }
+    },
+    "length_distribution": {
+      "CCUPP": {
+        "1-6": 590,
+        "7-8": 859,
+        "9-12": 1775,
+        "13-16": 989,
+        "17-24": 219,
+        "25+": 0
+      },
+      "CUPP": {
+        "1-6": 823,
+        "7-8": 5544,
+        "9-12": 15937,
+        "13-16": 0,
+        "17-24": 0,
+        "25+": 0
+      },
+      "bopscrk": {
+        "1-6": 163,
+        "7-8": 78,
+        "9-12": 5467,
+        "13-16": 8498,
+        "17-24": 0,
+        "25+": 0
       }
     }
   },
@@ -239,12 +435,20 @@
     "results": {
       "CCUPP": {
         "count": 2076,
-        "duration_seconds": 0.0007596015930175781,
+        "duration_seconds": 0.0010881423950195312,
+        "pwd_per_s": 1907838.541630149,
         "error": null
       },
       "CUPP": {
         "count": 9546,
-        "duration_seconds": 0.0214383602142334,
+        "duration_seconds": 0.03811812400817871,
+        "pwd_per_s": 250432.05163905202,
+        "error": null
+      },
+      "bopscrk": {
+        "count": 672,
+        "duration_seconds": 0.9600348472595215,
+        "pwd_per_s": 699.9745914622425,
         "error": null
       }
     },
@@ -274,6 +478,14 @@
           "hit_rate": 0.0,
           "hit_passwords": []
         }
+      },
+      "bopscrk": {
+        "common-passwords": {
+          "dataset_size": 122,
+          "hits": 0,
+          "hit_rate": 0.0,
+          "hit_passwords": []
+        }
       }
     },
     "pii_embedding_rate": {
@@ -290,27 +502,60 @@
         "phone": 0.0,
         "account": 0.0,
         "overall": 0.38654934003771213
+      },
+      "bopscrk": {
+        "name": 0.48660714285714285,
+        "date": 0.21875,
+        "phone": 0.0,
+        "account": 0.0,
+        "overall": 0.6488095238095238
+      }
+    },
+    "length_distribution": {
+      "CCUPP": {
+        "1-6": 326,
+        "7-8": 490,
+        "9-12": 743,
+        "13-16": 435,
+        "17-24": 82,
+        "25+": 0
+      },
+      "CUPP": {
+        "1-6": 267,
+        "7-8": 4212,
+        "9-12": 5067,
+        "13-16": 0,
+        "17-24": 0,
+        "25+": 0
+      },
+      "bopscrk": {
+        "1-6": 74,
+        "7-8": 0,
+        "9-12": 598,
+        "13-16": 0,
+        "17-24": 0,
+        "25+": 0
       }
     }
   },
   "_academic_paired": {
     "CCUPP": {
-      "paired_test": {
-        "num_targets": 30,
+      "synthetic_200": {
+        "num_targets": 200,
         "success_rates": {
           "10": 0.0,
-          "100": 0.0,
-          "1000": 0.06666666666666667,
-          "10000": 1.0
+          "100": 0.01,
+          "1000": 0.455,
+          "10000": 0.84
         },
-        "coverage": 1.0,
+        "coverage": 0.84,
         "guess_numbers": {
-          "found": 30,
-          "total": 30,
-          "min_rank": 394,
-          "max_rank": 3038,
-          "median_rank": 2566.0,
-          "mean_rank": 2450.8
+          "found": 168,
+          "total": 200,
+          "min_rank": 24,
+          "max_rank": 5993,
+          "median_rank": 686.0,
+          "mean_rank": 1774.720238095238
         },
         "guess_curve": [
           [
@@ -343,39 +588,55 @@
           ],
           [
             200,
-            0.0
+            0.005263157894736842
           ],
           [
             500,
-            0.0
+            0.005263157894736842
           ],
           [
             1000,
-            0.0
+            0.005263157894736842
           ],
           [
             2000,
-            0.0
+            0.005263157894736842
           ],
           [
             5000,
-            0.03333333333333333
+            0.010526315789473684
           ],
           [
-            5188,
-            0.03333333333333333
+            6471,
+            0.02631578947368421
           ]
         ]
       }
     },
     "CUPP": {
-      "paired_test": {
-        "num_targets": 30,
+      "synthetic_200": {
+        "num_targets": 200,
         "success_rates": {},
-        "coverage": 0.6,
+        "coverage": 0.225,
         "guess_numbers": {
           "found": 0,
-          "total": 30,
+          "total": 200,
+          "min_rank": 0,
+          "max_rank": 0,
+          "median_rank": 0,
+          "mean_rank": 0
+        },
+        "guess_curve": []
+      }
+    },
+    "bopscrk": {
+      "synthetic_200": {
+        "num_targets": 200,
+        "success_rates": {},
+        "coverage": 0.115,
+        "guess_numbers": {
+          "found": 0,
+          "total": 200,
           "min_rank": 0,
           "max_rank": 0,
           "median_rank": 0,
