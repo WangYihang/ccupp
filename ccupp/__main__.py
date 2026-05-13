@@ -324,6 +324,10 @@ def benchmark(
         None, '--bopscrk-path',
         help='Path to bopscrk package directory',
     ),
+    passllm_path: str = typer.Option(
+        None, '--passllm-path',
+        help='Path to PassLLM repo clone (default: PASSLLM_PATH env var)',
+    ),
     paired_datasets: list[str] = typer.Option(
         None, '--paired-dataset', '-pd',
         help='Path to PII-password paired dataset (JSONL/CSV) for academic evaluation',
@@ -368,7 +372,11 @@ def benchmark(
     from ccupp.benchmark.tools import get_available_tools
 
     # Get tools
-    tools = get_available_tools(cupp_path=cupp_path, bopscrk_path=bopscrk_path)
+    tools = get_available_tools(
+        cupp_path=cupp_path,
+        bopscrk_path=bopscrk_path,
+        passllm_path=passllm_path,
+    )
     tool_names = [t.name for t in tools]
     console.print(f'[dim]Available tools: {", ".join(tool_names)}[/dim]')
 

@@ -262,13 +262,19 @@ class BopscrkTool(BaseTool):
     def name(self) -> str:
         return 'bopscrk'
 
+    @staticmethod
+    def _resolve_executable() -> str | None:
+        """Locate the bopscrk CLI executable; pip's `python -m bopscrk` is a no-op."""
+        import shutil
+        return shutil.which('bopscrk')
+
     def is_available(self) -> bool:
-        # Check if bopscrk can be found
+        exe = self._resolve_executable()
+        if not exe:
+            return False
         try:
             result = subprocess.run(
-                ['python3', '-m', 'bopscrk', '--help'],
-                capture_output=True, text=True, timeout=10,
-                env={**__import__('os').environ, 'PYTHONPATH': str(self._bopscrk_path or '')},
+                [exe, '--version'], capture_output=True, text=True, timeout=10,
             )
             return result.returncode == 0
         except (FileNotFoundError, subprocess.TimeoutExpired):
@@ -297,24 +303,23 @@ class BopscrkTool(BaseTool):
             if not words:
                 return ToolResult(self.name, set(), 0, 0, error='No words for bopscrk')
 
+            exe = self._resolve_executable()
+            if not exe:
+                return ToolResult(self.name, set(), 0, 0, error='bopscrk not on PATH')
+
             with tempfile.NamedTemporaryFile(suffix='.txt', delete=False) as tmp:
                 tmp_path = tmp.name
 
-            env = __import__('os').environ.copy()
-            if self._bopscrk_path:
-                env['PYTHONPATH'] = str(self._bopscrk_path)
-
             cmd = [
-                'python3', '-m', 'bopscrk',
+                exe,
                 '-w', ','.join(words),
                 '-c', '-l',
                 '--min', '4', '--max', '24',
                 '-o', tmp_path,
             ]
 
-            subprocess.run(
-                cmd, capture_output=True, text=True,
-                timeout=60, env=env,
+            proc = subprocess.run(
+                cmd, capture_output=True, text=True, timeout=300,
             )
 
             passwords: set[str] = set()
@@ -328,8 +333,131 @@ class BopscrkTool(BaseTool):
                 out_path.unlink()
 
             duration = time.time() - start
-            return ToolResult(self.name, passwords, len(passwords), duration)
+            err = None if passwords else (proc.stderr or proc.stdout or 'bopscrk produced no output')
+            return ToolResult(self.name, passwords, len(passwords), duration, error=err)
 
+        except Exception as e:
+            duration = time.time() - start
+            return ToolResult(self.name, set(), 0, duration, error=str(e))
+
+
+class PassLLMTool(BaseTool):
+    """Adapter for PassLLM (USENIX Security 2025).
+
+    PassLLM is a 4B-param Qwen3 LoRA-finetuned model for targeted password
+    guessing. Inference is GPU-friendly but works on CPU at single-digit
+    candidates/second. Setup:
+        git clone https://github.com/Tzohar/PassLLM.git /opt/PassLLM
+        cd /opt/PassLLM && pip install -r requirements.txt
+        curl -L https://github.com/Tzohar/PassLLM/releases/download/v1.3.0/PassLLM-Qwen3-4B-v1.0.pth \
+            -o models/PassLLM_LoRA_Weights.pth
+
+    Then point this adapter at the repo via `passllm_path` (or env var
+    PASSLLM_PATH). The model is loaded once and cached across generate() calls.
+    """
+
+    # PassLLM's schema (see PassLLM/src/config.py:169)
+    _SCHEMA_FIELDS = (
+        'name', 'birth_year', 'birth_month', 'birth_day',
+        'username', 'email', 'address', 'phone', 'city', 'country', 'sister_pw',
+    )
+
+    def __init__(self, passllm_path: str | Path | None = None):
+        import os
+        self._passllm_path = Path(passllm_path) if passllm_path else (
+            Path(os.environ['PASSLLM_PATH']) if 'PASSLLM_PATH' in os.environ else None
+        )
+        self._model = None
+        self._tokenizer = None
+        self._predict = None  # cached reference to inference.predict_password
+
+    @property
+    def name(self) -> str:
+        return 'PassLLM'
+
+    def is_available(self) -> bool:
+        if not self._passllm_path or not self._passllm_path.exists():
+            return False
+        return (
+            (self._passllm_path / 'app.py').exists()
+            and (self._passllm_path / 'inference.py').exists()
+            and (self._passllm_path / 'models').exists()
+        )
+
+    def _load_model(self) -> None:
+        """Lazy-load model + tokenizer from PassLLM's loader (once per process)."""
+        if self._model is not None:
+            return
+        import sys
+        import torch
+        sys.path.insert(0, str(self._passllm_path))
+        try:
+            from src.loader import build_model, inject_lora_layers
+            from src.config import Config
+            from inference import predict_password
+            model, tokenizer = build_model()
+            model = inject_lora_layers(model)
+            ckpt = torch.load(Config.WEIGHTS_FILE, map_location='cpu')
+            model.load_state_dict(ckpt, strict=False)
+            model.eval()
+            self._model = model
+            self._tokenizer = tokenizer
+            self._predict = predict_password
+        finally:
+            # Don't poison sys.path beyond this load.
+            try:
+                sys.path.remove(str(self._passllm_path))
+            except ValueError:
+                pass
+
+    def _profile_to_passllm_dict(self, profile: Profile) -> dict:
+        from ccupp.transforms.pinyin import to_pinyin
+
+        first = to_pinyin(profile.first_name) if profile.first_name else ''
+        last = to_pinyin(profile.surname) if profile.surname else ''
+        full_name = (last + first).strip() or first or last
+
+        y, m, d = '', '', ''
+        if profile.birthdate and len(profile.birthdate) >= 3:
+            y, m, d = profile.birthdate[0], profile.birthdate[1], profile.birthdate[2]
+
+        out = {
+            'name': full_name,
+            'birth_year': y,
+            'birth_month': m,
+            'birth_day': d,
+            'username': profile.accounts[0] if profile.accounts else '',
+            'phone': profile.phone_numbers[0] if profile.phone_numbers else '',
+            'city': to_pinyin(profile.hometowns[0]) if profile.hometowns else '',
+        }
+        return {k: v for k, v in out.items() if v}
+
+    def generate(self, profile: Profile) -> ToolResult:
+        start = time.time()
+        try:
+            self._load_model()
+            pii = self._profile_to_passllm_dict(profile)
+            if not pii.get('name'):
+                return ToolResult(self.name, set(), 0, 0, error='PassLLM needs at least a name')
+
+            candidates = self._predict(self._model, self._tokenizer, pii)
+            # candidates is List[{'password': str, 'score': float, ...}] ranked by
+            # log-prob. Preserve ranking for SR@N.
+            ordered: list[str] = []
+            seen: set[str] = set()
+            for cand in candidates:
+                pw = cand.get('password', '')
+                if pw and pw not in seen:
+                    ordered.append(pw)
+                    seen.add(pw)
+            duration = time.time() - start
+            return ToolResult(
+                tool_name=self.name,
+                passwords=seen,
+                count=len(seen),
+                duration_seconds=duration,
+                ordered_passwords=ordered,
+            )
         except Exception as e:
             duration = time.time() - start
             return ToolResult(self.name, set(), 0, duration, error=str(e))
@@ -338,6 +466,7 @@ class BopscrkTool(BaseTool):
 def get_available_tools(
     cupp_path: str | None = None,
     bopscrk_path: str | None = None,
+    passllm_path: str | None = None,
 ) -> list[BaseTool]:
     """Get all available password generation tools."""
     tools: list[BaseTool] = [CCUPPTool()]
@@ -349,5 +478,9 @@ def get_available_tools(
     bopscrk = BopscrkTool(bopscrk_path=bopscrk_path)
     if bopscrk.is_available():
         tools.append(bopscrk)
+
+    passllm = PassLLMTool(passllm_path=passllm_path)
+    if passllm.is_available():
+        tools.append(passllm)
 
     return tools

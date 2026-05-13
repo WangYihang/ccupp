@@ -20,10 +20,7 @@ type Lang = 'en' | 'zh';
 const STORAGE_KEY = 'ccupp-lang';
 
 interface ChartMessages {
-  ds_ccupp:   string;
-  ds_cupp:    string;
-  ds_ccupp_m: string;
-  ds_cupp_m:  string;
+  measured:   string;
   y_pps:      string;
   y_count:    string;
   y_pii:      string;
@@ -32,14 +29,10 @@ interface ChartMessages {
   x_len:      string;
   y_share:    string;
   pii_labels: [string, string, string, string, string];
-  ov_labels:  [string, string, string];
 }
 
 const CHART_EN: ChartMessages = {
-  ds_ccupp:   'CCUPP',
-  ds_cupp:    'CUPP',
-  ds_ccupp_m: 'CCUPP (measured)',
-  ds_cupp_m:  'CUPP (measured)',
+  measured:   '(measured)',
   y_pps:      'passwords / second',
   y_count:    '# candidates generated',
   y_pii:      'embedding rate (%)',
@@ -48,14 +41,10 @@ const CHART_EN: ChartMessages = {
   x_len:      'length (chars)',
   y_share:    'share of output (%)',
   pii_labels: ['Name', 'Date', 'Phone', 'Account', 'Overall'],
-  ov_labels:  ['CCUPP only', 'Overlap', 'CUPP only'],
 };
 
 const CHART_ZH: ChartMessages = {
-  ds_ccupp:   'CCUPP',
-  ds_cupp:    'CUPP',
-  ds_ccupp_m: 'CCUPP（实测）',
-  ds_cupp_m:  'CUPP（实测）',
+  measured:   '（实测）',
   y_pps:      '候选 / 秒',
   y_count:    '候选总数',
   y_pii:      '嵌入率（%）',
@@ -64,7 +53,6 @@ const CHART_ZH: ChartMessages = {
   x_len:      '长度（字符）',
   y_share:    '输出占比（%）',
   pii_labels: ['姓名', '日期', '电话', '账号', '整体'],
-  ov_labels:  ['仅 CCUPP', '重叠', '仅 CUPP'],
 };
 
 function snapshotOriginals(): void {
@@ -87,42 +75,52 @@ function applyDom(lang: Lang): void {
   });
 }
 
+/** Strip any " (measured)"/"（实测）" suffix so we can re-attach in the target lang. */
+function stripMeasured(label: string): string {
+  return label.replace(/\s*\((measured|实测)\)\s*$/u, '')
+              .replace(/\s*（(measured|实测)）\s*$/u, '');
+}
+
 function applyCharts(lang: Lang, charts: Charts): void {
   const t = lang === 'zh' ? CHART_ZH : CHART_EN;
 
+  const relabelMeasured = (chart: any) => {
+    for (const ds of chart.data.datasets) {
+      // Tool names (CCUPP / CUPP / bopscrk / PassLLM) are language-neutral; only
+      // the " (measured)" suffix translates. SR-chart academic-baseline datasets
+      // ("TarGuess-III · CCS 2016") have no suffix and pass through unchanged.
+      const bare = stripMeasured(ds.label ?? '');
+      // Heuristic: a dataset is "measured" when the bare label is a known tool
+      // (no venue dot). Academic baselines all contain " · " for the venue.
+      const isMeasured = !bare.includes('·');
+      ds.label = isMeasured ? `${bare} ${t.measured}` : bare;
+    }
+  };
+
   if (charts.speed) {
-    charts.speed.data.datasets[0].label = t.ds_ccupp;
-    charts.speed.data.datasets[1].label = t.ds_cupp;
     charts.speed.options.scales.y.title.text = t.y_pps;
     charts.speed.update();
   }
   if (charts.count) {
-    charts.count.data.datasets[0].label = t.ds_ccupp;
-    charts.count.data.datasets[1].label = t.ds_cupp;
     charts.count.options.scales.y.title.text = t.y_count;
     charts.count.update();
   }
   if (charts.pii) {
-    charts.pii.data.datasets[0].label = t.ds_ccupp;
-    charts.pii.data.datasets[1].label = t.ds_cupp;
     charts.pii.data.labels = t.pii_labels;
     charts.pii.options.scales.y.title.text = t.y_pii;
     charts.pii.update();
   }
   if (charts.sr) {
-    charts.sr.data.datasets[0].label = t.ds_ccupp_m;
-    charts.sr.data.datasets[1].label = t.ds_cupp_m;
+    relabelMeasured(charts.sr);
     charts.sr.options.scales.x.title.text = t.x_n;
     charts.sr.options.scales.y.title.text = t.y_sr;
     charts.sr.update();
   }
   if (charts.overlap) {
-    charts.overlap.data.labels = t.ov_labels;
+    // Overlap labels are tool names; keep as-is.
     charts.overlap.update();
   }
   if (charts.length) {
-    charts.length.data.datasets[0].label = t.ds_ccupp;
-    charts.length.data.datasets[1].label = t.ds_cupp;
     charts.length.options.scales.x.title.text = t.x_len;
     charts.length.options.scales.y.title.text = t.y_share;
     charts.length.update();

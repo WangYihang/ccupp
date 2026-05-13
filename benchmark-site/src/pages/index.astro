@@ -5,53 +5,65 @@ import Caption   from '../components/Caption.astro';
 import Figure    from '../components/Figure.astro';
 import KeyStrip  from '../components/KeyStrip.astro';
 
+import { references } from '../data/benchmark';
 import {
-  generation,
-  piiEmbedding,
-  successRate,
-  rankStats,
-  lengthDist,
-  references,
-  type ProfileGen,
-  type ProfilePii,
-} from '../data/benchmark';
+  PROFILE_ORDER,
+  getMeasuredTools,
+  getGenerationStats,
+  getPiiEmbedding,
+  getSuccessRates,
+  getRankStats,
+  getLengthDist,
+} from '../data/loader';
+import type { GenRow, PiiRow, LengthRow } from '../data/benchmark';
 import { EN } from '../data/i18n';
 
 const fmt  = (n: number): string => n.toLocaleString('en-US');
 const pct  = (n: number): string => `${n.toFixed(1)}%`;
 const opt  = (n: number | null, render: (x: number) => string): string => (n === null ? '—' : render(n));
 
-/* "Per-column maximum" helpers used to mark the .best cell. */
-const argmaxPair = (a: number, b: number): 0 | 1 => (a >= b ? 0 : 1);
-const argmaxArr  = <T,>(xs: T[], key: (x: T) => number | null): number => {
+const measuredTools = getMeasuredTools();
+
+// Per-profile data assembled once for the render.
+const PII_PROFILES = ['zh_full', 'zh_minimal', 'zh_medium'] as const;
+const generation   = PROFILE_ORDER.map((p) => ({ profile: p, rows: getGenerationStats(p) }));
+const piiEmbedding = PII_PROFILES.map((p) => ({ profile: p, rows: getPiiEmbedding(p) }));
+const successRate  = getSuccessRates();
+const rankStats    = getRankStats();
+const lengthDist   = getLengthDist('zh_full');
+
+const argmaxRows = <R,>(rows: R[], key: (r: R) => number | null): number => {
   let best = -Infinity, idx = -1;
-  xs.forEach((x, i) => {
-    const v = key(x);
+  rows.forEach((r, i) => {
+    const v = key(r);
     if (v !== null && v > best) { best = v; idx = i; }
   });
   return idx;
 };
 
-/* Table 2 (PII): per-profile, per-PII-category argmax over the pair. */
-const piiBest = (p: ProfilePii) => {
-  const [a, b] = p.rows;
-  return {
-    name:    argmaxPair(a.name,    b.name),
-    date:    argmaxPair(a.date,    b.date),
-    phone:   argmaxPair(a.phone,   b.phone),
-    account: argmaxPair(a.account, b.account),
-    overall: argmaxPair(a.overall, b.overall),
-  };
-};
+const genBest = (rows: GenRow[])         => argmaxRows(rows, (r) => r.pwd_per_s);
+const piiBest = (rows: PiiRow[], field: keyof PiiRow) => argmaxRows(rows, (r) => r[field] as number);
+const lenBest = (row: LengthRow)         => argmaxRows(measuredTools, (t) => row.counts[t] ?? 0);
 
-/* Table 1: only pwd_per_s is "good direction"; CCUPP wins every row. */
-const genBest = (p: ProfileGen) => argmaxPair(p.rows[0].pwd_per_s, p.rows[1].pwd_per_s);
+const sr10Best  = argmaxRows(successRate, (r) => r.sr10);
+const sr100Best = argmaxRows(successRate, (r) => r.sr100);
+const sr1kBest  = argmaxRows(successRate, (r) => r.sr1k);
+const sr10kBest = argmaxRows(successRate, (r) => r.sr10k);
 
-/* Table 3: per-column maxima across all methods. */
-const sr10Best  = argmaxArr(successRate, (r) => r.sr10);
-const sr100Best = argmaxArr(successRate, (r) => r.sr100);
-const sr1kBest  = argmaxArr(successRate, (r) => r.sr1k);
-const sr10kBest = argmaxArr(successRate, (r) => r.sr10k);
+const rankBestFound    = argmaxRows(rankStats, (r) => r.found);
+const rankBestCoverage = argmaxRows(rankStats, (r) => r.coverage);
+
+// Hero stats: pulled from CCUPP's measured numbers in JSON.
+const ccuppSr = successRate.find((r) => r.method === 'CCUPP');
+const ccuppRank = rankStats.find((r) => r.tool === 'CCUPP');
+const ccuppZhFull = generation[0]?.rows.find((r) => r.tool === 'CCUPP');
+const cuppZhFull  = generation[0]?.rows.find((r) => r.tool === 'CUPP');
+const heroSr1k    = ccuppSr?.sr1k ?? 45.5;
+const heroCov     = ccuppRank?.coverage ?? 84.0;
+const heroSpeed   = ccuppZhFull ? (ccuppZhFull.pwd_per_s / 1_000_000) : 2.2;
+const heroVsCupp  = ccuppZhFull && cuppZhFull && cuppZhFull.pwd_per_s
+  ? ccuppZhFull.pwd_per_s / cuppZhFull.pwd_per_s
+  : 9;
 ---
 
 <Layout title="CCUPP — Benchmark Evaluation Report">
@@ -68,10 +80,10 @@ const sr10kBest = argmaxArr(successRate, (r) => r.sr10k);
   <Section n={1} k="s1" title={EN.s1} />
 
   <KeyStrip cells={[
-    { value: '45.5', unit: '%',    labelKey: 'ks_sr',  label: EN.ks_sr  },
-    { value: '84.0', unit: '%',    labelKey: 'ks_cov', label: EN.ks_cov },
-    { value: '2.4',  unit: ' M/s', labelKey: 'ks_gen', label: EN.ks_gen },
-    { value: '9',    unit: '×',    labelKey: 'ks_vs',  label: EN.ks_vs  },
+    { value: heroSr1k.toFixed(1),   unit: '%',    labelKey: 'ks_sr',  label: EN.ks_sr  },
+    { value: heroCov.toFixed(1),    unit: '%',    labelKey: 'ks_cov', label: EN.ks_cov },
+    { value: heroSpeed.toFixed(1),  unit: ' M/s', labelKey: 'ks_gen', label: EN.ks_gen },
+    { value: heroVsCupp.toFixed(0), unit: '×',    labelKey: 'ks_vs',  label: EN.ks_vs  },
   ]} />
 
   <Section n={2} k="s2" title={EN.s2} />
@@ -92,10 +104,10 @@ const sr10kBest = argmaxArr(successRate, (r) => r.sr10k);
       </thead>
       <tbody>
         {generation.map((p) => {
-          const winner = genBest(p);
+          const winner = genBest(p.rows);
           return p.rows.map((r, i) => (
             <tr class={i === 0 ? 'group-start' : ''}>
-              {i === 0 && <td rowspan="2" class="label-col">{p.profile}</td>}
+              {i === 0 && <td rowspan={p.rows.length} class="label-col">{p.profile}</td>}
               <td><span class={`tool-tag${r.tool === 'CCUPP' ? ' ours' : ''}`}>{r.tool}</span></td>
               <td class="num">{fmt(r.passwords)}</td>
               <td class="num">{r.time_s.toFixed(3)}</td>
@@ -132,16 +144,20 @@ const sr10kBest = argmaxArr(successRate, (r) => r.sr10k);
       </thead>
       <tbody>
         {piiEmbedding.map((p) => {
-          const b = piiBest(p);
+          const bName    = piiBest(p.rows, 'name');
+          const bDate    = piiBest(p.rows, 'date');
+          const bPhone   = piiBest(p.rows, 'phone');
+          const bAccount = piiBest(p.rows, 'account');
+          const bOverall = piiBest(p.rows, 'overall');
           return p.rows.map((r, i) => (
             <tr class={i === 0 ? 'group-start' : ''}>
-              {i === 0 && <td rowspan="2" class="label-col">{p.profile}</td>}
+              {i === 0 && <td rowspan={p.rows.length} class="label-col">{p.profile}</td>}
               <td><span class={`tool-tag${r.tool === 'CCUPP' ? ' ours' : ''}`}>{r.tool}</span></td>
-              <td class={`num${b.name    === i ? ' best' : ''}`}>{pct(r.name)}</td>
-              <td class={`num${b.date    === i ? ' best' : ''}`}>{pct(r.date)}</td>
-              <td class={`num${b.phone   === i ? ' best' : ''}`}>{pct(r.phone)}</td>
-              <td class={`num${b.account === i ? ' best' : ''}`}>{pct(r.account)}</td>
-              <td class={`num${b.overall === i ? ' best' : ''}`}>{pct(r.overall)}</td>
+              <td class={`num${bName    === i ? ' best' : ''}`}>{pct(r.name)}</td>
+              <td class={`num${bDate    === i ? ' best' : ''}`}>{pct(r.date)}</td>
+              <td class={`num${bPhone   === i ? ' best' : ''}`}>{pct(r.phone)}</td>
+              <td class={`num${bAccount === i ? ' best' : ''}`}>{pct(r.account)}</td>
+              <td class={`num${bOverall === i ? ' best' : ''}`}>{pct(r.overall)}</td>
             </tr>
           ));
         })}
@@ -209,12 +225,12 @@ const sr10kBest = argmaxArr(successRate, (r) => r.sr10k);
         </tr>
       </thead>
       <tbody>
-        {rankStats.map((r) => (
+        {rankStats.map((r, i) => (
           <tr class={r.tool === 'CCUPP' ? 'row-mine' : ''}>
             <td><span class={`tool-tag${r.tool === 'CCUPP' ? ' ours' : ''}`}>{r.tool}</span></td>
-            <td class={`num${r.tool === 'CCUPP' ? ' best' : ''}`}>{fmt(r.found)}</td>
+            <td class={`num${rankBestFound    === i ? ' best' : ''}`}>{fmt(r.found)}</td>
             <td class="num">{fmt(r.missed)}</td>
-            <td class={`num${r.tool === 'CCUPP' ? ' best' : ''}`}>{pct(r.coverage)}</td>
+            <td class={`num${rankBestCoverage === i ? ' best' : ''}`}>{pct(r.coverage)}</td>
             <td class={`num${r.min    === null ? ' dim' : ''}`}>{opt(r.min,    fmt)}</td>
             <td class={`num${r.median === null ? ' dim' : ''}`}>{opt(r.median, fmt)}</td>
             <td class={`num${r.mean   === null ? ' dim' : ''}`}>{opt(r.mean,   fmt)}</td>
@@ -233,22 +249,29 @@ const sr10kBest = argmaxArr(successRate, (r) => r.sr10k);
       <thead>
         <tr>
           <th data-i18n="th_length">{EN.th_length}</th>
-          <th class="num">CCUPP</th>
-          <th class="num" data-i18n-html="th_ccupp_pct" set:html={EN.th_ccupp_pct}></th>
-          <th class="num">CUPP</th>
-          <th class="num" data-i18n-html="th_cupp_pct" set:html={EN.th_cupp_pct}></th>
+          {measuredTools.map((t) => (
+            <Fragment>
+              <th class="num">{t}</th>
+              <th class="num" data-i18n-html={`th_${t.toLowerCase()}_pct`}>{t} %</th>
+            </Fragment>
+          ))}
         </tr>
       </thead>
       <tbody>
-        {lengthDist.map((r) => (
-          <tr>
-            <td>{r.bin}</td>
-            <td class="num">{fmt(r.ccupp)}</td>
-            <td class="num">{r.ccuppPct}%</td>
-            <td class="num">{fmt(r.cupp)}</td>
-            <td class="num">{r.cuppPct}%</td>
-          </tr>
-        ))}
+        {lengthDist.map((r) => {
+          const winner = lenBest(r);
+          return (
+            <tr>
+              <td>{r.bin}</td>
+              {measuredTools.map((t, i) => (
+                <Fragment>
+                  <td class={`num${i === winner ? ' best' : ''}`}>{fmt(r.counts[t] ?? 0)}</td>
+                  <td class="num">{(r.pcts[t] ?? 0).toFixed(0)}%</td>
+                </Fragment>
+              ))}
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   </div>
