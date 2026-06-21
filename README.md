@@ -99,6 +99,77 @@ ccupp generate -f json -o passwords.json
 ccupp generate --no-leetspeak --no-cultural --no-keyboard
 ```
 
+## 作为 SDK / Python 库使用
+
+除了命令行，CCUPP 也可以作为库在你自己的代码里调用。核心 API 都从顶层 `ccupp` 包直接导出。
+
+### 一步到位：`generate_passwords`
+
+```python
+from ccupp import Profile, generate_passwords
+
+profile = Profile(
+    surname='李',
+    first_name='二狗',
+    birthdate=['1983', '09', '24'],
+    phone_numbers=['13512345678'],
+    passwords=['old_password'],
+)
+
+# 返回一个惰性迭代器，按可能性从高到低排序、自动去重
+for pw in generate_passwords(profile, min_length=6, max_length=16):
+    print(pw)
+```
+
+`generate_passwords` 的常用参数：
+
+| 参数 | 说明 | 默认 |
+|------|------|------|
+| `min_length` / `max_length` | 长度过滤（0 表示不限制） | `0` |
+| `enable_leetspeak` | Leetspeak 变换（a→@、e→3…） | `True` |
+| `enable_case_variants` | 大小写变换 | `True` |
+| `enable_cultural_numbers` | 文化数字组合（520、1314…） | `True` |
+| `enable_keyboard_patterns` | 键盘模式组合 | `True` |
+| `suffixes` / `prefixes` / `delimiters` | 覆盖默认的后缀/前缀/分隔符规则 | 内置默认值 |
+
+第一个参数也可以传入「多个 Profile」，会跨用户统一去重：
+
+```python
+from ccupp import load_profiles, generate_passwords
+
+profiles = load_profiles('config.yaml')          # 从 YAML 加载多个用户
+passwords = list(generate_passwords(profiles))    # 跨用户去重
+```
+
+### 精细控制：底层组件
+
+如果需要在「提取组件」和「生成」之间插入自定义逻辑，可以分两步调用：
+
+```python
+from ccupp import Profile, extract_components, PasswordGenerator
+
+profile = Profile(surname='李', first_name='二狗', passwords=['old_password'])
+
+components = extract_components(profile)   # Profile → {类别: [候选值, ...]}
+generator = PasswordGenerator(
+    components,
+    enable_keyboard_patterns=False,
+    suffixes=['', '123', '!'],            # 自定义后缀规则
+)
+for pw in generator.generate():
+    ...
+```
+
+### 公开 API 一览
+
+| 名称 | 说明 |
+|------|------|
+| `Profile` | 用户信息数据模型（Pydantic） |
+| `load_profiles(path)` | 从 YAML 文件加载 `list[Profile]` |
+| `extract_components(profile)` | 从 Profile 提取密码组件 |
+| `PasswordGenerator` | 底层规则生成引擎 |
+| `generate_passwords(profile, **options)` | 一步到位的高层封装（推荐） |
+
 ## 配置说明
 
 | 字段 | 类型 | 说明 | 示例 |
@@ -134,6 +205,7 @@ ccupp generate --no-leetspeak --no-cultural --no-keyboard
 ccupp/
 ├── ccupp/
 │   ├── __main__.py          # CLI 入口 (Typer)
+│   ├── api.py               # SDK 高层 API (generate_passwords)
 │   ├── models.py            # Profile 数据模型 (Pydantic)
 │   ├── config.py            # YAML 配置加载
 │   ├── generator.py         # 基于规则的密码生成引擎
