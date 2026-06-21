@@ -1,6 +1,7 @@
 """Extract password components from a user Profile."""
 from __future__ import annotations
 
+from collections.abc import Iterable
 from collections.abc import Iterator
 from typing import TYPE_CHECKING
 
@@ -52,7 +53,7 @@ def extract_components(profile: Profile) -> dict[str, list[str]]:
     components: dict[str, list[str]] = {}
 
     # Name components (pinyin)
-    name_parts = []
+    name_parts: list[str] = []
     if profile.surname:
         name_parts.extend(pinyin_variants(profile.surname))
     if profile.first_name:
@@ -129,9 +130,9 @@ def extract_components(profile: Profile) -> dict[str, list[str]]:
     return components
 
 
-def _dedup(items) -> list[str]:
+def _dedup(items: Iterable[str]) -> list[str]:
     """Deduplicate while preserving order."""
-    seen = set()
+    seen: set[str] = set()
     result = []
     for item in items:
         if item not in seen:

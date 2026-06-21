@@ -1,4 +1,6 @@
 """Data models for user profile information."""
+from typing import Any
+
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
@@ -29,7 +31,7 @@ class Profile(BaseModel):
 
     @model_validator(mode='before')
     @classmethod
-    def normalize_nested_lists(cls, data: dict) -> dict:
+    def normalize_nested_lists(cls, data: Any) -> Any:
         """Convert tuples/nested structures to consistent list[list[str]] format."""
         if not isinstance(data, dict):
             return data

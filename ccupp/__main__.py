@@ -4,6 +4,7 @@ import sys
 from collections import Counter
 from importlib import resources
 from pathlib import Path
+from typing import Any
 
 import structlog
 import typer
@@ -194,7 +195,7 @@ def _length_bucket(length: int) -> str:
         return '17+'
 
 
-def _print_stats(total: int, length_counter: Counter) -> None:
+def _print_stats(total: int, length_counter: Counter[str]) -> None:
     """Print generation statistics."""
     console.print()
     table = Table(title='Generation Statistics')
@@ -263,7 +264,7 @@ def interactive() -> None:
     """Interactively build a configuration file by answering questions."""
     console.print('[bold cyan]CCUPP Interactive Profile Builder[/bold cyan]\n')
 
-    data: dict = {}
+    data: dict[str, Any] = {}
     data['surname'] = typer.prompt('Surname (姓氏)', default='')
     data['first_name'] = typer.prompt('First name (名字)', default='')
 
@@ -293,7 +294,7 @@ def interactive() -> None:
     path = Path(output_path)
 
     # Merge with existing if present
-    existing = []
+    existing: list[Any] = []
     if path.exists():
         with open(path, encoding='utf-8') as f:
             existing = yaml.safe_load(f) or []

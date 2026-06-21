@@ -5,6 +5,7 @@ import json
 from dataclasses import dataclass
 from dataclasses import field
 from pathlib import Path
+from typing import Any
 
 from rich.console import Console
 from rich.table import Table
@@ -436,7 +437,7 @@ class BenchmarkRunner:
 
     def export_json(self, report: BenchmarkReport, path: str | Path) -> None:
         """Export benchmark report as JSON."""
-        data: dict = {}
+        data: dict[str, Any] = {}
 
         for profile_name, pb in report.profiles.items():
             data[profile_name] = {

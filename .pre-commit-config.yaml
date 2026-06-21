@@ -49,10 +49,16 @@ repos:
     rev: v1.17.1
     hooks:
     -   id: mypy
+        files: ^ccupp/
         additional_dependencies:
             - types-pyyaml
             - types-requests
             - pandas-stubs
+            - pydantic>=2.0
+            - pypinyin>=0.55.0
+            - typer>=0.20.0
+            - rich>=14.2.0
+            - structlog>=25.5.0
         exclude: ^testing/resources/
 -   repo: https://github.com/citation-file-format/cffconvert
     rev: 054bda51dbe278b3e86f27c890e3f3ac877d616c

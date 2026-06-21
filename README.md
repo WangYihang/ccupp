@@ -170,6 +170,8 @@ for pw in generator.generate():
 | `PasswordGenerator` | 底层规则生成引擎 |
 | `generate_passwords(profile, **options)` | 一步到位的高层封装（推荐） |
 
+> CCUPP 是**完整类型标注**的库：包内携带 [PEP 561](https://peps.python.org/pep-0561/) `py.typed` 标记，整个包通过 `mypy --strict`，下游用户在自己的项目里能直接享受到类型检查与编辑器补全。
+
 ## 配置说明
 
 | 字段 | 类型 | 说明 | 示例 |

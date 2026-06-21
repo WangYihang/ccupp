@@ -10,11 +10,13 @@ import tempfile
 import time
 from abc import ABC
 from abc import abstractmethod
+from collections.abc import Iterable
 from collections.abc import Iterator
 from dataclasses import dataclass
 from dataclasses import field
 from pathlib import Path
 from typing import TYPE_CHECKING
+from typing import Any
 
 if TYPE_CHECKING:
     from ccupp.models import Profile
@@ -113,7 +115,7 @@ class CUPPTool(BaseTool):
         except (FileNotFoundError, subprocess.TimeoutExpired):
             return False
 
-    def _profile_to_cupp_profile(self, profile: Profile) -> dict:
+    def _profile_to_cupp_profile(self, profile: Profile) -> dict[str, Any]:
         """Convert our Profile to CUPP's profile dict format."""
         from ccupp.transforms.pinyin import to_pinyin
 
@@ -197,7 +199,9 @@ class CUPPTool(BaseTool):
 
         # Load cupp module
         spec = importlib.util.spec_from_file_location('cupp_bench', str(cupp_py))
-        cupp_module = importlib.util.module_from_spec(spec)
+        if spec is None or spec.loader is None:
+            raise ImportError(f'Could not load CUPP module from {cupp_py}')
+        cupp_module: Any = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(cupp_module)
 
         cfg_path = cupp_py.parent / 'cupp.cfg'
@@ -207,7 +211,7 @@ class CUPPTool(BaseTool):
         passwords: set[str] = set()
         orig_print_to_file = cupp_module.print_to_file
 
-        def patched_print_to_file(filename, unique_list_finished):
+        def patched_print_to_file(filename: str, unique_list_finished: Iterable[str]) -> None:
             """Write to file without interactive prompts."""
             with open(filename, 'w') as f:
                 f.write(os.linesep.join(sorted(unique_list_finished)))
@@ -367,9 +371,9 @@ class PassLLMTool(BaseTool):
         self._passllm_path = Path(passllm_path) if passllm_path else (
             Path(os.environ['PASSLLM_PATH']) if 'PASSLLM_PATH' in os.environ else None
         )
-        self._model = None
-        self._tokenizer = None
-        self._predict = None  # cached reference to inference.predict_password
+        self._model: Any = None
+        self._tokenizer: Any = None
+        self._predict: Any = None  # cached reference to inference.predict_password
 
     @property
     def name(self) -> str:
@@ -410,7 +414,7 @@ class PassLLMTool(BaseTool):
             except ValueError:
                 pass
 
-    def _profile_to_passllm_dict(self, profile: Profile) -> dict:
+    def _profile_to_passllm_dict(self, profile: Profile) -> dict[str, str]:
         from ccupp.transforms.pinyin import to_pinyin
 
         first = to_pinyin(profile.first_name) if profile.first_name else ''

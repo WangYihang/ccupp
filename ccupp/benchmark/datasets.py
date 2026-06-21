@@ -13,6 +13,7 @@ import gzip
 import json
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 from ccupp.models import Profile
 
@@ -73,11 +74,9 @@ def load_password_set(path: str | Path) -> set[str]:
         raise FileNotFoundError(f'Password list not found: {path}')
 
     passwords: set[str] = set()
-    open_fn = gzip.open if path.suffix == '.gz' else open
-    encoding_kw = {'encoding': 'utf-8', 'errors': 'ignore'}
 
     if path.suffix == '.gz':
-        with gzip.open(path, 'rt', **encoding_kw) as f:
+        with gzip.open(path, 'rt', encoding='utf-8', errors='ignore') as f:
             for line in f:
                 pw = line.strip()
                 if pw:
@@ -160,7 +159,7 @@ def _load_paired_csv(path: Path) -> list[PairedRecord]:
             if not target:
                 continue
             # Convert CSV string fields to expected types
-            data: dict = {}
+            data: dict[str, Any] = {}
             for key, value in row.items():
                 if not value:
                     continue
