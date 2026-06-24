@@ -150,3 +150,9 @@ benchmark-site/dist/
 # Root-level npm artifacts (from npx)
 /package.json
 /package-lock.json
+
+# Local PassLLM checkout (model weights)
+PassLLM/
+
+# Local model weights / checkpoints
+models/

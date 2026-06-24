@@ -1,649 +1,1667 @@
 {
-  "zh_full": {
-    "results": {
-      "CCUPP": {
-        "count": 12335,
-        "duration_seconds": 0.01157832145690918,
-        "pwd_per_s": 1065353.0432633897,
-        "error": null
-      },
-      "CUPP": {
-        "count": 28527,
-        "duration_seconds": 0.12215280532836914,
-        "pwd_per_s": 233535.36517900013,
-        "error": null
-      },
-      "bopscrk": {
-        "count": 19675,
-        "duration_seconds": 1.1368649005889893,
-        "pwd_per_s": 17306.36594533505,
-        "error": null
-      }
-    },
-    "dataset_evals": {
-      "CCUPP": {
-        "common-passwords": {
-          "dataset_size": 122,
-          "hits": 10,
-          "hit_rate": 0.08196721311475409,
-          "hit_passwords": [
-            "1q2w3e4r",
-            "1qaz2wsx",
-            "987654321",
-            "asd123",
-            "asdfgh",
-            "qazwsx",
-            "qwe123",
-            "qwerty",
-            "qwertyuiop",
-            "zxcvbn"
-          ]
-        }
-      },
-      "CUPP": {
-        "common-passwords": {
-          "dataset_size": 122,
-          "hits": 0,
-          "hit_rate": 0.0,
-          "hit_passwords": []
-        }
-      },
-      "bopscrk": {
-        "common-passwords": {
-          "dataset_size": 122,
-          "hits": 0,
-          "hit_rate": 0.0,
-          "hit_passwords": []
-        }
-      }
-    },
-    "pii_embedding_rate": {
-      "CCUPP": {
-        "name": 0.22423996757194975,
-        "date": 0.20802594244021078,
-        "phone": 0.08925820835022294,
-        "account": 0.05139845966761249,
-        "overall": 0.48244831779489256
-      },
-      "CUPP": {
-        "name": 0.2709713604655239,
-        "date": 0.04571108073053598,
-        "phone": 0.0,
-        "account": 0.0733340344235286,
-        "overall": 0.331825989413538
-      },
-      "bopscrk": {
-        "name": 0.10332909783989835,
-        "date": 0.03888182973316391,
-        "phone": 0.0,
-        "account": 0.055756035578144854,
-        "overall": 0.19176620076238882
-      }
-    },
-    "length_distribution": {
-      "CCUPP": {
-        "1-6": 2407,
-        "7-8": 2080,
-        "9-12": 4388,
-        "13-16": 2268,
-        "17-24": 1044,
-        "25+": 148
-      },
-      "CUPP": {
-        "1-6": 478,
-        "7-8": 4518,
-        "9-12": 23531,
-        "13-16": 0,
-        "17-24": 0,
-        "25+": 0
-      },
-      "bopscrk": {
-        "1-6": 64,
-        "7-8": 592,
-        "9-12": 5747,
-        "13-16": 13272,
-        "17-24": 0,
-        "25+": 0
-      }
-    }
-  },
-  "zh_minimal": {
-    "results": {
-      "CCUPP": {
-        "count": 4244,
-        "duration_seconds": 0.0023415088653564453,
-        "pwd_per_s": 1812506.4836574686,
-        "error": null
-      },
-      "CUPP": {
-        "count": 5230,
-        "duration_seconds": 0.03598380088806152,
-        "pwd_per_s": 145343.1786227779,
-        "error": null
-      },
-      "bopscrk": {
-        "count": 1576,
-        "duration_seconds": 0.8963172435760498,
-        "pwd_per_s": 1758.3060141878004,
-        "error": null
-      }
-    },
-    "dataset_evals": {
-      "CCUPP": {
-        "common-passwords": {
-          "dataset_size": 122,
-          "hits": 11,
-          "hit_rate": 0.09016393442622951,
-          "hit_passwords": [
-            "1111",
-            "111111",
-            "1q2w3e4r",
-            "1qaz2wsx",
-            "asd123",
-            "asdfgh",
-            "qazwsx",
-            "qwe123",
-            "qwerty",
-            "qwertyuiop",
-            "zxcvbn"
-          ]
-        }
-      },
-      "CUPP": {
-        "common-passwords": {
-          "dataset_size": 122,
-          "hits": 0,
-          "hit_rate": 0.0,
-          "hit_passwords": []
-        }
-      },
-      "bopscrk": {
-        "common-passwords": {
-          "dataset_size": 122,
-          "hits": 0,
-          "hit_rate": 0.0,
-          "hit_passwords": []
-        }
-      }
-    },
-    "pii_embedding_rate": {
-      "CCUPP": {
-        "name": 0.4637134778510839,
-        "date": 0.3360037700282752,
-        "phone": 0.1449104618284637,
-        "account": 0.0,
-        "overall": 0.7368049010367578
-      },
-      "CUPP": {
-        "name": 0.38279158699808796,
-        "date": 0.048948374760994263,
-        "phone": 0.0,
-        "account": 0.0,
-        "overall": 0.4164435946462715
-      },
-      "bopscrk": {
-        "name": 0.3889593908629442,
-        "date": 0.25317258883248733,
-        "phone": 0.0,
-        "account": 0.0,
-        "overall": 0.6129441624365483
-      }
-    },
-    "length_distribution": {
-      "CCUPP": {
-        "1-6": 829,
-        "7-8": 788,
-        "9-12": 1161,
-        "13-16": 903,
-        "17-24": 563,
-        "25+": 0
-      },
-      "CUPP": {
-        "1-6": 537,
-        "7-8": 1189,
-        "9-12": 3504,
-        "13-16": 0,
-        "17-24": 0,
-        "25+": 0
-      },
-      "bopscrk": {
-        "1-6": 16,
-        "7-8": 214,
-        "9-12": 1346,
-        "13-16": 0,
-        "17-24": 0,
-        "25+": 0
-      }
-    }
-  },
-  "zh_medium": {
-    "results": {
-      "CCUPP": {
-        "count": 9007,
-        "duration_seconds": 0.005440473556518555,
-        "pwd_per_s": 1655554.4120250668,
-        "error": null
-      },
-      "CUPP": {
-        "count": 18594,
-        "duration_seconds": 0.07043170928955078,
-        "pwd_per_s": 264000.40816215996,
-        "error": null
-      },
-      "bopscrk": {
-        "count": 25157,
-        "duration_seconds": 2.12404465675354,
-        "pwd_per_s": 11843.912942231069,
-        "error": null
-      }
-    },
-    "dataset_evals": {
-      "CCUPP": {
-        "common-passwords": {
-          "dataset_size": 122,
-          "hits": 9,
-          "hit_rate": 0.07377049180327869,
-          "hit_passwords": [
-            "1q2w3e4r",
-            "1qaz2wsx",
-            "asd123",
-            "asdfgh",
-            "qazwsx",
-            "qwe123",
-            "qwerty",
-            "qwertyuiop",
-            "zxcvbn"
-          ]
-        }
-      },
-      "CUPP": {
-        "common-passwords": {
-          "dataset_size": 122,
-          "hits": 0,
-          "hit_rate": 0.0,
-          "hit_passwords": []
-        }
-      },
-      "bopscrk": {
-        "common-passwords": {
-          "dataset_size": 122,
-          "hits": 0,
-          "hit_rate": 0.0,
-          "hit_passwords": []
-        }
-      }
-    },
-    "pii_embedding_rate": {
-      "CCUPP": {
-        "name": 0.3490618407904963,
-        "date": 0.24869545908737647,
-        "phone": 0.13545020539580327,
-        "account": 0.058843122016209615,
-        "overall": 0.600199844565338
-      },
-      "CUPP": {
-        "name": 0.30396902226524686,
-        "date": 0.05227492739593417,
-        "phone": 0.0,
-        "account": 0.0020436700010756158,
-        "overall": 0.34376680649671937
-      },
-      "bopscrk": {
-        "name": 0.35067774376912986,
-        "date": 0.03676909011408355,
-        "phone": 0.0,
-        "account": 0.0556505147672616,
-        "overall": 0.3810072743172874
-      }
-    },
-    "length_distribution": {
-      "CCUPP": {
-        "1-6": 1898,
-        "7-8": 1730,
-        "9-12": 2634,
-        "13-16": 1770,
-        "17-24": 877,
-        "25+": 98
-      },
-      "CUPP": {
-        "1-6": 1979,
-        "7-8": 4808,
-        "9-12": 11807,
-        "13-16": 0,
-        "17-24": 0,
-        "25+": 0
-      },
-      "bopscrk": {
-        "1-6": 92,
-        "7-8": 803,
-        "9-12": 5852,
-        "13-16": 11132,
-        "17-24": 7278,
-        "25+": 0
-      }
-    }
-  },
-  "en_full": {
-    "results": {
-      "CCUPP": {
-        "count": 4432,
-        "duration_seconds": 0.0023043155670166016,
-        "pwd_per_s": 1923347.6800827729,
-        "error": null
-      },
-      "CUPP": {
-        "count": 22304,
-        "duration_seconds": 0.07048392295837402,
-        "pwd_per_s": 316440.95651673875,
-        "error": null
-      },
-      "bopscrk": {
-        "count": 14206,
-        "duration_seconds": 1.054912805557251,
-        "pwd_per_s": 13466.515834449247,
-        "error": null
-      }
-    },
-    "dataset_evals": {
-      "CCUPP": {
-        "common-passwords": {
-          "dataset_size": 122,
-          "hits": 10,
-          "hit_rate": 0.08196721311475409,
-          "hit_passwords": [
-            "1234",
-            "1q2w3e4r",
-            "1qaz2wsx",
-            "asd123",
-            "asdfgh",
-            "qazwsx",
-            "qwe123",
-            "qwerty",
-            "qwertyuiop",
-            "zxcvbn"
-          ]
-        }
-      },
-      "CUPP": {
-        "common-passwords": {
-          "dataset_size": 122,
-          "hits": 0,
-          "hit_rate": 0.0,
-          "hit_passwords": []
-        }
-      },
-      "bopscrk": {
-        "common-passwords": {
-          "dataset_size": 122,
-          "hits": 0,
-          "hit_rate": 0.0,
-          "hit_passwords": []
-        }
-      }
-    },
-    "pii_embedding_rate": {
-      "CCUPP": {
-        "name": 0.3822202166064982,
-        "date": 0.28046028880866425,
-        "phone": 0.16922382671480143,
-        "account": 0.09115523465703972,
-        "overall": 0.6886281588447654
-      },
-      "CUPP": {
-        "name": 0.2725071736011478,
-        "date": 0.0468974175035868,
-        "phone": 0.0,
-        "account": 0.06796987087517933,
-        "overall": 0.30738880918220945
-      },
-      "bopscrk": {
-        "name": 0.18991975221737295,
-        "date": 0.04413628044488244,
-        "phone": 0.0,
-        "account": 0.06609883147965648,
-        "overall": 0.22983246515556807
-      }
-    },
-    "length_distribution": {
-      "CCUPP": {
-        "1-6": 590,
-        "7-8": 859,
-        "9-12": 1775,
-        "13-16": 989,
-        "17-24": 219,
-        "25+": 0
-      },
-      "CUPP": {
-        "1-6": 823,
-        "7-8": 5544,
-        "9-12": 15937,
-        "13-16": 0,
-        "17-24": 0,
-        "25+": 0
-      },
-      "bopscrk": {
-        "1-6": 163,
-        "7-8": 78,
-        "9-12": 5467,
-        "13-16": 8498,
-        "17-24": 0,
-        "25+": 0
-      }
-    }
-  },
-  "en_minimal": {
-    "results": {
-      "CCUPP": {
-        "count": 2076,
-        "duration_seconds": 0.0010881423950195312,
-        "pwd_per_s": 1907838.541630149,
-        "error": null
-      },
-      "CUPP": {
-        "count": 9546,
-        "duration_seconds": 0.03811812400817871,
-        "pwd_per_s": 250432.05163905202,
-        "error": null
-      },
-      "bopscrk": {
-        "count": 672,
-        "duration_seconds": 0.9600348472595215,
-        "pwd_per_s": 699.9745914622425,
-        "error": null
-      }
-    },
-    "dataset_evals": {
-      "CCUPP": {
-        "common-passwords": {
-          "dataset_size": 122,
-          "hits": 9,
-          "hit_rate": 0.07377049180327869,
-          "hit_passwords": [
-            "1q2w3e4r",
-            "1qaz2wsx",
-            "asd123",
-            "asdfgh",
-            "qazwsx",
-            "qwe123",
-            "qwerty",
-            "qwertyuiop",
-            "zxcvbn"
-          ]
-        }
-      },
-      "CUPP": {
-        "common-passwords": {
-          "dataset_size": 122,
-          "hits": 0,
-          "hit_rate": 0.0,
-          "hit_passwords": []
-        }
-      },
-      "bopscrk": {
-        "common-passwords": {
-          "dataset_size": 122,
-          "hits": 0,
-          "hit_rate": 0.0,
-          "hit_passwords": []
-        }
-      }
-    },
-    "pii_embedding_rate": {
-      "CCUPP": {
-        "name": 0.4653179190751445,
-        "date": 0.4234104046242775,
-        "phone": 0.0,
-        "account": 0.0,
-        "overall": 0.75
-      },
-      "CUPP": {
-        "name": 0.3379425937565472,
-        "date": 0.06201550387596899,
-        "phone": 0.0,
-        "account": 0.0,
-        "overall": 0.38654934003771213
-      },
-      "bopscrk": {
-        "name": 0.48660714285714285,
-        "date": 0.21875,
-        "phone": 0.0,
-        "account": 0.0,
-        "overall": 0.6488095238095238
-      }
-    },
-    "length_distribution": {
-      "CCUPP": {
-        "1-6": 326,
-        "7-8": 490,
-        "9-12": 743,
-        "13-16": 435,
-        "17-24": 82,
-        "25+": 0
-      },
-      "CUPP": {
-        "1-6": 267,
-        "7-8": 4212,
-        "9-12": 5067,
-        "13-16": 0,
-        "17-24": 0,
-        "25+": 0
-      },
-      "bopscrk": {
-        "1-6": 74,
-        "7-8": 0,
-        "9-12": 598,
-        "13-16": 0,
-        "17-24": 0,
-        "25+": 0
-      }
-    }
-  },
-  "_academic_paired": {
-    "CCUPP": {
-      "synthetic_200": {
-        "num_targets": 200,
-        "success_rates": {
-          "10": 0.0,
-          "100": 0.01,
-          "1000": 0.455,
-          "10000": 0.84
+    "en_full": {
+        "dataset_evals": {
+            "CCUPP": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [
+                        "1234",
+                        "1q2w3e4r",
+                        "1qaz2wsx",
+                        "asd123",
+                        "asdfgh",
+                        "qazwsx",
+                        "qwe123",
+                        "qwerty",
+                        "qwertyuiop",
+                        "zxcvbn"
+                    ],
+                    "hit_rate": 0.08196721311475409,
+                    "hits": 10
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "!@#$%^",
+                        "!@#$%^123",
+                        "00007",
+                        "0001234",
+                        "00015",
+                        "0001507",
+                        "0001985",
+                        "000715",
+                        "00085",
+                        "07000",
+                        "0711",
+                        "07111",
+                        "071111",
+                        "0712",
+                        "07123",
+                        "071234",
+                        "07123456",
+                        "071314",
+                        "0715",
+                        "07150",
+                        "071500",
+                        "07151",
+                        "071511",
+                        "07151111",
+                        "071512",
+                        "0715520",
+                        "0715a",
+                        "071688",
+                        "07233",
+                        "07520",
+                        "07666",
+                        "07888",
+                        "078888",
+                        "11107",
+                        "1111234",
+                        "11115",
+                        "1111985",
+                        "111715",
+                        "11185",
+                        "12307",
+                        "1230715",
+                        "1231234",
+                        "12315",
+                        "1231985",
+                        "1234",
+                        "1234!",
+                        "1234#",
+                        "1234.",
+                        "12340",
+                        "123400"
+                    ],
+                    "hit_rate": 2.4958711806983544e-05,
+                    "hits": 358
+                }
+            },
+            "CUPP": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [],
+                    "hit_rate": 0.0,
+                    "hits": 0
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "07151985",
+                        "071585",
+                        "071985",
+                        "075985",
+                        "079855",
+                        "15071985",
+                        "150785",
+                        "151985",
+                        "1551985",
+                        "1571985",
+                        "159855",
+                        "159857",
+                        "198507",
+                        "19850715",
+                        "198515",
+                        "1985157",
+                        "1985515",
+                        "198557",
+                        "198575",
+                        "198585",
+                        "1985855",
+                        "5071985",
+                        "515985",
+                        "571985",
+                        "585985",
+                        "598515",
+                        "7071985",
+                        "7151985",
+                        "7198507",
+                        "751985",
+                        "785985",
+                        "850715",
+                        "85071985",
+                        "851507",
+                        "851985",
+                        "855985",
+                        "857985",
+                        "9850785",
+                        "985507",
+                        "985707",
+                        "Google",
+                        "Google*",
+                        "Google1",
+                        "Google11",
+                        "Google12",
+                        "Google14",
+                        "Google15",
+                        "Google2",
+                        "Google2007",
+                        "Google23"
+                    ],
+                    "hit_rate": 3.59042921245713e-05,
+                    "hits": 515
+                }
+            },
+            "PassLLM": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [
+                        "computer",
+                        "dragon",
+                        "football",
+                        "jennifer",
+                        "password1",
+                        "password123",
+                        "superman"
+                    ],
+                    "hit_rate": 0.05737704918032787,
+                    "hits": 7
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "1password",
+                        "Catherine1",
+                        "Cleveland1",
+                        "Einstein",
+                        "Einstein1",
+                        "Hollywood",
+                        "Hollywood1",
+                        "Hollywood123",
+                        "Lollipop1",
+                        "Lollipop123",
+                        "abcdefgh123",
+                        "abcdefgh12345",
+                        "abcdefgh123456",
+                        "abcdefghij",
+                        "abcdefghijk",
+                        "adventure",
+                        "adventure1",
+                        "adventure123",
+                        "adventure1234",
+                        "adventure12345",
+                        "advertising",
+                        "alexander",
+                        "alexandra",
+                        "alexandra1",
+                        "anderson",
+                        "anderson1",
+                        "anderson12",
+                        "anderson123",
+                        "anderson1234",
+                        "anderson12345",
+                        "applebee",
+                        "applebee1",
+                        "applepie",
+                        "applepie1",
+                        "applepie10",
+                        "applepie101",
+                        "applepie11",
+                        "applepie123",
+                        "applepie123!",
+                        "applepie1234",
+                        "applepie15",
+                        "applepie2009",
+                        "applepie21",
+                        "applepie23",
+                        "applepie3",
+                        "applepie4",
+                        "applepie5",
+                        "asdfasdf",
+                        "asdfasdf12341234",
+                        "ashleigh"
+                    ],
+                    "hit_rate": 2.9978340997214874e-05,
+                    "hits": 430
+                }
+            },
+            "bopscrk": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [],
+                    "hit_rate": 0.0,
+                    "hits": 0
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "1985",
+                        "1985smith",
+                        "G00GL3",
+                        "GOOGLE",
+                        "Google",
+                        "JOHN",
+                        "John",
+                        "JohnSmith",
+                        "Jsmith",
+                        "MANHATTAN",
+                        "Manhattan",
+                        "N3WYORK",
+                        "N3wY0rk",
+                        "NEWYORK",
+                        "NewYork",
+                        "Newyork",
+                        "SMITH",
+                        "Smith",
+                        "g00gl3",
+                        "g00gl31985",
+                        "g00gle",
+                        "go0gl3",
+                        "go0gle",
+                        "googl3",
+                        "google",
+                        "googlegoogle",
+                        "j0hn",
+                        "john",
+                        "john1985",
+                        "johnsmith",
+                        "jsm1th",
+                        "jsmith",
+                        "m4nh4tt4n",
+                        "m4nhattan",
+                        "manhattan",
+                        "manhattannewyork",
+                        "n3wy0rk",
+                        "n3wyork",
+                        "newYork",
+                        "newy0rk",
+                        "newyork",
+                        "newyorkmanhattan",
+                        "smith",
+                        "smith1985"
+                    ],
+                    "hit_rate": 3.0675511718080335e-06,
+                    "hits": 44
+                }
+            }
         },
-        "coverage": 0.84,
-        "guess_numbers": {
-          "found": 168,
-          "total": 200,
-          "min_rank": 24,
-          "max_rank": 5993,
-          "median_rank": 686.0,
-          "mean_rank": 1774.720238095238
+        "length_distribution": {
+            "CCUPP": {
+                "1-6": 590,
+                "13-16": 989,
+                "17-24": 219,
+                "25+": 0,
+                "7-8": 859,
+                "9-12": 1775
+            },
+            "CUPP": {
+                "1-6": 823,
+                "13-16": 0,
+                "17-24": 0,
+                "25+": 0,
+                "7-8": 5544,
+                "9-12": 15937
+            },
+            "PassLLM": {
+                "1-6": 2,
+                "13-16": 1484,
+                "17-24": 0,
+                "25+": 0,
+                "7-8": 80,
+                "9-12": 537
+            },
+            "bopscrk": {
+                "1-6": 163,
+                "13-16": 8498,
+                "17-24": 0,
+                "25+": 0,
+                "7-8": 78,
+                "9-12": 5467
+            }
         },
-        "guess_curve": [
-          [
-            1,
-            0.0
-          ],
-          [
-            2,
-            0.0
-          ],
-          [
-            5,
-            0.0
-          ],
-          [
-            10,
-            0.0
-          ],
-          [
-            20,
-            0.0
-          ],
-          [
-            50,
-            0.0
-          ],
-          [
-            100,
-            0.0
-          ],
-          [
-            200,
-            0.005263157894736842
-          ],
-          [
-            500,
-            0.005263157894736842
-          ],
-          [
-            1000,
-            0.005263157894736842
-          ],
-          [
-            2000,
-            0.005263157894736842
-          ],
-          [
-            5000,
-            0.010526315789473684
-          ],
-          [
-            6471,
-            0.02631578947368421
-          ]
-        ]
-      }
+        "pii_embedding_rate": {
+            "CCUPP": {
+                "account": 0.09115523465703972,
+                "date": 0.28046028880866425,
+                "name": 0.3822202166064982,
+                "overall": 0.6886281588447654,
+                "phone": 0.16922382671480143
+            },
+            "CUPP": {
+                "account": 0.06796987087517933,
+                "date": 0.0468974175035868,
+                "name": 0.2725071736011478,
+                "overall": 0.30738880918220945,
+                "phone": 0.0
+            },
+            "PassLLM": {
+                "account": 0.0,
+                "date": 0.16119828815977175,
+                "name": 0.2914883499762244,
+                "overall": 0.644793152639087,
+                "phone": 0.2815026153114598
+            },
+            "bopscrk": {
+                "account": 0.06609883147965648,
+                "date": 0.04413628044488244,
+                "name": 0.18991975221737295,
+                "overall": 0.22983246515556807,
+                "phone": 0.0
+            }
+        },
+        "results": {
+            "CCUPP": {
+                "count": 4432,
+                "duration_seconds": 0.0010085105895996094,
+                "error": null,
+                "pwd_per_s": 4394599.368321513
+            },
+            "CUPP": {
+                "count": 22304,
+                "duration_seconds": 0.024936676025390625,
+                "error": null,
+                "pwd_per_s": 894425.5432155423
+            },
+            "PassLLM": {
+                "count": 2103,
+                "duration_seconds": 34.244158029556274,
+                "error": null,
+                "pwd_per_s": 61.41193479439302
+            },
+            "bopscrk": {
+                "count": 14206,
+                "duration_seconds": 0.8582816123962402,
+                "error": null,
+                "pwd_per_s": 16551.676972710862
+            }
+        }
     },
-    "CUPP": {
-      "synthetic_200": {
-        "num_targets": 200,
-        "success_rates": {},
-        "coverage": 0.225,
-        "guess_numbers": {
-          "found": 0,
-          "total": 200,
-          "min_rank": 0,
-          "max_rank": 0,
-          "median_rank": 0,
-          "mean_rank": 0
+    "en_minimal": {
+        "dataset_evals": {
+            "CCUPP": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [
+                        "1q2w3e4r",
+                        "1qaz2wsx",
+                        "asd123",
+                        "asdfgh",
+                        "qazwsx",
+                        "qwe123",
+                        "qwerty",
+                        "qwertyuiop",
+                        "zxcvbn"
+                    ],
+                    "hit_rate": 0.07377049180327869,
+                    "hits": 9
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "!@#$%^",
+                        "!@#$%^123",
+                        "00012",
+                        "0001992",
+                        "00025",
+                        "11112",
+                        "1111225",
+                        "1111992",
+                        "11125",
+                        "1112512",
+                        "11192",
+                        "12",
+                        "120",
+                        "1200",
+                        "12000",
+                        "121",
+                        "1211",
+                        "12111",
+                        "121111",
+                        "1212",
+                        "12123",
+                        "121234",
+                        "1212345",
+                        "12123456",
+                        "121314",
+                        "12168",
+                        "121688",
+                        "12233",
+                        "1225",
+                        "12250",
+                        "122500",
+                        "12251",
+                        "122511",
+                        "1225111",
+                        "122512",
+                        "12251314",
+                        "1225886",
+                        "12312",
+                        "1231225",
+                        "1231992",
+                        "12321",
+                        "12325",
+                        "12392",
+                        "12520",
+                        "12521",
+                        "12666",
+                        "126666",
+                        "12886",
+                        "12888",
+                        "128888"
+                    ],
+                    "hit_rate": 1.74989850937231e-05,
+                    "hits": 251
+                }
+            },
+            "CUPP": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [],
+                    "hit_rate": 0.0,
+                    "hits": 0
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "121992",
+                        "1221992",
+                        "12251992",
+                        "122592",
+                        "1225992",
+                        "122992",
+                        "1251992",
+                        "125992",
+                        "129922",
+                        "199212",
+                        "1992122",
+                        "19921225",
+                        "1992125",
+                        "1992212",
+                        "1992225",
+                        "199225",
+                        "19922512",
+                        "19922992",
+                        "199252",
+                        "1992525",
+                        "1992592",
+                        "199292",
+                        "1992922",
+                        "1992925",
+                        "1992992",
+                        "2121992",
+                        "212992",
+                        "219925",
+                        "2251992",
+                        "225992",
+                        "25121992",
+                        "251292",
+                        "2512992",
+                        "251992",
+                        "2519922",
+                        "2521992",
+                        "252992",
+                        "2551992",
+                        "259212",
+                        "259925",
+                        "2921992",
+                        "292992",
+                        "299212",
+                        "29921992",
+                        "299292",
+                        "4l1c33",
+                        "5121992",
+                        "512992",
+                        "521992",
+                        "5251992"
+                    ],
+                    "hit_rate": 2.321578500481989e-05,
+                    "hits": 333
+                }
+            },
+            "PassLLM": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [
+                        "superman"
+                    ],
+                    "hit_rate": 0.00819672131147541,
+                    "hits": 1
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "Catherine1",
+                        "Cleveland1",
+                        "Einstein1",
+                        "adventure123",
+                        "alexandra",
+                        "alexandra12",
+                        "alexandra25",
+                        "alexbrown",
+                        "alicealice",
+                        "alicebrown",
+                        "alicelee",
+                        "alicious",
+                        "anniversary",
+                        "applepie1",
+                        "applepie10",
+                        "applepie123",
+                        "applepie92",
+                        "babydoll00",
+                        "babydoll1",
+                        "babydoll10",
+                        "babydoll11",
+                        "babydoll12",
+                        "babydoll123",
+                        "babydoll1234",
+                        "babydoll12345",
+                        "babydoll20",
+                        "babydoll25",
+                        "babydollz1",
+                        "bingbing",
+                        "birthday01",
+                        "birthday10",
+                        "birthday12",
+                        "birthday1225",
+                        "birthday123",
+                        "birthday25",
+                        "blackcat",
+                        "blackops12",
+                        "bluebear",
+                        "bluebear1",
+                        "bluebear12",
+                        "bluebell1",
+                        "blueberry12",
+                        "blueberry123",
+                        "brownbob",
+                        "brownboy",
+                        "brownbrown",
+                        "brownies",
+                        "brownies1",
+                        "calculus",
+                        "calculus1"
+                    ],
+                    "hit_rate": 2.154257527474278e-05,
+                    "hits": 309
+                }
+            },
+            "bopscrk": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [],
+                    "hit_rate": 0.0,
+                    "hits": 0
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "1992",
+                        "ALICE",
+                        "ALICEBROWN",
+                        "Alice",
+                        "Alice1992",
+                        "BROWN",
+                        "Brown",
+                        "alice",
+                        "alice1992",
+                        "alicebrown",
+                        "br0wn",
+                        "brown",
+                        "brown1992"
+                    ],
+                    "hit_rate": 9.063219371251008e-07,
+                    "hits": 13
+                }
+            }
         },
-        "guess_curve": []
-      }
+        "length_distribution": {
+            "CCUPP": {
+                "1-6": 326,
+                "13-16": 435,
+                "17-24": 82,
+                "25+": 0,
+                "7-8": 490,
+                "9-12": 743
+            },
+            "CUPP": {
+                "1-6": 267,
+                "13-16": 0,
+                "17-24": 0,
+                "25+": 0,
+                "7-8": 4212,
+                "9-12": 5067
+            },
+            "PassLLM": {
+                "1-6": 0,
+                "13-16": 1701,
+                "17-24": 0,
+                "25+": 0,
+                "7-8": 38,
+                "9-12": 450
+            },
+            "bopscrk": {
+                "1-6": 74,
+                "13-16": 0,
+                "17-24": 0,
+                "25+": 0,
+                "7-8": 0,
+                "9-12": 598
+            }
+        },
+        "pii_embedding_rate": {
+            "CCUPP": {
+                "account": 0.0,
+                "date": 0.4234104046242775,
+                "name": 0.4653179190751445,
+                "overall": 0.75,
+                "phone": 0.0
+            },
+            "CUPP": {
+                "account": 0.0,
+                "date": 0.06201550387596899,
+                "name": 0.3379425937565472,
+                "overall": 0.38654934003771213,
+                "phone": 0.0
+            },
+            "PassLLM": {
+                "account": 0.0,
+                "date": 0.33074463225216993,
+                "name": 0.25216994061215164,
+                "overall": 0.5564184559159433,
+                "phone": 0.0
+            },
+            "bopscrk": {
+                "account": 0.0,
+                "date": 0.21875,
+                "name": 0.48660714285714285,
+                "overall": 0.6488095238095238,
+                "phone": 0.0
+            }
+        },
+        "results": {
+            "CCUPP": {
+                "count": 2076,
+                "duration_seconds": 0.00047206878662109375,
+                "error": null,
+                "pwd_per_s": 4397664.193939394
+            },
+            "CUPP": {
+                "count": 9546,
+                "duration_seconds": 0.012930870056152344,
+                "error": null,
+                "pwd_per_s": 738233.3871229441
+            },
+            "PassLLM": {
+                "count": 2189,
+                "duration_seconds": 32.281766414642334,
+                "error": null,
+                "pwd_per_s": 67.80917660711143
+            },
+            "bopscrk": {
+                "count": 672,
+                "duration_seconds": 0.8126423358917236,
+                "error": null,
+                "pwd_per_s": 826.932058939072
+            }
+        }
     },
-    "bopscrk": {
-      "synthetic_200": {
-        "num_targets": 200,
-        "success_rates": {},
-        "coverage": 0.115,
-        "guess_numbers": {
-          "found": 0,
-          "total": 200,
-          "min_rank": 0,
-          "max_rank": 0,
-          "median_rank": 0,
-          "mean_rank": 0
+    "zh_full": {
+        "dataset_evals": {
+            "CCUPP": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [
+                        "1q2w3e4r",
+                        "1qaz2wsx",
+                        "987654321",
+                        "asd123",
+                        "asdfgh",
+                        "qazwsx",
+                        "qwe123",
+                        "qwerty",
+                        "qwertyuiop",
+                        "zxcvbn"
+                    ],
+                    "hit_rate": 0.08196721311475409,
+                    "hits": 10
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "!@#$%^",
+                        "!@#$%^123",
+                        "00009",
+                        "0001983",
+                        "00024",
+                        "0002409",
+                        "0005678",
+                        "00083",
+                        "000924",
+                        "09",
+                        "09000",
+                        "0911",
+                        "09111",
+                        "091111",
+                        "0912",
+                        "09123",
+                        "091234",
+                        "0912345",
+                        "09123456",
+                        "091314",
+                        "091688",
+                        "09233",
+                        "0924",
+                        "092400",
+                        "092411",
+                        "092412",
+                        "0924520",
+                        "09321",
+                        "09521",
+                        "096666",
+                        "09886",
+                        "09888",
+                        "098888",
+                        "11109",
+                        "1111983",
+                        "11124",
+                        "11183",
+                        "111924",
+                        "12309",
+                        "1231983",
+                        "12324",
+                        "123345678",
+                        "1235678",
+                        "12383",
+                        "123924",
+                        "123hb",
+                        "123leg",
+                        "131409",
+                        "131424",
+                        "13145678"
+                    ],
+                    "hit_rate": 2.39826727977719e-05,
+                    "hits": 344
+                }
+            },
+            "CUPP": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [],
+                    "hit_rate": 0.0,
+                    "hits": 0
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "091983",
+                        "0919834",
+                        "09241983",
+                        "092483",
+                        "0941983",
+                        "094983",
+                        "098324",
+                        "198309",
+                        "19830924",
+                        "198324",
+                        "198383",
+                        "198394",
+                        "24091983",
+                        "240983",
+                        "241983",
+                        "2441983",
+                        "244983",
+                        "248309",
+                        "2491983",
+                        "409983",
+                        "4241983",
+                        "491983",
+                        "830924",
+                        "831983",
+                        "832409",
+                        "834983",
+                        "8391983",
+                        "839839",
+                        "839983",
+                        "9241983",
+                        "941983",
+                        "983099",
+                        "983834",
+                        "983983",
+                        "998324",
+                        "L19983",
+                        "Li2008",
+                        "chengdu",
+                        "li1991",
+                        "li1992",
+                        "li1995",
+                        "li2005",
+                        "li2006",
+                        "li2007",
+                        "sichuan",
+                        "twodogs",
+                        "twodogs0",
+                        "twodogs1",
+                        "twodogs2",
+                        "twodogs5"
+                    ],
+                    "hit_rate": 3.625287748500403e-06,
+                    "hits": 52
+                }
+            },
+            "PassLLM": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [
+                        "jennifer",
+                        "password123",
+                        "sunshine"
+                    ],
+                    "hit_rate": 0.02459016393442623,
+                    "hits": 3
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "Einstein",
+                        "Einstein1",
+                        "abandoned",
+                        "admission",
+                        "adventure",
+                        "aligator",
+                        "asdfasdf",
+                        "asdfasdf12341234",
+                        "assassin",
+                        "assassin123",
+                        "assassin88",
+                        "bingbing",
+                        "bingbing123",
+                        "bingbing2009",
+                        "blackandwhite",
+                        "blackbear",
+                        "blackcat",
+                        "blackcat123",
+                        "blackdog",
+                        "blackdog12",
+                        "blackdog123",
+                        "blackstar",
+                        "bluebear",
+                        "blueberry",
+                        "blueberry10",
+                        "blueberry11",
+                        "blueberry123",
+                        "blueberry2008",
+                        "chenjing",
+                        "chenming",
+                        "dogfight",
+                        "doghouse",
+                        "doglover",
+                        "dreambig",
+                        "dreamers",
+                        "dreaming",
+                        "dreamland",
+                        "eighteen",
+                        "eightone",
+                        "einstein",
+                        "ericsson",
+                        "ericsson123",
+                        "fahrenheit",
+                        "fentanyl",
+                        "fivefive",
+                        "foreveryoung",
+                        "fourcats",
+                        "fourdogs",
+                        "fourfish",
+                        "fourfive"
+                    ],
+                    "hit_rate": 1.5198321714867075e-05,
+                    "hits": 218
+                }
+            },
+            "bopscrk": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [],
+                    "hit_rate": 0.0,
+                    "hits": 0
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "1983",
+                        "TENCENT",
+                        "TWODOGS",
+                        "chengdu",
+                        "sichuan",
+                        "tencent",
+                        "tw0d0gs",
+                        "twodogs"
+                    ],
+                    "hit_rate": 5.577365766923697e-07,
+                    "hits": 8
+                }
+            }
         },
-        "guess_curve": []
-      }
+        "length_distribution": {
+            "CCUPP": {
+                "1-6": 2407,
+                "13-16": 2268,
+                "17-24": 1044,
+                "25+": 148,
+                "7-8": 2080,
+                "9-12": 4388
+            },
+            "CUPP": {
+                "1-6": 478,
+                "13-16": 0,
+                "17-24": 0,
+                "25+": 0,
+                "7-8": 4518,
+                "9-12": 23531
+            },
+            "PassLLM": {
+                "1-6": 0,
+                "13-16": 1512,
+                "17-24": 0,
+                "25+": 0,
+                "7-8": 90,
+                "9-12": 531
+            },
+            "bopscrk": {
+                "1-6": 64,
+                "13-16": 13272,
+                "17-24": 0,
+                "25+": 0,
+                "7-8": 592,
+                "9-12": 5747
+            }
+        },
+        "pii_embedding_rate": {
+            "CCUPP": {
+                "account": 0.05139845966761249,
+                "date": 0.20802594244021078,
+                "name": 0.22423996757194975,
+                "overall": 0.48244831779489256,
+                "phone": 0.08925820835022294
+            },
+            "CUPP": {
+                "account": 0.0733340344235286,
+                "date": 0.04571108073053598,
+                "name": 0.2709713604655239,
+                "overall": 0.331825989413538,
+                "phone": 0.0
+            },
+            "PassLLM": {
+                "account": 0.0,
+                "date": 0.2887951242381622,
+                "name": 0.1350210970464135,
+                "overall": 0.39052977027660574,
+                "phone": 0.012189404594467886
+            },
+            "bopscrk": {
+                "account": 0.055756035578144854,
+                "date": 0.03888182973316391,
+                "name": 0.10332909783989835,
+                "overall": 0.19176620076238882,
+                "phone": 0.0
+            }
+        },
+        "results": {
+            "CCUPP": {
+                "count": 12335,
+                "duration_seconds": 0.0030050277709960938,
+                "error": null,
+                "pwd_per_s": 4104787.3563947952
+            },
+            "CUPP": {
+                "count": 28527,
+                "duration_seconds": 0.4426121711730957,
+                "error": null,
+                "pwd_per_s": 64451.458540763284
+            },
+            "PassLLM": {
+                "count": 2133,
+                "duration_seconds": 44.45109796524048,
+                "error": null,
+                "pwd_per_s": 47.985316395737776
+            },
+            "bopscrk": {
+                "count": 19675,
+                "duration_seconds": 0.8446004390716553,
+                "error": null,
+                "pwd_per_s": 23295.038801573235
+            }
+        }
+    },
+    "zh_medium": {
+        "dataset_evals": {
+            "CCUPP": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [
+                        "1q2w3e4r",
+                        "1qaz2wsx",
+                        "asd123",
+                        "asdfgh",
+                        "qazwsx",
+                        "qwe123",
+                        "qwerty",
+                        "qwertyuiop",
+                        "zxcvbn"
+                    ],
+                    "hit_rate": 0.07377049180327869,
+                    "hits": 9
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "!@#$%^",
+                        "!@#$%^123",
+                        "!@#$%^z",
+                        "00005",
+                        "00015",
+                        "0001505",
+                        "0001995",
+                        "000515",
+                        "0005678",
+                        "00095",
+                        "050",
+                        "0500",
+                        "05000",
+                        "0511",
+                        "05111",
+                        "051111",
+                        "0512",
+                        "05123",
+                        "051234",
+                        "0512345",
+                        "051314",
+                        "0515",
+                        "05150",
+                        "051500",
+                        "05151",
+                        "051511",
+                        "051512",
+                        "0515520",
+                        "05156666",
+                        "05168",
+                        "051688",
+                        "05233",
+                        "05520",
+                        "05521",
+                        "056666",
+                        "05888",
+                        "058888",
+                        "11105",
+                        "11115",
+                        "1111995",
+                        "1112345",
+                        "111515",
+                        "11195",
+                        "12305",
+                        "12315",
+                        "1231995",
+                        "123345678",
+                        "123515",
+                        "1235678",
+                        "12395"
+                    ],
+                    "hit_rate": 2.4819277662810452e-05,
+                    "hits": 356
+                }
+            },
+            "CUPP": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [],
+                    "hit_rate": 0.0,
+                    "hits": 0
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "051595",
+                        "051995",
+                        "0551995",
+                        "055995",
+                        "15051995",
+                        "150595",
+                        "151995",
+                        "1551995",
+                        "155995",
+                        "159505",
+                        "199505",
+                        "19950515",
+                        "199515",
+                        "1995505",
+                        "1995515",
+                        "199595",
+                        "5051995",
+                        "5151995",
+                        "5199515",
+                        "595995",
+                        "599595",
+                        "950515",
+                        "951505",
+                        "951995",
+                        "955995",
+                        "995155",
+                        "995515",
+                        "Beijing1",
+                        "Beijing2008",
+                        "Zhang1",
+                        "beijing",
+                        "beijing05",
+                        "beijing1",
+                        "beijing12",
+                        "beijing2",
+                        "beijing2008",
+                        "beijing21",
+                        "beijing22",
+                        "beijing95",
+                        "wei1991",
+                        "wei995",
+                        "wei_1991",
+                        "zhang1",
+                        "zhang13",
+                        "zhang19",
+                        "zhang23",
+                        "zhang24",
+                        "zhang3",
+                        "zhang83",
+                        "zhang90"
+                    ],
+                    "hit_rate": 3.555570676413857e-06,
+                    "hits": 51
+                }
+            },
+            "PassLLM": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [
+                        "jennifer",
+                        "password123",
+                        "superman"
+                    ],
+                    "hit_rate": 0.02459016393442623,
+                    "hits": 3
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "Einstein",
+                        "adventure",
+                        "android",
+                        "android123",
+                        "appleapple",
+                        "applefish",
+                        "asdfasdf",
+                        "bestfriend",
+                        "bestlove",
+                        "bigseven",
+                        "bingbing123",
+                        "blackandwhite",
+                        "blackangel",
+                        "blackbird",
+                        "blackcat",
+                        "blackjack",
+                        "cdplayer",
+                        "chandler",
+                        "changhai",
+                        "chenjing",
+                        "chenming",
+                        "chocolate",
+                        "chocolate95",
+                        "comprehensive",
+                        "einstein",
+                        "gangbang",
+                        "goodafternoon",
+                        "goodgood",
+                        "goodidea",
+                        "goodlife",
+                        "goodluck",
+                        "goodnight",
+                        "goodtime",
+                        "goodtime123",
+                        "goodwill",
+                        "hanghang",
+                        "hangzhou",
+                        "happiness",
+                        "hellohello",
+                        "helloworld",
+                        "helloworld10",
+                        "helloworld123",
+                        "helloworld90",
+                        "helloworld987",
+                        "jennifer",
+                        "jiangdong",
+                        "jiangling",
+                        "jiangmin",
+                        "jiangwei",
+                        "jingjing123"
+                    ],
+                    "hit_rate": 1.0039258380462655e-05,
+                    "hits": 144
+                }
+            },
+            "bopscrk": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [],
+                    "hit_rate": 0.0,
+                    "hits": 0
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "1995",
+                        "ZHANG",
+                        "baidu",
+                        "beijing",
+                        "zhang",
+                        "zhangwei"
+                    ],
+                    "hit_rate": 4.1830243251927727e-07,
+                    "hits": 6
+                }
+            }
+        },
+        "length_distribution": {
+            "CCUPP": {
+                "1-6": 1898,
+                "13-16": 1770,
+                "17-24": 877,
+                "25+": 98,
+                "7-8": 1730,
+                "9-12": 2634
+            },
+            "CUPP": {
+                "1-6": 1979,
+                "13-16": 0,
+                "17-24": 0,
+                "25+": 0,
+                "7-8": 4808,
+                "9-12": 11807
+            },
+            "PassLLM": {
+                "1-6": 0,
+                "13-16": 1520,
+                "17-24": 0,
+                "25+": 0,
+                "7-8": 75,
+                "9-12": 378
+            },
+            "bopscrk": {
+                "1-6": 92,
+                "13-16": 11132,
+                "17-24": 7278,
+                "25+": 0,
+                "7-8": 803,
+                "9-12": 5852
+            }
+        },
+        "pii_embedding_rate": {
+            "CCUPP": {
+                "account": 0.058843122016209615,
+                "date": 0.24869545908737647,
+                "name": 0.3490618407904963,
+                "overall": 0.600199844565338,
+                "phone": 0.13545020539580327
+            },
+            "CUPP": {
+                "account": 0.0020436700010756158,
+                "date": 0.05227492739593417,
+                "name": 0.30396902226524686,
+                "overall": 0.34376680649671937,
+                "phone": 0.0
+            },
+            "PassLLM": {
+                "account": 0.0,
+                "date": 0.2853522554485555,
+                "name": 0.12924480486568676,
+                "overall": 0.3385707045108971,
+                "phone": 0.008109477952356817
+            },
+            "bopscrk": {
+                "account": 0.0556505147672616,
+                "date": 0.03676909011408355,
+                "name": 0.35067774376912986,
+                "overall": 0.3810072743172874,
+                "phone": 0.0
+            }
+        },
+        "results": {
+            "CCUPP": {
+                "count": 9007,
+                "duration_seconds": 0.0021555423736572266,
+                "error": null,
+                "pwd_per_s": 4178530.707665081
+            },
+            "CUPP": {
+                "count": 18594,
+                "duration_seconds": 0.02327442169189453,
+                "error": null,
+                "pwd_per_s": 798902.7717271051
+            },
+            "PassLLM": {
+                "count": 1973,
+                "duration_seconds": 34.05555057525635,
+                "error": null,
+                "pwd_per_s": 57.93475561759138
+            },
+            "bopscrk": {
+                "count": 25157,
+                "duration_seconds": 1.0830473899841309,
+                "error": null,
+                "pwd_per_s": 23227.977125145564
+            }
+        }
+    },
+    "zh_minimal": {
+        "dataset_evals": {
+            "CCUPP": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [
+                        "1111",
+                        "111111",
+                        "1q2w3e4r",
+                        "1qaz2wsx",
+                        "asd123",
+                        "asdfgh",
+                        "qazwsx",
+                        "qwe123",
+                        "qwerty",
+                        "qwertyuiop",
+                        "zxcvbn"
+                    ],
+                    "hit_rate": 0.09016393442622951,
+                    "hits": 11
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "!@#$%^",
+                        "!@#$%^123",
+                        "00001",
+                        "00011",
+                        "0001990",
+                        "0008000",
+                        "00090",
+                        "01",
+                        "010",
+                        "0100",
+                        "01000",
+                        "0101",
+                        "01010",
+                        "010100",
+                        "01011",
+                        "010111",
+                        "0101111",
+                        "01011111",
+                        "010112",
+                        "0101123",
+                        "0101168",
+                        "01011990",
+                        "0101233",
+                        "0101521",
+                        "0101888",
+                        "0101a",
+                        "011",
+                        "0111",
+                        "01111",
+                        "011111",
+                        "0112",
+                        "01123",
+                        "011234",
+                        "0112345",
+                        "01123456",
+                        "011314",
+                        "01168",
+                        "011688",
+                        "01233",
+                        "01520",
+                        "01521",
+                        "01666",
+                        "016666",
+                        "11",
+                        "110",
+                        "1100",
+                        "11000",
+                        "111",
+                        "11101",
+                        "1111"
+                    ],
+                    "hit_rate": 1.8196155814588564e-05,
+                    "hits": 261
+                }
+            },
+            "CUPP": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [],
+                    "hit_rate": 0.0,
+                    "hits": 0
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "0111990",
+                        "011990",
+                        "019901",
+                        "1011990",
+                        "101990",
+                        "1901990",
+                        "190990",
+                        "199001",
+                        "1990011",
+                        "1990101",
+                        "1990190",
+                        "19901990",
+                        "199090",
+                        "1990990",
+                        "9011990",
+                        "901990",
+                        "990011",
+                        "990101",
+                        "990190",
+                        "99019901",
+                        "9909001",
+                        "990901",
+                        "Wang1990",
+                        "w4n926",
+                        "wang!!",
+                        "wang01",
+                        "wang12",
+                        "wang14",
+                        "wang17",
+                        "wang18",
+                        "wang19",
+                        "wang1992",
+                        "wang21",
+                        "wang22",
+                        "wang27",
+                        "wang31",
+                        "wang49",
+                        "wang61",
+                        "wang69",
+                        "wang76",
+                        "wang78",
+                        "wang85",
+                        "wang87",
+                        "xiaoming",
+                        "xiaoming1"
+                    ],
+                    "hit_rate": 3.1372682438945796e-06,
+                    "hits": 45
+                }
+            },
+            "PassLLM": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [
+                        "password123",
+                        "superman"
+                    ],
+                    "hit_rate": 0.01639344262295082,
+                    "hits": 2
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "Einstein1",
+                        "aaaaaaaaa",
+                        "aaaaaaaaaa",
+                        "adventure1",
+                        "adventure123",
+                        "adventure1234",
+                        "adventure12345",
+                        "alexander1",
+                        "alexandra01",
+                        "alexandra1",
+                        "alexandra123",
+                        "alexandra1990",
+                        "alexandra1992",
+                        "alexandra1993",
+                        "alexandra1994",
+                        "alexandra1995",
+                        "alexandra1996",
+                        "alexandra1997",
+                        "alexandra2009",
+                        "alexandra2010",
+                        "alexandra90",
+                        "appleapple",
+                        "applepie1",
+                        "applepie123",
+                        "asdfasdf",
+                        "asdfasdf12341234",
+                        "assassin007",
+                        "assassin1",
+                        "assassin123",
+                        "assassin90",
+                        "assassin99",
+                        "babydoll00",
+                        "babydoll01",
+                        "babydoll1",
+                        "babydoll10",
+                        "babydoll100",
+                        "babydoll101",
+                        "babydoll11",
+                        "babydoll111",
+                        "babydoll123",
+                        "babydoll1234",
+                        "babydoll12345",
+                        "babydoll13",
+                        "babydoll1990",
+                        "babydoll20",
+                        "babydoll2008",
+                        "babydoll2009",
+                        "babydoll2011",
+                        "babydoll9",
+                        "babydoll90"
+                    ],
+                    "hit_rate": 2.3843238653598804e-05,
+                    "hits": 342
+                }
+            },
+            "bopscrk": {
+                "common-passwords": {
+                    "dataset_size": 122,
+                    "hit_passwords": [],
+                    "hit_rate": 0.0,
+                    "hits": 0
+                },
+                "rockyou.txt": {
+                    "dataset_size": 14343689,
+                    "hit_passwords": [
+                        "1990",
+                        "Wang1990",
+                        "wang",
+                        "xiaoming"
+                    ],
+                    "hit_rate": 2.7886828834618485e-07,
+                    "hits": 4
+                }
+            }
+        },
+        "length_distribution": {
+            "CCUPP": {
+                "1-6": 829,
+                "13-16": 903,
+                "17-24": 563,
+                "25+": 0,
+                "7-8": 788,
+                "9-12": 1161
+            },
+            "CUPP": {
+                "1-6": 537,
+                "13-16": 0,
+                "17-24": 0,
+                "25+": 0,
+                "7-8": 1189,
+                "9-12": 3504
+            },
+            "PassLLM": {
+                "1-6": 0,
+                "13-16": 1537,
+                "17-24": 0,
+                "25+": 0,
+                "7-8": 42,
+                "9-12": 598
+            },
+            "bopscrk": {
+                "1-6": 16,
+                "13-16": 0,
+                "17-24": 0,
+                "25+": 0,
+                "7-8": 214,
+                "9-12": 1346
+            }
+        },
+        "pii_embedding_rate": {
+            "CCUPP": {
+                "account": 0.0,
+                "date": 0.3360037700282752,
+                "name": 0.4637134778510839,
+                "overall": 0.7368049010367578,
+                "phone": 0.1449104618284637
+            },
+            "CUPP": {
+                "account": 0.0,
+                "date": 0.048948374760994263,
+                "name": 0.38279158699808796,
+                "overall": 0.4164435946462715,
+                "phone": 0.0
+            },
+            "PassLLM": {
+                "account": 0.0,
+                "date": 0.3638033991731741,
+                "name": 0.23840146991272393,
+                "overall": 0.5011483693155719,
+                "phone": 0.011024345429490124
+            },
+            "bopscrk": {
+                "account": 0.0,
+                "date": 0.25317258883248733,
+                "name": 0.3889593908629442,
+                "overall": 0.6129441624365483,
+                "phone": 0.0
+            }
+        },
+        "results": {
+            "CCUPP": {
+                "count": 4244,
+                "duration_seconds": 0.0009982585906982422,
+                "error": null,
+                "pwd_per_s": 4251403.433484595
+            },
+            "CUPP": {
+                "count": 5230,
+                "duration_seconds": 0.010158777236938477,
+                "error": null,
+                "pwd_per_s": 514825.7391630876
+            },
+            "PassLLM": {
+                "count": 2177,
+                "duration_seconds": 35.41904067993164,
+                "error": null,
+                "pwd_per_s": 61.46411529529325
+            },
+            "bopscrk": {
+                "count": 1576,
+                "duration_seconds": 0.8227734565734863,
+                "error": null,
+                "pwd_per_s": 1915.4725853254831
+            }
+        }
     }
-  }
 }
