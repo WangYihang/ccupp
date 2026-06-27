@@ -39,14 +39,14 @@ export const EN = {
   /* paragraphs */
   s2_p:    'We measure password generation throughput across five standard benchmark profiles — three Chinese (<em>zh_full</em>, <em>zh_minimal</em>, <em>zh_medium</em>) and two English (<em>en_full</em>, <em>en_minimal</em>). All measurements are wall-clock on a single CPU thread.',
   s3_p:    'Fraction of generated candidates that contain a fragment of the target’s personal information. Higher rates indicate more targeted generation. The Personal-PCFG study (Li et&nbsp;al., USENIX Security 2014) observed that <span class="nv">60.1%</span> of Chinese users embed PII in their passwords.',
-  s4_p:    'The primary metric in the targeted password guessing literature. Given a PII–password paired dataset, what fraction of target passwords appears within the first <span class="nv">N</span> guesses? CCUPP and CUPP rows are measured on 200 synthetic records modelled after real Chinese password patterns; the remaining baselines are reported numbers from their respective papers on real leaked corpora — see <em>fair-comparison caveat</em> in §6.',
+  s4_p:    'The primary metric in the targeted password guessing literature. Given a PII–password paired dataset, what fraction of target passwords appears within the first <span class="nv">N</span> guesses? CCUPP, CUPP and bopscrk are evaluated on 200 synthetic records modelled after real Chinese password patterns (SR@N shown where a candidate ordering was captured); the remaining baselines are reported numbers from their respective papers on real leaked corpora — see <em>fair-comparison caveat</em> in §6.',
   s5_p:    'For passwords that were ultimately found, at what rank in the generated list did they appear? Lower ranks indicate better priority ordering.',
   s5_p2:   'The two tools also produce nearly disjoint candidate sets, suggesting they could be productively combined. Length distributions differ markedly: CUPP concentrates 82% of its output in the 9–12 character range, while CCUPP spreads across 1–24 characters in line with observed Chinese password length distributions.',
 
   /* table captions */
   tbl1_cap: 'Password generation statistics. Bold values mark per-row maxima. CCUPP generates fewer total candidates but at a substantially higher rate.',
   tbl2_cap: 'PII embedding rate by category. Bold values mark per-profile maxima.',
-  tbl3_cap: 'Success rate at guess budget&nbsp;N. Asterisks mark per-column maxima; em dashes indicate values not reported in source.',
+  tbl3_cap: 'Success rate at guess budget&nbsp;N. Asterisks mark per-column maxima. In measured rows an em dash means no SR@N was captured: CUPP\'s original build is not reproducible in this environment and PassLLM needs a GPU pass not run here; bopscrk\'s SR@N reflects its raw output order, not a likelihood ranking. In baseline rows an em dash means the value was not reported in the source.',
   tbl4_cap: 'Hit-rank statistics on 200 synthetic targets.',
   tbl5_cap: 'Length distribution on the <em>zh_full</em> profile.',
 
@@ -153,13 +153,13 @@ export const ZH: Strings = {
 
   s2_p:    '我们在五个标准基准画像下测量密码生成吞吐量——三个中文画像（<em>zh_full</em>、<em>zh_minimal</em>、<em>zh_medium</em>）与两个英文画像（<em>en_full</em>、<em>en_minimal</em>）。所有测量均为单 CPU 线程的真实墙钟时间。',
   s3_p:    '生成候选中包含目标个人信息片段的比例。比例越高表示生成越具针对性。Personal-PCFG（Li 等人，USENIX Security 2014）观察到 <span class="nv">60.1%</span> 的中文用户在密码中嵌入了 PII。',
-  s4_p:    '定向密码猜测领域的核心指标。给定一份 PII–密码配对数据集，前 <span class="nv">N</span> 次猜测内能命中多少比例的目标密码？CCUPP 与 CUPP 的数值在 200 条合成中文密码记录上实测得到；其余基线为各自论文在真实泄露语料上报告的结果——参见 §6 中的<em>公平性说明</em>。',
+  s4_p:    '定向密码猜测领域的核心指标。给定一份 PII–密码配对数据集，前 <span class="nv">N</span> 次猜测内能命中多少比例的目标密码？CCUPP、CUPP 与 bopscrk 在 200 条合成中文密码记录上实测运行（在能捕获候选排序时给出 SR@N）；其余基线为各自论文在真实泄露语料上报告的结果——参见 §6 中的<em>公平性说明</em>。',
   s5_p:    '对于最终被命中的密码，它们在生成列表中位列第几？排名越低，说明优先级排序越好。',
   s5_p2:   '两款工具的候选集几乎不相交，说明二者具有互补潜力。长度分布差异显著：CUPP 有 82% 的输出集中在 9–12 字符区间，而 CCUPP 分布在 1–24 字符，更贴合实际观察到的中文密码长度分布。',
 
   tbl1_cap: '密码生成统计。粗体标注每组（profile）内的最大值。CCUPP 候选总数更少，但生成速率显著更高。',
   tbl2_cap: '各类 PII 嵌入率。粗体标注每个 profile 内的最大值。',
-  tbl3_cap: '不同猜测预算 N 下的成功率。星号标注列内最大值；破折号表示原文未给出该数值。',
+  tbl3_cap: '不同猜测预算 N 下的成功率。星号标注列内最大值。实测行中的破折号表示未捕获到 SR@N：CUPP 原版工具在本环境无法复现，PassLLM 需 GPU 运行而此处未执行；bopscrk 的 SR@N 取其原始输出顺序，并非按可能性排序。基线行的破折号表示原文未给出该数值。',
   tbl4_cap: '200 条合成目标下的命中排名统计。',
   tbl5_cap: '<em>zh_full</em> 画像下的长度分布。',
 

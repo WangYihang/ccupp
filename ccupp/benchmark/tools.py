@@ -326,19 +326,28 @@ class BopscrkTool(BaseTool):
                 cmd, capture_output=True, text=True, timeout=300,
             )
 
+            # Preserve bopscrk's emission order so the paired evaluation can
+            # treat candidate position as a (coarse) ranking for SR@N. bopscrk
+            # has no likelihood model, so this order is its output order, not a
+            # relevance ranking — see the SR@N caption note on the site.
+            ordered: list[str] = []
             passwords: set[str] = set()
             out_path = Path(tmp_path)
             if out_path.exists():
                 with open(out_path, encoding='utf-8', errors='ignore') as f:
                     for line in f:
                         pw = line.strip()
-                        if pw:
+                        if pw and pw not in passwords:
                             passwords.add(pw)
+                            ordered.append(pw)
                 out_path.unlink()
 
             duration = time.time() - start
             err = None if passwords else (proc.stderr or proc.stdout or 'bopscrk produced no output')
-            return ToolResult(self.name, passwords, len(passwords), duration, error=err)
+            return ToolResult(
+                self.name, passwords, len(passwords), duration,
+                error=err, ordered_passwords=ordered,
+            )
 
         except Exception as e:
             duration = time.time() - start
