@@ -46,9 +46,9 @@ ACADEMIC_RESULTS: list[AcademicPaper] = [
     ),
     AcademicPaper(
         name='Personal-PCFG',
-        authors='Li et al.',
-        venue='USENIX Security',
-        year=2014,
+        authors='Li, Wang & Sun',
+        venue='IEEE INFOCOM',
+        year=2016,
         approach='PCFG with PII semantic tags',
         targeted=True,
         chinese=True,
@@ -56,8 +56,12 @@ ACADEMIC_RESULTS: list[AcademicPaper] = [
             100: 0.128,
             1000: 0.295,
         },
-        notes='Found 60.1% of Chinese users embed PII in passwords. '
-              'First large-scale PII-password study on Chinese users.',
+        notes='Extends PCFG with PII grammar variables (name/birthday/email/'
+              'phone/account, subscripted by length). Found 60.1% of 12306 '
+              'passwords (78,975/131,389) contain at least one PII type. '
+              'Journal extension: Li, Wang & Sun, IEEE TIFS 2017. '
+              'Not to be confused with Li, Han & Xu, USENIX Sec 2014, which is '
+              'the large-scale empirical analysis of Chinese web passwords.',
     ),
     AcademicPaper(
         name='RFGuess-PII',
