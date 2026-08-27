@@ -52,16 +52,17 @@ def extract_components(profile: Profile) -> dict[str, list[str]]:
     """
     components: dict[str, list[str]] = {}
 
-    # Name components (pinyin)
+    # Name components (pinyin). Order here becomes emission order, and the
+    # full surname+given form is by far the most common name shape in
+    # Chinese passwords, so it leads — the given name and the bare surname
+    # follow it rather than the other way round.
     name_parts: list[str] = []
-    if profile.surname:
-        name_parts.extend(pinyin_variants(profile.surname))
+    if profile.surname and profile.first_name:
+        name_parts.extend(pinyin_variants(profile.surname + profile.first_name))
     if profile.first_name:
         name_parts.extend(pinyin_variants(profile.first_name))
-    # Full name combined
-    if profile.surname and profile.first_name:
-        full = profile.surname + profile.first_name
-        name_parts.extend(pinyin_variants(full))
+    if profile.surname:
+        name_parts.extend(pinyin_variants(profile.surname))
     if name_parts:
         components['name'] = _dedup(name_parts)
 

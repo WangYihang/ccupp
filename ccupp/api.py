@@ -18,6 +18,7 @@ def generate_passwords(
     enable_case_variants: bool = True,
     enable_cultural_numbers: bool = True,
     enable_keyboard_patterns: bool = True,
+    enable_common_passwords: bool = True,
     suffixes: list[str] | None = None,
     prefixes: list[str] | None = None,
     delimiters: list[str] | None = None,
@@ -38,6 +39,10 @@ def generate_passwords(
         enable_case_variants: Enable upper/lower/title-case variants.
         enable_cultural_numbers: Enable Chinese lucky-number combinations.
         enable_keyboard_patterns: Enable keyboard-pattern combinations.
+        enable_common_passwords: Enable the generic weak-password fallback
+            list, for targets whose password contains no personal
+            information at all. Like keyboard patterns, this source is
+            independent of the profile.
         suffixes: Override the default common suffixes.
         prefixes: Override the default common prefixes.
         delimiters: Override the default component delimiters.
@@ -62,6 +67,7 @@ def generate_passwords(
             enable_case_variants=enable_case_variants,
             enable_cultural_numbers=enable_cultural_numbers,
             enable_keyboard_patterns=enable_keyboard_patterns,
+            enable_common_passwords=enable_common_passwords,
             suffixes=suffixes,
             prefixes=prefixes,
             delimiters=delimiters,
