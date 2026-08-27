@@ -9,7 +9,7 @@ def case_variants(word: str) -> Iterator[str]:
     Skips duplicates.
 
     >>> list(case_variants('liergou'))
-    ['liergou', 'Liergou', 'LIERGOU', 'LIERGOU']
+    ['liergou', 'Liergou', 'LIERGOU']
     """
     if not word:
         return
