@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://ccupp.pages.dev',
+  site: 'https://pii2pw.pages.dev',
   vite: {
     server: { fs: { allow: ['..'] } },
   },

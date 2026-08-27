@@ -8,24 +8,11 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Tests](https://github.com/WangYihang/pii2pw/actions/workflows/test.yaml/badge.svg)](https://github.com/WangYihang/pii2pw/actions/workflows/test.yaml)
 
-PII2PW 是一个基于社会工程学的弱口令密码字典生成工具，通过分析用户的个人信息（姓名、生日、电话、地址等），智能生成可能的弱口令密码字典。
+PII2PW 把目标的个人信息——姓名、生日、电话、地点等——转换成一份按可能性排序的弱口令字典。
 
-## 特性
-
-- **智能拼音转换**：自动将中文姓名、地名等转换为拼音、首字母、首字母大写等多种形式
-- **基于规则的生成**：按可能性优先级排序输出，高信号模式在前（详见[密码生成策略](#密码生成策略)）
-- **中国特色数字**：自动组合 520、1314、888、666 等文化含义数字
-- **日期格式变换**：从生日自动生成 19830924、830924、0924、83-09-24 等十余种变体
-- **Leetspeak 变换**：支持 a→@、e→3、o→0 等变换
-- **密码过滤**：支持按长度、字符类型过滤
-- **多输出格式**：支持 txt、json 格式输出
-- **统计信息**：`--stats` 显示生成密码的长度分布
-- **交互模式**：引导式输入用户信息
-- **高性能**：迭代器生成，内存高效
+工具针对中文用户做了适配：姓名和地名会转成拼音，生日会展开成中国人实际会用的各种日期写法，并自动组合 520、1314 这类有文化含义的数字。
 
 ## 安装
-
-从 PyPI 安装：
 
 ```bash
 pip install pii2pw
@@ -37,35 +24,15 @@ pip install pii2pw
 uv tool install pii2pw
 ```
 
-从源码安装：
+## 使用
 
-```bash
-git clone https://github.com/WangYihang/pii2pw.git
-cd pii2pw
-uv sync
-uv run pii2pw --help
-```
-
-## 快速开始
-
-### 1. 准备配置文件
-
-```bash
-# 自动生成示例配置
-pii2pw init
-
-# 或使用交互模式
-pii2pw interactive
-```
-
-手动创建 `config.yaml`：
+在 `config.yaml` 里描述目标。`pii2pw init` 可以生成示例配置，`pii2pw interactive` 则引导你逐项填写：
 
 ```yaml
 - surname: 李
   first_name: 二狗
   phone_numbers:
     - '13512345678'
-  identity: '220281198309243953'
   birthdate:
     - '1983'
     - '09'
@@ -73,120 +40,27 @@ pii2pw interactive
   hometowns:
     - 四川
     - 成都
-  places:
-    - - 河北
-      - 秦皇岛
-  social_media:
-    - '987654321'
-  workplaces:
-    - - 腾讯
-      - tencent
-  educational_institutions:
-    - - 清华大学
-      - tsinghua
   accounts:
     - twodogs
   passwords:
     - old_password
 ```
 
-### 2. 生成密码
+然后生成：
 
 ```bash
-# 基本使用
-pii2pw generate
-
-# 输出到文件
-pii2pw generate -o passwords.txt
-
-# 过滤长度
-pii2pw generate --min-length 8 --max-length 16
-
-# 查看统计
-pii2pw generate --stats
-
-# JSON 格式
-pii2pw generate -f json -o passwords.json
-
-# 禁用某些策略
-pii2pw generate --no-leetspeak --no-cultural --no-keyboard --no-common
+pii2pw generate                                  # 输出到终端
+pii2pw generate -o passwords.txt                 # 输出到文件
+pii2pw generate --min-length 8 --max-length 16   # 按长度过滤
+pii2pw generate -f json -o passwords.json        # JSON 格式
+pii2pw generate --stats                          # 同时打印长度分布
 ```
 
-## 作为 SDK / Python 库使用
+输出按可能性从高到低排序，因此就算只取前 N 条，拿到的也是最值得尝试的 N 个。`pii2pw generate --help` 列出全部选项，包括关闭单个生成策略的开关。
 
-除了命令行，PII2PW 也可以作为库在你自己的代码里调用。核心 API 都从顶层 `pii2pw` 包直接导出。
+## 配置字段
 
-### 一步到位：`generate_passwords`
-
-```python
-from pii2pw import Profile, generate_passwords
-
-profile = Profile(
-    surname='李',
-    first_name='二狗',
-    birthdate=['1983', '09', '24'],
-    phone_numbers=['13512345678'],
-    passwords=['old_password'],
-)
-
-# 返回一个惰性迭代器，按可能性从高到低排序、自动去重
-for pw in generate_passwords(profile, min_length=6, max_length=16):
-    print(pw)
-```
-
-`generate_passwords` 的常用参数：
-
-| 参数 | 说明 | 默认 |
-|------|------|------|
-| `min_length` / `max_length` | 长度过滤（0 表示不限制） | `0` |
-| `enable_leetspeak` | Leetspeak 变换（a→@、e→3…） | `True` |
-| `enable_case_variants` | 大小写变换 | `True` |
-| `enable_cultural_numbers` | 文化数字组合（520、1314…） | `True` |
-| `enable_keyboard_patterns` | 键盘模式组合 | `True` |
-| `enable_common_passwords` | 通用弱口令兜底，覆盖密码里完全不含 PII 的目标 | `True` |
-| `suffixes` / `prefixes` / `delimiters` | 覆盖默认的后缀/前缀/分隔符规则 | 内置默认值 |
-
-第一个参数也可以传入「多个 Profile」，会跨用户统一去重：
-
-```python
-from pii2pw import load_profiles, generate_passwords
-
-profiles = load_profiles('config.yaml')          # 从 YAML 加载多个用户
-passwords = list(generate_passwords(profiles))    # 跨用户去重
-```
-
-### 精细控制：底层组件
-
-如果需要在「提取组件」和「生成」之间插入自定义逻辑，可以分两步调用：
-
-```python
-from pii2pw import Profile, extract_components, PasswordGenerator
-
-profile = Profile(surname='李', first_name='二狗', passwords=['old_password'])
-
-components = extract_components(profile)   # Profile → {类别: [候选值, ...]}
-generator = PasswordGenerator(
-    components,
-    enable_keyboard_patterns=False,
-    suffixes=['', '123', '!'],            # 自定义后缀规则
-)
-for pw in generator.generate():
-    ...
-```
-
-### 公开 API 一览
-
-| 名称 | 说明 |
-|------|------|
-| `Profile` | 用户信息数据模型（Pydantic） |
-| `load_profiles(path)` | 从 YAML 文件加载 `list[Profile]` |
-| `extract_components(profile)` | 从 Profile 提取密码组件 |
-| `PasswordGenerator` | 底层规则生成引擎 |
-| `generate_passwords(profile, **options)` | 一步到位的高层封装（推荐） |
-
-> PII2PW 是**完整类型标注**的库：包内携带 [PEP 561](https://peps.python.org/pep-0561/) `py.typed` 标记，整个包通过 `mypy --strict`，下游用户在自己的项目里能直接享受到类型检查与编辑器补全。
-
-## 配置说明
+所有字段都是可选的——知道多少填多少。
 
 | 字段 | 类型 | 说明 | 示例 |
 |------|------|------|------|
@@ -203,50 +77,27 @@ for pw in generator.generate():
 | `accounts` | list[string] | 账号列表 | `['twodogs']` |
 | `passwords` | list[string] | 旧密码列表 | `['old_password']` |
 
-## 密码生成策略
+一份配置文件可以写多个目标，生成结果会跨目标去重。
 
-密码按可能性优先级排序输出，高信号模式在前：
+## 在 Python 中调用
 
-1. **旧密码变体**：旧密码 + 大小写/leetspeak/后缀变换
-2. **裸身份值**：账号 / 全拼姓名 / 手机号
-3. **姓名 + 生日**：最常见的中国用户弱口令模式
-4. **高信号后缀**：姓名/账号/生日 + 123、520、1314 等
-5. **姓名 + 电话/身份证尾号**
-6. **通用弱口令兜底**：不含 PII 的常见密码（`--no-common` 关闭）
-7. **穷举**：组合+后缀、单组件全后缀、带分隔符组合、双组件、文化数字、键盘模式
+```python
+from pii2pw import Profile, generate_passwords
 
-## 项目结构
+profile = Profile(
+    surname='李',
+    first_name='二狗',
+    birthdate=['1983', '09', '24'],
+    phone_numbers=['13512345678'],
+)
 
-```
-pii2pw/                      # 仓库目录
-├── pii2pw/                  # Python 包
-│   ├── __main__.py          # CLI 入口 (Typer)
-│   ├── api.py               # SDK 高层 API (generate_passwords)
-│   ├── models.py            # Profile 数据模型 (Pydantic)
-│   ├── config.py            # YAML 配置加载
-│   ├── generator.py         # 基于规则的密码生成引擎
-│   ├── extractors/
-│   │   └── components.py    # 从 Profile 提取密码组件
-│   ├── transforms/
-│   │   ├── pinyin.py        # 中文拼音转换
-│   │   ├── date.py          # 日期格式变换
-│   │   ├── case.py          # 大小写变换
-│   │   └── leetspeak.py     # Leetspeak 变换
-│   └── data/                # 示例配置、通用弱口令表
-├── tests/                   # pytest 测试套件
-├── .github/workflows/       # CI/CD (test + release)
-├── pyproject.toml
-└── Dockerfile
+for pw in generate_passwords(profile, min_length=6, max_length=16):
+    print(pw)
 ```
 
-## 技术栈
+`generate_passwords` 返回一个惰性迭代器，已排序并去重。它也接受一个 Profile 列表——`load_profiles('config.yaml')` 就能得到。完整选项见 `help(generate_passwords)`。
 
-- **Python 3.12+**
-- **Typer** — CLI 框架
-- **Pydantic** — 数据验证
-- **pypinyin** — 中文拼音转换
-- **PyYAML** — 配置解析
-- **Rich** — 终端美化
+本包带有完整类型标注，并附 [PEP 561](https://peps.python.org/pep-0561/) `py.typed` 标记。
 
 ## 开发
 
@@ -257,9 +108,7 @@ uv sync --dev
 uv run pytest -v
 ```
 
-## 贡献
-
-欢迎提交 Issue 和 Pull Request！
+欢迎提交 Issue 和 Pull Request。
 
 ## 许可证
 

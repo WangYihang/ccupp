@@ -13,7 +13,7 @@ order is the emission order, so the most common come first.
    :data:`pii2pw.benchmark.datasets.TOP_COMMON_PASSWORDS`, which is an
    *evaluation* dataset. They overlap by construction — both enumerate
    common weak passwords — so the built-in ``common-passwords`` benchmark
-   dataset is **not** an independent test set for CCUPP. Use an external
+   dataset is **not** an independent test set for PII2PW. Use an external
    corpus (rockyou, SecLists) when measuring hit rate.
 """
 from __future__ import annotations

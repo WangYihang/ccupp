@@ -3,7 +3,7 @@
 PassLLM needs a GPU pass that this environment cannot do, but its per-profile
 metrics (candidate count, throughput, PII embedding rate, length distribution,
 dataset hits) are properties of PassLLM's own output and are unaffected by any
-change to CCUPP or to the aggregation code. They are carried forward rather
+change to PII2PW or to the aggregation code. They are carried forward rather
 than dropped, and the merge is recorded in the exported JSON.
 
 PassLLM never appeared in the paired (_academic_paired) section, so nothing
@@ -97,7 +97,7 @@ new['_meta'] = {
         f'{TOOL} rows in the per-profile sections are carried forward from the '
         f'previous run ({old_path}); it requires a GPU pass not available in the '
         f'environment this run was produced in. Its metrics are properties of '
-        f'{TOOL} output alone and are unaffected by changes to CCUPP or to the '
+        f'{TOOL} output alone and are unaffected by changes to PII2PW or to the '
         f'aggregation code. Every other number in this file is from a single '
         f'fresh run.' + meta_note_extra
     ),
