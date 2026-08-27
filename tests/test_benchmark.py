@@ -11,6 +11,8 @@ from ccupp.benchmark.datasets import PairedRecord
 from ccupp.benchmark.datasets import get_builtin_common_passwords
 from ccupp.benchmark.datasets import load_paired_dataset
 from ccupp.benchmark.metrics import GuessNumberStats
+from ccupp.benchmark.metrics import aggregate_guess_curve
+from ccupp.benchmark.metrics import aggregate_success_rate_at_n
 from ccupp.benchmark.metrics import compute_guess_curve
 from ccupp.benchmark.metrics import compute_guess_numbers
 from ccupp.benchmark.metrics import compute_pii_embedding_rate
@@ -280,3 +282,44 @@ class TestBenchmarkRunner:
         # 'liwei' should be found (it's name pinyin), 'nonexistent_xyz' should not
         assert acad.coverage > 0
         assert 10 in acad.success_rates or 100 in acad.success_rates
+
+
+class TestAggregateMetrics:
+    """Aggregation across independently-guessed targets.
+
+    Each target is attacked with a dictionary built for its own profile, so
+    these aggregate per-record ranks. The earlier implementation matched one
+    record's dictionary against every record's password, which reported a
+    guess curve two orders of magnitude below the Success Rate @ N computed
+    from the same run.
+    """
+
+    def test_success_rate_counts_ranks_within_n(self):
+        ranks = [1, 50, 500, 5000, None]
+        sr = aggregate_success_rate_at_n(ranks)
+        assert sr[10] == 0.2
+        assert sr[100] == 0.4
+        assert sr[1000] == 0.6
+        assert sr[10_000] == 0.8
+
+    def test_unfound_targets_count_against_the_rate(self):
+        """None means that target's own dictionary never produced it."""
+        assert aggregate_success_rate_at_n([None, None])[10_000] == 0.0
+        assert aggregate_success_rate_at_n([1, None])[10] == 0.5
+
+    def test_curve_agrees_with_success_rate(self):
+        """The curve at N is exactly Success Rate @ N — same inputs, same answer."""
+        ranks = [3, 42, 900, 12_000, None, 7]
+        sr = aggregate_success_rate_at_n(ranks)
+        curve = dict(aggregate_guess_curve(ranks))
+        for n, rate in sr.items():
+            assert curve[n] == rate, f'curve and SR disagree at N={n}'
+
+    def test_curve_is_monotonic(self):
+        curve = aggregate_guess_curve([1, 100, 10_000, None])
+        rates = [rate for _, rate in curve]
+        assert rates == sorted(rates)
+
+    def test_empty_input(self):
+        assert aggregate_guess_curve([]) == []
+        assert all(v == 0.0 for v in aggregate_success_rate_at_n([]).values())
