@@ -6,23 +6,12 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Tests](https://github.com/WangYihang/pii2pw/actions/workflows/test.yaml/badge.svg)](https://github.com/WangYihang/pii2pw/actions/workflows/test.yaml)
 
-> [!IMPORTANT]
-> **本项目已由 `ccupp` 更名为 `pii2pw`。**
->
-> PyPI 上的 `ccupp` 属于一个与本项目无关的工具（[claude-code-usage-per-project](https://github.com/jwchoi-kr/claude-code-usage-per-project)，Claude Code 用量统计），
-> 它的分发名、顶层模块 `ccupp/` 与命令 `ccupp` 与本项目旧名完全相同，装在同一环境里会互相覆盖，
-> 表现为命令跑出别的程序、或 `ModuleNotFoundError`。为彻底解耦，本项目改用 `pii2pw`。
->
-> **⚠️ `pip install ccupp` 装到的不是本项目，请使用 `pip install pii2pw`。**
->
-> 老用户迁移：命令 `ccupp <子命令>` → `pii2pw <子命令>`；代码 `from ccupp import ...` → `from pii2pw import ...`。
-
 PII2PW 是一个基于社会工程学的弱口令密码字典生成工具，通过分析用户的个人信息（姓名、生日、电话、地址等），智能生成可能的弱口令密码字典。
 
 ## 特性
 
 - **智能拼音转换**：自动将中文姓名、地名等转换为拼音、首字母、首字母大写等多种形式
-- **基于规则的生成**：按优先级生成密码（旧密码变体 → 姓名+生日 → 姓名+电话 → 组合 → 文化数字 → 键盘模式）
+- **基于规则的生成**：按可能性优先级排序输出，高信号模式在前（详见「密码生成策略」）
 - **中国特色数字**：自动组合 520、1314、888、666 等文化含义数字
 - **日期格式变换**：从生日自动生成 19830924、830924、0924、83-09-24 等十余种变体
 - **Leetspeak 变换**：支持 a→@、e→3、o→0 等变换
@@ -34,7 +23,7 @@ PII2PW 是一个基于社会工程学的弱口令密码字典生成工具，通�
 
 ## 安装
 
-从 PyPI 安装（注意是 `pii2pw`，不是 `ccupp`）：
+从 PyPI 安装：
 
 ```bash
 pip install pii2pw
