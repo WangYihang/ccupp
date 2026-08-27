@@ -4,7 +4,7 @@
 
 [![Python Version](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Tests](https://github.com/WangYihang/ccupp/actions/workflows/test.yaml/badge.svg)](https://github.com/WangYihang/ccupp/actions/workflows/test.yaml)
+[![Tests](https://github.com/WangYihang/pii2pw/actions/workflows/test.yaml/badge.svg)](https://github.com/WangYihang/pii2pw/actions/workflows/test.yaml)
 
 > [!IMPORTANT]
 > **本项目已由 `ccupp` 更名为 `pii2pw`。**
@@ -49,8 +49,8 @@ uv tool install pii2pw
 从源码安装：
 
 ```bash
-git clone https://github.com/WangYihang/ccupp.git
-cd ccupp
+git clone https://github.com/WangYihang/pii2pw.git
+cd pii2pw
 uv sync
 uv run pii2pw --help
 ```
@@ -226,7 +226,7 @@ for pw in generator.generate():
 ## 项目结构
 
 ```
-ccupp/                       # 仓库目录
+pii2pw/                      # 仓库目录
 ├── pii2pw/                  # Python 包
 │   ├── __main__.py          # CLI 入口 (Typer)
 │   ├── api.py               # SDK 高层 API (generate_passwords)
@@ -259,8 +259,8 @@ ccupp/                       # 仓库目录
 ## 开发
 
 ```bash
-git clone https://github.com/WangYihang/ccupp.git
-cd ccupp
+git clone https://github.com/WangYihang/pii2pw.git
+cd pii2pw
 uv sync --dev
 uv run pytest -v
 ```
