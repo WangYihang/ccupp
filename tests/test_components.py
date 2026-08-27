@@ -1,6 +1,6 @@
 """Tests for component extraction."""
-from ccupp.extractors.components import extract_components
-from ccupp.models import Profile
+from pii2pw.extractors.components import extract_components
+from pii2pw.models import Profile
 
 
 class TestExtractComponents:

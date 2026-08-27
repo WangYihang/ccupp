@@ -1,7 +1,7 @@
 [project]
-name = "ccupp"
+name = "pii2pw"
 version = "0.1.0"
-description = "Chinese Common User Passwords Profiler — generate weak password dictionaries from personal information using social engineering insights"
+description = "Turn personal information into a ranked weak-password wordlist — a rule-based targeted password guesser tuned for Chinese users"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-ccupp = "ccupp.__main__:app"
+pii2pw = "pii2pw.__main__:app"
 
 [build-system]
 requires = ["hatchling"]
@@ -22,7 +22,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 # Ship the package together with its PEP 561 typing marker and data files.
-packages = ["ccupp"]
+packages = ["pii2pw"]
 
 [dependency-groups]
 dev = [
@@ -35,7 +35,7 @@ dev = [
 [tool.mypy]
 python_version = "3.12"
 strict = true
-files = ["ccupp"]
+files = ["pii2pw"]
 
 [[tool.mypy.overrides]]
 # Optional PassLLM benchmark backend — these modules only exist when the user

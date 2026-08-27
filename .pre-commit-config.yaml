@@ -49,7 +49,7 @@ repos:
     rev: v1.17.1
     hooks:
     -   id: mypy
-        files: ^ccupp/
+        files: ^pii2pw/
         additional_dependencies:
             - types-pyyaml
             - types-requests

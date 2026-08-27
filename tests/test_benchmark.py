@@ -5,22 +5,22 @@ from pathlib import Path
 
 import pytest
 
-from ccupp.benchmark.academic import ACADEMIC_RESULTS
-from ccupp.benchmark.academic import get_targeted_papers
-from ccupp.benchmark.datasets import PairedRecord
-from ccupp.benchmark.datasets import get_builtin_common_passwords
-from ccupp.benchmark.datasets import load_paired_dataset
-from ccupp.benchmark.metrics import GuessNumberStats
-from ccupp.benchmark.metrics import compute_guess_curve
-from ccupp.benchmark.metrics import compute_guess_numbers
-from ccupp.benchmark.metrics import compute_pii_embedding_rate
-from ccupp.benchmark.metrics import compute_success_rate_at_n
-from ccupp.benchmark.profiles import BENCHMARK_PROFILES
-from ccupp.benchmark.profiles import get_profile
-from ccupp.benchmark.profiles import list_profiles
-from ccupp.benchmark.runner import BenchmarkRunner
-from ccupp.benchmark.tools import CCUPPTool
-from ccupp.models import Profile
+from pii2pw.benchmark.academic import ACADEMIC_RESULTS
+from pii2pw.benchmark.academic import get_targeted_papers
+from pii2pw.benchmark.datasets import PairedRecord
+from pii2pw.benchmark.datasets import get_builtin_common_passwords
+from pii2pw.benchmark.datasets import load_paired_dataset
+from pii2pw.benchmark.metrics import GuessNumberStats
+from pii2pw.benchmark.metrics import compute_guess_curve
+from pii2pw.benchmark.metrics import compute_guess_numbers
+from pii2pw.benchmark.metrics import compute_pii_embedding_rate
+from pii2pw.benchmark.metrics import compute_success_rate_at_n
+from pii2pw.benchmark.profiles import BENCHMARK_PROFILES
+from pii2pw.benchmark.profiles import get_profile
+from pii2pw.benchmark.profiles import list_profiles
+from pii2pw.benchmark.runner import BenchmarkRunner
+from pii2pw.benchmark.tools import PII2PWTool
+from pii2pw.models import Profile
 
 
 class TestProfiles:
@@ -196,14 +196,14 @@ class TestAcademicData:
             assert paper.year >= 2014
 
 
-class TestCCUPPTool:
+class TestPII2PWTool:
     def test_is_available(self):
-        tool = CCUPPTool()
+        tool = PII2PWTool()
         assert tool.is_available()
-        assert tool.name == 'CCUPP'
+        assert tool.name == 'PII2PW'
 
     def test_generate(self):
-        tool = CCUPPTool()
+        tool = PII2PWTool()
         profile = get_profile('zh_full')
         result = tool.generate(profile)
         assert result.count > 0
@@ -212,7 +212,7 @@ class TestCCUPPTool:
         assert len(result.passwords) == result.count
 
     def test_generate_preserves_order(self):
-        tool = CCUPPTool()
+        tool = PII2PWTool()
         profile = get_profile('zh_full')
         result = tool.generate(profile)
         assert len(result.ordered_passwords) > 0
@@ -221,7 +221,7 @@ class TestCCUPPTool:
         assert result.ordered_passwords[0] == 'old_password'
 
     def test_generate_minimal(self):
-        tool = CCUPPTool()
+        tool = PII2PWTool()
         profile = get_profile('zh_minimal')
         result = tool.generate(profile)
         assert result.count > 0
@@ -229,36 +229,36 @@ class TestCCUPPTool:
 
 class TestBenchmarkRunner:
     def test_run_single_tool(self):
-        tools = [CCUPPTool()]
+        tools = [PII2PWTool()]
         runner = BenchmarkRunner(tools=tools)
         report = runner.run(profiles={'zh_minimal': get_profile('zh_minimal')})
         assert 'zh_minimal' in report.profiles
         pb = report.profiles['zh_minimal']
-        assert 'CCUPP' in pb.results
-        assert pb.results['CCUPP'].count > 0
+        assert 'PII2PW' in pb.results
+        assert pb.results['PII2PW'].count > 0
 
     def test_dataset_evaluation(self):
-        tools = [CCUPPTool()]
+        tools = [PII2PWTool()]
         runner = BenchmarkRunner(tools=tools)
         report = runner.run(profiles={'zh_full': get_profile('zh_full')})
         pb = report.profiles['zh_full']
-        assert 'CCUPP' in pb.dataset_evals
-        assert 'common-passwords' in pb.dataset_evals['CCUPP']
-        ev = pb.dataset_evals['CCUPP']['common-passwords']
+        assert 'PII2PW' in pb.dataset_evals
+        assert 'common-passwords' in pb.dataset_evals['PII2PW']
+        ev = pb.dataset_evals['PII2PW']['common-passwords']
         assert ev.hits >= 0
         assert 0 <= ev.hit_rate <= 1
 
     def test_pii_embedding_computed(self):
-        tools = [CCUPPTool()]
+        tools = [PII2PWTool()]
         runner = BenchmarkRunner(tools=tools)
         report = runner.run(profiles={'zh_full': get_profile('zh_full')})
         pb = report.profiles['zh_full']
-        acad = pb.academic_evals.get('CCUPP', {}).get('pii_embedding')
+        acad = pb.academic_evals.get('PII2PW', {}).get('pii_embedding')
         assert acad is not None
         assert acad.pii_embedding_rate['overall'] > 0
 
     def test_paired_evaluation(self, tmp_path):
-        # Create synthetic paired data where target passwords match CCUPP output
+        # Create synthetic paired data where target passwords match PII2PW output
         data = [
             {'surname': '李', 'first_name': '伟', 'birthdate': ['1990', '01', '15'], 'target_password': 'liwei'},
             {'surname': '张', 'first_name': '明', 'birthdate': ['1985', '06', '20'], 'target_password': 'nonexistent_xyz'},
@@ -266,16 +266,16 @@ class TestBenchmarkRunner:
         jsonl_file = tmp_path / 'test.jsonl'
         jsonl_file.write_text('\n'.join(json.dumps(d, ensure_ascii=False) for d in data), encoding='utf-8')
 
-        tools = [CCUPPTool()]
+        tools = [PII2PWTool()]
         runner = BenchmarkRunner(tools=tools)
         runner.add_paired_dataset('test', jsonl_file)
 
         report = runner.run(profiles={'zh_minimal': get_profile('zh_minimal')})
 
         # Check paired evaluation exists
-        assert 'CCUPP' in report.paired_evals
-        assert 'test' in report.paired_evals['CCUPP']
-        acad = report.paired_evals['CCUPP']['test']
+        assert 'PII2PW' in report.paired_evals
+        assert 'test' in report.paired_evals['PII2PW']
+        acad = report.paired_evals['PII2PW']['test']
         assert acad.num_targets == 2
         # 'liwei' should be found (it's name pinyin), 'nonexistent_xyz' should not
         assert acad.coverage > 0

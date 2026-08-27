@@ -35,10 +35,10 @@ const palette = {
   grid:     '#e6e6e6',
 } as const;
 
-/* Stable color per measured tool. CCUPP keeps the ours hue; others take
+/* Stable color per measured tool. PII2PW keeps the ours hue; others take
  * neutral / accent colors. */
 const TOOL_COLOR: Record<string, string> = {
-  CCUPP:   palette.ours,
+  PII2PW:   palette.ours,
   CUPP:    palette.baseline,
   bopscrk: palette.b,
   PassLLM: palette.d,

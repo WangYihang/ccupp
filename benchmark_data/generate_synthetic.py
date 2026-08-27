@@ -178,7 +178,7 @@ def main():
         print(f'  {k}: {v} ({v/len(records)*100:.0f}%)')
 
     # Write JSONL
-    outpath = '/home/user/ccupp/benchmark_data/synthetic_200.jsonl'
+    outpath = '/home/user/pii2pw/benchmark_data/synthetic_200.jsonl'
     with open(outpath, 'w', encoding='utf-8') as f:
         for r in records:
             f.write(json.dumps(r, ensure_ascii=False) + '\n')

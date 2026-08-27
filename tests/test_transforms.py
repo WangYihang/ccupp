@@ -1,11 +1,11 @@
 """Tests for transform modules."""
-from ccupp.transforms.case import case_variants
-from ccupp.transforms.date import date_variants
-from ccupp.transforms.leetspeak import leetspeak
-from ccupp.transforms.leetspeak import leetspeak_variants
-from ccupp.transforms.pinyin import pinyin_variants
-from ccupp.transforms.pinyin import to_pinyin
-from ccupp.transforms.pinyin import to_pinyin_initials
+from pii2pw.transforms.case import case_variants
+from pii2pw.transforms.date import date_variants
+from pii2pw.transforms.leetspeak import leetspeak
+from pii2pw.transforms.leetspeak import leetspeak_variants
+from pii2pw.transforms.pinyin import pinyin_variants
+from pii2pw.transforms.pinyin import to_pinyin
+from pii2pw.transforms.pinyin import to_pinyin_initials
 
 
 class TestPinyin:

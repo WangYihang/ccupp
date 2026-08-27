@@ -7,7 +7,7 @@ from dataclasses import field
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ccupp.models import Profile
+    from pii2pw.models import Profile
 
 # Default N values for Success Rate @ N (matches academic literature)
 DEFAULT_N_VALUES = [10, 100, 1000, 10_000]
@@ -196,7 +196,7 @@ def compute_pii_embedding_rate(
     if not passwords:
         return {'name': 0.0, 'date': 0.0, 'phone': 0.0, 'account': 0.0, 'overall': 0.0}
 
-    from ccupp.transforms.pinyin import to_pinyin, to_pinyin_initials
+    from pii2pw.transforms.pinyin import to_pinyin, to_pinyin_initials
 
     # Collect PII fragments to search for
     name_fragments: set[str] = set()

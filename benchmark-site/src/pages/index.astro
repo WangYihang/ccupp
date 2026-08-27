@@ -53,20 +53,20 @@ const sr10kBest = argmaxRows(successRate, (r) => r.sr10k);
 const rankBestFound    = argmaxRows(rankStats, (r) => r.found);
 const rankBestCoverage = argmaxRows(rankStats, (r) => r.coverage);
 
-// Hero stats: pulled from CCUPP's measured numbers in JSON.
-const ccuppSr = successRate.find((r) => r.method === 'CCUPP');
-const ccuppRank = rankStats.find((r) => r.tool === 'CCUPP');
-const ccuppZhFull = generation[0]?.rows.find((r) => r.tool === 'CCUPP');
+// Hero stats: pulled from PII2PW's measured numbers in JSON.
+const pii2pwSr = successRate.find((r) => r.method === 'PII2PW');
+const pii2pwRank = rankStats.find((r) => r.tool === 'PII2PW');
+const pii2pwZhFull = generation[0]?.rows.find((r) => r.tool === 'PII2PW');
 const cuppZhFull  = generation[0]?.rows.find((r) => r.tool === 'CUPP');
-const heroSr1k    = ccuppSr?.sr1k ?? 45.5;
-const heroCov     = ccuppRank?.coverage ?? 84.0;
-const heroSpeed   = ccuppZhFull ? (ccuppZhFull.pwd_per_s / 1_000_000) : 2.2;
-const heroVsCupp  = ccuppZhFull && cuppZhFull && cuppZhFull.pwd_per_s
-  ? ccuppZhFull.pwd_per_s / cuppZhFull.pwd_per_s
+const heroSr1k    = pii2pwSr?.sr1k ?? 45.5;
+const heroCov     = pii2pwRank?.coverage ?? 84.0;
+const heroSpeed   = pii2pwZhFull ? (pii2pwZhFull.pwd_per_s / 1_000_000) : 2.2;
+const heroVsCupp  = pii2pwZhFull && cuppZhFull && cuppZhFull.pwd_per_s
+  ? pii2pwZhFull.pwd_per_s / cuppZhFull.pwd_per_s
   : 9;
 ---
 
-<Layout title="CCUPP — Benchmark Evaluation Report">
+<Layout title="PII2PW — Benchmark Evaluation Report">
 
   <section class="title-block">
     <div class="eyebrow" data-i18n="eyebrow">{EN.eyebrow}</div>
@@ -108,7 +108,7 @@ const heroVsCupp  = ccuppZhFull && cuppZhFull && cuppZhFull.pwd_per_s
           return p.rows.map((r, i) => (
             <tr class={i === 0 ? 'group-start' : ''}>
               {i === 0 && <td rowspan={p.rows.length} class="label-col">{p.profile}</td>}
-              <td><span class={`tool-tag${r.tool === 'CCUPP' ? ' ours' : ''}`}>{r.tool}</span></td>
+              <td><span class={`tool-tag${r.tool === 'PII2PW' ? ' ours' : ''}`}>{r.tool}</span></td>
               <td class="num">{fmt(r.passwords)}</td>
               <td class="num">{r.time_s.toFixed(3)}</td>
               <td class={`num${i === winner ? ' best' : ''}`}>{fmt(r.pwd_per_s)}</td>
@@ -152,7 +152,7 @@ const heroVsCupp  = ccuppZhFull && cuppZhFull && cuppZhFull.pwd_per_s
           return p.rows.map((r, i) => (
             <tr class={i === 0 ? 'group-start' : ''}>
               {i === 0 && <td rowspan={p.rows.length} class="label-col">{p.profile}</td>}
-              <td><span class={`tool-tag${r.tool === 'CCUPP' ? ' ours' : ''}`}>{r.tool}</span></td>
+              <td><span class={`tool-tag${r.tool === 'PII2PW' ? ' ours' : ''}`}>{r.tool}</span></td>
               <td class={`num${bName    === i ? ' best' : ''}`}>{pct(r.name)}</td>
               <td class={`num${bDate    === i ? ' best' : ''}`}>{pct(r.date)}</td>
               <td class={`num${bPhone   === i ? ' best' : ''}`}>{pct(r.phone)}</td>
@@ -226,8 +226,8 @@ const heroVsCupp  = ccuppZhFull && cuppZhFull && cuppZhFull.pwd_per_s
       </thead>
       <tbody>
         {rankStats.map((r, i) => (
-          <tr class={r.tool === 'CCUPP' ? 'row-mine' : ''}>
-            <td><span class={`tool-tag${r.tool === 'CCUPP' ? ' ours' : ''}`}>{r.tool}</span></td>
+          <tr class={r.tool === 'PII2PW' ? 'row-mine' : ''}>
+            <td><span class={`tool-tag${r.tool === 'PII2PW' ? ' ours' : ''}`}>{r.tool}</span></td>
             <td class={`num${rankBestFound    === i ? ' best' : ''}`}>{fmt(r.found)}</td>
             <td class="num">{fmt(r.missed)}</td>
             <td class={`num${rankBestCoverage === i ? ' best' : ''}`}>{pct(r.coverage)}</td>

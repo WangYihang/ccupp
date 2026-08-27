@@ -5,11 +5,11 @@ from collections.abc import Iterable
 from collections.abc import Iterator
 from typing import TYPE_CHECKING
 
-from ccupp.transforms.date import date_variants
-from ccupp.transforms.pinyin import pinyin_variants
+from pii2pw.transforms.date import date_variants
+from pii2pw.transforms.pinyin import pinyin_variants
 
 if TYPE_CHECKING:
-    from ccupp.models import Profile
+    from pii2pw.models import Profile
 
 
 def _text_variants(word: str, use_pinyin: bool = True) -> Iterator[str]:

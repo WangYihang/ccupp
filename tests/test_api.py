@@ -1,18 +1,18 @@
-"""Tests for the high-level SDK API (ccupp.generate_passwords and re-exports)."""
+"""Tests for the high-level SDK API (pii2pw.generate_passwords and re-exports)."""
 import itertools
 
-import ccupp
-from ccupp import Profile
-from ccupp import extract_components
-from ccupp import generate_passwords
+import pii2pw
+from pii2pw import Profile
+from pii2pw import extract_components
+from pii2pw import generate_passwords
 
 
 def test_public_api_reexports():
     """Core SDK names are importable straight from the top-level package."""
     for name in ('Profile', 'PasswordGenerator', 'extract_components',
                  'generate_passwords', 'load_profiles'):
-        assert name in ccupp.__all__
-        assert hasattr(ccupp, name)
+        assert name in pii2pw.__all__
+        assert hasattr(pii2pw, name)
 
 
 def test_generate_passwords_single_profile(sample_profile: Profile):
@@ -59,7 +59,7 @@ def test_generate_passwords_disable_strategies(minimal_profile: Profile):
 
 def test_generate_passwords_matches_manual_pipeline(sample_profile: Profile):
     """The convenience wrapper equals the explicit extract+generate pipeline."""
-    from ccupp import PasswordGenerator
+    from pii2pw import PasswordGenerator
 
     manual = PasswordGenerator(extract_components(sample_profile))
     expected = list(itertools.islice(manual.generate(), 30))

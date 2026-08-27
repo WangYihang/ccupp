@@ -29,5 +29,5 @@ jobs:
         run: uv run pytest -v --tb=short
 
       - name: Run type check
-        run: uv run mypy ccupp/ --ignore-missing-imports
+        run: uv run mypy pii2pw/ --ignore-missing-imports
         continue-on-error: true

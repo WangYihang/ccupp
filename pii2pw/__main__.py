@@ -1,4 +1,4 @@
-"""CCUPP CLI — Chinese Common User Passwords Profiler."""
+"""PII2PW CLI — Personal Information to Password Wordlists."""
 import json
 import sys
 from collections import Counter
@@ -13,13 +13,13 @@ from pydantic import ValidationError
 from rich.console import Console
 from rich.table import Table
 
-from ccupp.config import load_profiles
-from ccupp.extractors.components import extract_components
-from ccupp.generator import PasswordGenerator
+from pii2pw.config import load_profiles
+from pii2pw.extractors.components import extract_components
+from pii2pw.generator import PasswordGenerator
 
 app = typer.Typer(
-    name='ccupp',
-    help='Chinese Common User Passwords Profiler — generate weak password dictionaries from personal information.',
+    name='pii2pw',
+    help='Turn personal information into a ranked weak-password wordlist.',
 )
 
 BENCHMARK_SETUP_GUIDE = """[bold cyan]Benchmark Setup Guide[/bold cyan]
@@ -51,17 +51,17 @@ BENCHMARK_SETUP_GUIDE = """[bold cyan]Benchmark Setup Guide[/bold cyan]
 
 [bold]3. Run Benchmark[/bold]
 
-  # Basic (CCUPP only, built-in common passwords):
-  ccupp benchmark
+  # Basic (PII2PW only, built-in common passwords):
+  pii2pw benchmark
 
   # With RockYou dataset:
-  ccupp benchmark -d rockyou.txt
+  pii2pw benchmark -d rockyou.txt
 
   # Full comparison with specific profile:
-  ccupp benchmark -p zh_full -d rockyou.txt -o results.json
+  pii2pw benchmark -p zh_full -d rockyou.txt -o results.json
 
   # Multiple datasets:
-  ccupp benchmark -d rockyou.txt -d phpbb.txt -d myspace.txt
+  pii2pw benchmark -d rockyou.txt -d phpbb.txt -d myspace.txt
 
 [bold]4. Paired Dataset (Academic Evaluation)[/bold]
 
@@ -70,7 +70,7 @@ BENCHMARK_SETUP_GUIDE = """[bold cyan]Benchmark Setup Guide[/bold cyan]
     {"surname":"张","first_name":"明","phone_numbers":["13800138000"],"target_password":"zm138000"}
 
   Then run:
-    ccupp benchmark -pd paired_data.jsonl
+    pii2pw benchmark -pd paired_data.jsonl
 
   This computes Success Rate @ N, Guess Number, Guess Curve,
   and compares with published results from TarGuess, RFGuess, PassLLM, etc.
@@ -81,7 +81,7 @@ console = Console(stderr=True)
 
 def _get_resource(filename: str) -> str:
     """Load a resource file from package data."""
-    with resources.files('ccupp.data').joinpath(filename).open(encoding='utf-8') as f:
+    with resources.files('pii2pw.data').joinpath(filename).open(encoding='utf-8') as f:
         return f.read()
 
 
@@ -122,7 +122,7 @@ def generate(
         console.print(f'[dim]Loaded {len(profiles)} profile(s) from {config}[/dim]')
     except FileNotFoundError:
         console.print(f'[red]Error:[/red] Configuration file not found: {config}')
-        console.print('[yellow]Hint:[/yellow] Use [cyan]ccupp init[/cyan] to generate an example config file')
+        console.print('[yellow]Hint:[/yellow] Use [cyan]pii2pw init[/cyan] to generate an example config file')
         sys.exit(1)
     except yaml.YAMLError as e:
         console.print(f'[red]Error:[/red] Invalid YAML: {e}')
@@ -242,7 +242,7 @@ def init(
 
     output_path.write_text(example_config, encoding='utf-8')
     console.print(f'[green]Created:[/green] {output_path}')
-    console.print('[cyan]Next:[/cyan] Edit the file and run [cyan]ccupp generate[/cyan]')
+    console.print('[cyan]Next:[/cyan] Edit the file and run [cyan]pii2pw generate[/cyan]')
 
 
 @app.command()
@@ -256,13 +256,13 @@ def example() -> None:
 
     console.print('[bold cyan]Configuration Format:[/bold cyan]\n')
     Console().print(content)
-    console.print('\n[cyan]Use[/cyan] [bold]ccupp init[/bold] [cyan]to generate a config file.[/cyan]')
+    console.print('\n[cyan]Use[/cyan] [bold]pii2pw init[/bold] [cyan]to generate a config file.[/cyan]')
 
 
 @app.command()
 def interactive() -> None:
     """Interactively build a configuration file by answering questions."""
-    console.print('[bold cyan]CCUPP Interactive Profile Builder[/bold cyan]\n')
+    console.print('[bold cyan]PII2PW Interactive Profile Builder[/bold cyan]\n')
 
     data: dict[str, Any] = {}
     data['surname'] = typer.prompt('Surname (姓氏)', default='')
@@ -304,7 +304,7 @@ def interactive() -> None:
     existing.append(data)
     path.write_text(yaml.dump(existing, allow_unicode=True, default_flow_style=False), encoding='utf-8')
     console.print(f'\n[green]Profile saved to {path}[/green]')
-    console.print(f'[cyan]Run:[/cyan] [bold]ccupp generate -c {path}[/bold]')
+    console.print(f'[cyan]Run:[/cyan] [bold]pii2pw generate -c {path}[/bold]')
 
 
 @app.command()
@@ -346,31 +346,31 @@ def benchmark(
         help='Show setup instructions for tools and datasets',
     ),
 ) -> None:
-    """Benchmark CCUPP against other tools using standard profiles and datasets.
+    """Benchmark PII2PW against other tools using standard profiles and datasets.
 
     Includes academic metrics (Success Rate @ N, Guess Number, PII Embedding Rate)
     and comparison with published results from TarGuess, RFGuess, PassLLM, etc.
 
     Examples:
 
-        ccupp benchmark
+        pii2pw benchmark
 
-        ccupp benchmark -d rockyou.txt
+        pii2pw benchmark -d rockyou.txt
 
-        ccupp benchmark -pd paired_data.jsonl
+        pii2pw benchmark -pd paired_data.jsonl
 
-        ccupp benchmark -p zh_full -pd data.jsonl -o results.json
+        pii2pw benchmark -p zh_full -pd data.jsonl -o results.json
 
-        ccupp benchmark --setup
+        pii2pw benchmark --setup
     """
     if setup_help:
         Console().print(BENCHMARK_SETUP_GUIDE)
         return
-    from ccupp.benchmark.datasets import find_password_lists
-    from ccupp.benchmark.profiles import BENCHMARK_PROFILES
-    from ccupp.benchmark.profiles import get_profile
-    from ccupp.benchmark.runner import BenchmarkRunner
-    from ccupp.benchmark.tools import get_available_tools
+    from pii2pw.benchmark.datasets import find_password_lists
+    from pii2pw.benchmark.profiles import BENCHMARK_PROFILES
+    from pii2pw.benchmark.profiles import get_profile
+    from pii2pw.benchmark.runner import BenchmarkRunner
+    from pii2pw.benchmark.tools import get_available_tools
 
     # Get tools
     tools = get_available_tools(

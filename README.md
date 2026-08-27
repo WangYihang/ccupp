@@ -1,4 +1,4 @@
-# CCUPP - Chinese Common User Passwords Profiler
+# PII2PW - Personal Information to Password Wordlists
 
 > 基于社会工程学的弱口令密码字典生成工具
 
@@ -6,7 +6,18 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Tests](https://github.com/WangYihang/ccupp/actions/workflows/test.yaml/badge.svg)](https://github.com/WangYihang/ccupp/actions/workflows/test.yaml)
 
-CCUPP 是一个基于社会工程学的弱口令密码字典生成工具，通过分析用户的个人信息（姓名、生日、电话、地址等），智能生成可能的弱口令密码字典。
+> [!IMPORTANT]
+> **本项目已由 `ccupp` 更名为 `pii2pw`。**
+>
+> PyPI 上的 `ccupp` 属于一个与本项目无关的工具（[claude-code-usage-per-project](https://github.com/jwchoi-kr/claude-code-usage-per-project)，Claude Code 用量统计），
+> 它的分发名、顶层模块 `ccupp/` 与命令 `ccupp` 与本项目旧名完全相同，装在同一环境里会互相覆盖，
+> 表现为命令跑出别的程序、或 `ModuleNotFoundError`。为彻底解耦，本项目改用 `pii2pw`。
+>
+> **⚠️ `pip install ccupp` 装到的不是本项目，请使用 `pip install pii2pw`。**
+>
+> 老用户迁移：命令 `ccupp <子命令>` → `pii2pw <子命令>`；代码 `from ccupp import ...` → `from pii2pw import ...`。
+
+PII2PW 是一个基于社会工程学的弱口令密码字典生成工具，通过分析用户的个人信息（姓名、生日、电话、地址等），智能生成可能的弱口令密码字典。
 
 ## 特性
 
@@ -23,14 +34,25 @@ CCUPP 是一个基于社会工程学的弱口令密码字典生成工具，通�
 
 ## 安装
 
+从 PyPI 安装（注意是 `pii2pw`，不是 `ccupp`）：
+
 ```bash
-pip install ccupp
+pip install pii2pw
 ```
+
+或作为独立命令行工具安装，与其他项目的依赖隔离：
+
+```bash
+uv tool install pii2pw
+```
+
+从源码安装：
 
 ```bash
 git clone https://github.com/WangYihang/ccupp.git
 cd ccupp
 uv sync
+uv run pii2pw --help
 ```
 
 ## 快速开始
@@ -39,10 +61,10 @@ uv sync
 
 ```bash
 # 自动生成示例配置
-ccupp init
+pii2pw init
 
 # 或使用交互模式
-ccupp interactive
+pii2pw interactive
 ```
 
 手动创建 `config.yaml`：
@@ -81,32 +103,32 @@ ccupp interactive
 
 ```bash
 # 基本使用
-ccupp generate
+pii2pw generate
 
 # 输出到文件
-ccupp generate -o passwords.txt
+pii2pw generate -o passwords.txt
 
 # 过滤长度
-ccupp generate --min-length 8 --max-length 16
+pii2pw generate --min-length 8 --max-length 16
 
 # 查看统计
-ccupp generate --stats
+pii2pw generate --stats
 
 # JSON 格式
-ccupp generate -f json -o passwords.json
+pii2pw generate -f json -o passwords.json
 
 # 禁用某些策略
-ccupp generate --no-leetspeak --no-cultural --no-keyboard
+pii2pw generate --no-leetspeak --no-cultural --no-keyboard
 ```
 
 ## 作为 SDK / Python 库使用
 
-除了命令行，CCUPP 也可以作为库在你自己的代码里调用。核心 API 都从顶层 `ccupp` 包直接导出。
+除了命令行，PII2PW 也可以作为库在你自己的代码里调用。核心 API 都从顶层 `pii2pw` 包直接导出。
 
 ### 一步到位：`generate_passwords`
 
 ```python
-from ccupp import Profile, generate_passwords
+from pii2pw import Profile, generate_passwords
 
 profile = Profile(
     surname='李',
@@ -135,7 +157,7 @@ for pw in generate_passwords(profile, min_length=6, max_length=16):
 第一个参数也可以传入「多个 Profile」，会跨用户统一去重：
 
 ```python
-from ccupp import load_profiles, generate_passwords
+from pii2pw import load_profiles, generate_passwords
 
 profiles = load_profiles('config.yaml')          # 从 YAML 加载多个用户
 passwords = list(generate_passwords(profiles))    # 跨用户去重
@@ -146,7 +168,7 @@ passwords = list(generate_passwords(profiles))    # 跨用户去重
 如果需要在「提取组件」和「生成」之间插入自定义逻辑，可以分两步调用：
 
 ```python
-from ccupp import Profile, extract_components, PasswordGenerator
+from pii2pw import Profile, extract_components, PasswordGenerator
 
 profile = Profile(surname='李', first_name='二狗', passwords=['old_password'])
 
@@ -170,7 +192,7 @@ for pw in generator.generate():
 | `PasswordGenerator` | 底层规则生成引擎 |
 | `generate_passwords(profile, **options)` | 一步到位的高层封装（推荐） |
 
-> CCUPP 是**完整类型标注**的库：包内携带 [PEP 561](https://peps.python.org/pep-0561/) `py.typed` 标记，整个包通过 `mypy --strict`，下游用户在自己的项目里能直接享受到类型检查与编辑器补全。
+> PII2PW 是**完整类型标注**的库：包内携带 [PEP 561](https://peps.python.org/pep-0561/) `py.typed` 标记，整个包通过 `mypy --strict`，下游用户在自己的项目里能直接享受到类型检查与编辑器补全。
 
 ## 配置说明
 
@@ -204,8 +226,8 @@ for pw in generator.generate():
 ## 项目结构
 
 ```
-ccupp/
-├── ccupp/
+ccupp/                       # 仓库目录
+├── pii2pw/                  # Python 包
 │   ├── __main__.py          # CLI 入口 (Typer)
 │   ├── api.py               # SDK 高层 API (generate_passwords)
 │   ├── models.py            # Profile 数据模型 (Pydantic)

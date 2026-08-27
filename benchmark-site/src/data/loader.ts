@@ -1,5 +1,5 @@
 /**
- * Adapter that exposes the benchmark JSON (produced by `ccupp.benchmark.runner`)
+ * Adapter that exposes the benchmark JSON (produced by `pii2pw.benchmark.runner`)
  * as typed structures for the site.
  *
  * Everything measured comes from `benchmark_data/results.json`. The published
@@ -105,7 +105,7 @@ export function getSuccessRates(): SrRow[] {
       sr1k:  has ? num(sr['1000'])   : null,
       sr10k: has ? num(sr['10000'])  : null,
       measured: true,
-      ours: tool === 'CCUPP',
+      ours: tool === 'PII2PW',
     });
   }
   return [...measured, ...academicBaselines];
@@ -158,18 +158,18 @@ export function getLengthDist(profile: ProfileName): LengthRow[] {
   });
 }
 
-/** Overlap doughnut for Figure 4a: CCUPP-only vs overlap vs others. */
+/** Overlap doughnut for Figure 4a: PII2PW-only vs overlap vs others. */
 export function getOverlap(profile: ProfileName): {
-  ccuppOnly: number; overlap: number; cuppOnly: number;
+  pii2pwOnly: number; overlap: number; cuppOnly: number;
 } {
   const entry = data[profile];
-  if (!entry) return { ccuppOnly: 0, overlap: 0, cuppOnly: 0 };
-  const ccupp = entry.results.CCUPP?.count ?? 0;
+  if (!entry) return { pii2pwOnly: 0, overlap: 0, cuppOnly: 0 };
+  const pii2pw = entry.results.PII2PW?.count ?? 0;
   const cupp  = entry.results.CUPP?.count ?? 0;
   // Without exposed candidate sets we can't compute exact overlap from JSON;
   // surface counts and let the chart fall back to the (small) historical
   // overlap figure if a future export includes it.
-  return { ccuppOnly: ccupp, overlap: 0, cuppOnly: cupp };
+  return { pii2pwOnly: pii2pw, overlap: 0, cuppOnly: cupp };
 }
 
 /* -- helpers -------------------------------------------------------------- */
@@ -185,7 +185,7 @@ function pct(v: number | undefined): number {
 
 function approachKey(tool: string): string {
   switch (tool) {
-    case 'CCUPP':   return 'apr_rb_pii';
+    case 'PII2PW':   return 'apr_rb_pii';
     case 'CUPP':    return 'apr_rb';
     case 'bopscrk': return 'apr_rb';
     case 'PassLLM': return 'apr_llm';

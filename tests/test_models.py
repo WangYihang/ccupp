@@ -2,7 +2,7 @@
 import pytest
 from pydantic import ValidationError
 
-from ccupp.models import Profile
+from pii2pw.models import Profile
 
 
 class TestProfile:

@@ -4,8 +4,8 @@ from __future__ import annotations
 from collections.abc import Iterator
 from itertools import product
 
-from ccupp.transforms.case import case_variants
-from ccupp.transforms.leetspeak import leetspeak_variants
+from pii2pw.transforms.case import case_variants
+from pii2pw.transforms.leetspeak import leetspeak_variants
 
 # Chinese culturally significant numbers commonly used in passwords
 CHINESE_LUCKY_NUMBERS = [
