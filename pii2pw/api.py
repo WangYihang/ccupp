@@ -49,8 +49,9 @@ def generate_passwords(
         >>> from pii2pw import Profile, generate_passwords
         >>> profile = Profile(surname='李', first_name='二狗',
         ...                   birthdate=['1983', '09', '24'])
-        >>> for pw in generate_passwords(profile, min_length=6, max_length=16):
-        ...     ...
+        >>> candidates = list(generate_passwords(profile, min_length=6, max_length=16))
+        >>> candidates[:3]
+        ['li1234', 'li12345', 'li123456']
     """
     profiles = [profile] if isinstance(profile, Profile) else list(profile)
 

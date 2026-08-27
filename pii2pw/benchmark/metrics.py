@@ -183,8 +183,8 @@ def compute_pii_embedding_rate(
 ) -> dict[str, float]:
     """Compute PII Embedding Rate — what fraction of passwords contain PII fragments.
 
-    Based on Personal-PCFG (USENIX Sec'14) which found 60.1% of Chinese users
-    embed PII in their passwords.
+    Based on Personal-PCFG (Li, Wang & Sun, INFOCOM'16), which found that 60.1%
+    of the 131,389 leaked 12306 passwords contain at least one type of PII.
 
     Args:
         passwords: Set of generated passwords.

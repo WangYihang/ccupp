@@ -2,7 +2,7 @@
 """Generate a realistic synthetic PII-password paired dataset.
 
 Password patterns are modeled after published research on Chinese password habits:
-- Li et al. (USENIX Sec 2014): 60.1% of Chinese users embed PII in passwords
+- Li, Wang & Sun (INFOCOM 2016): 60.1% of leaked 12306 passwords contain PII
 - Wang et al. (CCS 2016): name+birthday is the most common pattern
 
 Pattern distribution (approximating real-world):
