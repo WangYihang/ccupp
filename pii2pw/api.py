@@ -1,12 +1,12 @@
-"""High-level SDK entry points for using CCUPP as a library."""
+"""High-level SDK entry points for using PII2PW as a library."""
 from __future__ import annotations
 
 from collections.abc import Iterable
 from collections.abc import Iterator
 
-from ccupp.extractors.components import extract_components
-from ccupp.generator import PasswordGenerator
-from ccupp.models import Profile
+from pii2pw.extractors.components import extract_components
+from pii2pw.generator import PasswordGenerator
+from pii2pw.models import Profile
 
 
 def generate_passwords(
@@ -25,13 +25,13 @@ def generate_passwords(
     """Generate candidate passwords for one or more profiles.
 
     This is the one-call convenience wrapper around
-    :func:`~ccupp.extractors.components.extract_components` and
-    :class:`~ccupp.generator.PasswordGenerator`. Passwords are yielded
+    :func:`~pii2pw.extractors.components.extract_components` and
+    :class:`~pii2pw.generator.PasswordGenerator`. Passwords are yielded
     lazily, ordered by likelihood, deduplicated across all given profiles.
 
     Args:
-        profile: A single :class:`~ccupp.models.Profile` or any iterable of
-            profiles (e.g. the result of :func:`~ccupp.config.load_profiles`).
+        profile: A single :class:`~pii2pw.models.Profile` or any iterable of
+            profiles (e.g. the result of :func:`~pii2pw.config.load_profiles`).
         min_length: Drop passwords shorter than this (0 = no minimum).
         max_length: Drop passwords longer than this (0 = no maximum).
         enable_leetspeak: Enable leetspeak transforms (a→@, e→3, ...).
@@ -46,7 +46,7 @@ def generate_passwords(
         Candidate password strings, most likely first, without duplicates.
 
     Example:
-        >>> from ccupp import Profile, generate_passwords
+        >>> from pii2pw import Profile, generate_passwords
         >>> profile = Profile(surname='李', first_name='二狗',
         ...                   birthdate=['1983', '09', '24'])
         >>> for pw in generate_passwords(profile, min_length=6, max_length=16):

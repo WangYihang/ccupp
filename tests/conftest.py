@@ -1,7 +1,7 @@
 """Shared test fixtures."""
 import pytest
 
-from ccupp.models import Profile
+from pii2pw.models import Profile
 
 
 @pytest.fixture

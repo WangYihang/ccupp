@@ -10,20 +10,20 @@ from typing import Any
 from rich.console import Console
 from rich.table import Table
 
-from ccupp.benchmark.academic import get_targeted_papers
-from ccupp.benchmark.datasets import PairedRecord
-from ccupp.benchmark.datasets import get_builtin_common_passwords
-from ccupp.benchmark.datasets import load_paired_dataset
-from ccupp.benchmark.datasets import load_password_set
-from ccupp.benchmark.metrics import GuessNumberStats
-from ccupp.benchmark.metrics import compute_guess_curve
-from ccupp.benchmark.metrics import compute_guess_numbers
-from ccupp.benchmark.metrics import compute_pii_embedding_rate
-from ccupp.benchmark.metrics import compute_success_rate_at_n
-from ccupp.benchmark.profiles import BENCHMARK_PROFILES
-from ccupp.benchmark.tools import BaseTool
-from ccupp.benchmark.tools import ToolResult
-from ccupp.models import Profile
+from pii2pw.benchmark.academic import get_targeted_papers
+from pii2pw.benchmark.datasets import PairedRecord
+from pii2pw.benchmark.datasets import get_builtin_common_passwords
+from pii2pw.benchmark.datasets import load_paired_dataset
+from pii2pw.benchmark.datasets import load_password_set
+from pii2pw.benchmark.metrics import GuessNumberStats
+from pii2pw.benchmark.metrics import compute_guess_curve
+from pii2pw.benchmark.metrics import compute_guess_numbers
+from pii2pw.benchmark.metrics import compute_pii_embedding_rate
+from pii2pw.benchmark.metrics import compute_success_rate_at_n
+from pii2pw.benchmark.profiles import BENCHMARK_PROFILES
+from pii2pw.benchmark.tools import BaseTool
+from pii2pw.benchmark.tools import ToolResult
+from pii2pw.models import Profile
 
 
 LENGTH_BUCKETS = ['1-6', '7-8', '9-12', '13-16', '17-24', '25+']

@@ -9,7 +9,7 @@
  *     DOM — the SSR-rendered English IS the English version.
  *   • On switch we rewrite the snapshots back (→ EN) or look up `ZH[k]`
  *     (→ 中文), then rewire chart axis / dataset labels.
- *   • Preference is persisted in `localStorage["ccupp-lang"]`.
+ *   • Preference is persisted in `localStorage["pii2pw-lang"]`.
  */
 
 import { ZH, docTitles, type StringKey } from '../data/i18n';
@@ -17,7 +17,7 @@ import type { Charts } from './charts.client';
 
 type Lang = 'en' | 'zh';
 
-const STORAGE_KEY = 'ccupp-lang';
+const STORAGE_KEY = 'pii2pw-lang';
 
 interface ChartMessages {
   measured:   string;
@@ -86,7 +86,7 @@ function applyCharts(lang: Lang, charts: Charts): void {
 
   const relabelMeasured = (chart: any) => {
     for (const ds of chart.data.datasets) {
-      // Tool names (CCUPP / CUPP / bopscrk / PassLLM) are language-neutral; only
+      // Tool names (PII2PW / CUPP / bopscrk / PassLLM) are language-neutral; only
       // the " (measured)" suffix translates. SR-chart academic-baseline datasets
       // ("TarGuess-III · CCS 2016") have no suffix and pass through unchanged.
       const bare = stripMeasured(ds.label ?? '');

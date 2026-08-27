@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from ccupp.models import Profile
+from pii2pw.models import Profile
 
 
 @dataclass

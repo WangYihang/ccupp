@@ -4,7 +4,7 @@ These profiles represent realistic Chinese and English user personas
 with varying amounts of PII. They are synthetic (not real people)
 but follow realistic patterns.
 """
-from ccupp.models import Profile
+from pii2pw.models import Profile
 
 # Standard benchmark profiles — synthetic, not real people
 BENCHMARK_PROFILES: dict[str, Profile] = {

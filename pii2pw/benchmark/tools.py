@@ -19,7 +19,7 @@ from typing import TYPE_CHECKING
 from typing import Any
 
 if TYPE_CHECKING:
-    from ccupp.models import Profile
+    from pii2pw.models import Profile
 
 
 @dataclass
@@ -52,23 +52,23 @@ class BaseTool(ABC):
         """Generate passwords for the given profile."""
 
 
-class CCUPPTool(BaseTool):
-    """Adapter for CCUPP (this project)."""
+class PII2PWTool(BaseTool):
+    """Adapter for PII2PW (this project)."""
 
     @property
     def name(self) -> str:
-        return 'CCUPP'
+        return 'PII2PW'
 
     def is_available(self) -> bool:
         try:
-            from ccupp.generator import PasswordGenerator
+            from pii2pw.generator import PasswordGenerator
             return True
         except ImportError:
             return False
 
     def generate(self, profile: Profile) -> ToolResult:
-        from ccupp.extractors.components import extract_components
-        from ccupp.generator import PasswordGenerator
+        from pii2pw.extractors.components import extract_components
+        from pii2pw.generator import PasswordGenerator
 
         start = time.time()
         components = extract_components(profile)
@@ -117,7 +117,7 @@ class CUPPTool(BaseTool):
 
     def _profile_to_cupp_profile(self, profile: Profile) -> dict[str, Any]:
         """Convert our Profile to CUPP's profile dict format."""
-        from ccupp.transforms.pinyin import to_pinyin
+        from pii2pw.transforms.pinyin import to_pinyin
 
         # CUPP expects romanized names (not Chinese characters)
         name = to_pinyin(profile.first_name) if profile.first_name else ''
@@ -285,7 +285,7 @@ class BopscrkTool(BaseTool):
             return False
 
     def generate(self, profile: Profile) -> ToolResult:
-        from ccupp.transforms.pinyin import to_pinyin
+        from pii2pw.transforms.pinyin import to_pinyin
 
         start = time.time()
         try:
@@ -424,7 +424,7 @@ class PassLLMTool(BaseTool):
                 pass
 
     def _profile_to_passllm_dict(self, profile: Profile) -> dict[str, str]:
-        from ccupp.transforms.pinyin import to_pinyin
+        from pii2pw.transforms.pinyin import to_pinyin
 
         first = to_pinyin(profile.first_name) if profile.first_name else ''
         last = to_pinyin(profile.surname) if profile.surname else ''
@@ -482,7 +482,7 @@ def get_available_tools(
     passllm_path: str | None = None,
 ) -> list[BaseTool]:
     """Get all available password generation tools."""
-    tools: list[BaseTool] = [CCUPPTool()]
+    tools: list[BaseTool] = [PII2PWTool()]
 
     cupp = CUPPTool(cupp_path=cupp_path)
     if cupp.is_available():

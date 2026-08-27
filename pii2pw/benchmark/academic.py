@@ -1,7 +1,7 @@
 """Static reference data from published academic papers on password guessing.
 
 These are the reported Success Rate @ N values from peer-reviewed papers,
-used for direct comparison with CCUPP's benchmark results.
+used for direct comparison with PII2PW's benchmark results.
 """
 from __future__ import annotations
 
@@ -132,7 +132,7 @@ ACADEMIC_RESULTS: list[AcademicPaper] = [
         chinese=False,
         success_rates={},
         notes='Non-targeted (trawling). Guesses 2x more passwords than PassGAN. '
-              'Referenced in CCUPP README.',
+              'Referenced in PII2PW README.',
     ),
     AcademicPaper(
         name='PassGAN',
@@ -149,7 +149,7 @@ ACADEMIC_RESULTS: list[AcademicPaper] = [
 
 
 def get_targeted_papers() -> list[AcademicPaper]:
-    """Get only PII-targeted papers (relevant for CCUPP comparison)."""
+    """Get only PII-targeted papers (relevant for PII2PW comparison)."""
     return [p for p in ACADEMIC_RESULTS if p.targeted and p.success_rates]
 
 

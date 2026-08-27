@@ -7,7 +7,7 @@
  * bibliography — neither is in JSON.
  */
 
-export type Tool = 'CCUPP' | 'CUPP' | 'bopscrk' | 'PassLLM';
+export type Tool = 'PII2PW' | 'CUPP' | 'bopscrk' | 'PassLLM';
 
 export interface GenRow {
   tool: Tool;

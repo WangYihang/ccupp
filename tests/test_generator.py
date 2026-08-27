@@ -1,6 +1,6 @@
 """Tests for the password generator."""
-from ccupp.extractors.components import extract_components
-from ccupp.generator import PasswordGenerator
+from pii2pw.extractors.components import extract_components
+from pii2pw.generator import PasswordGenerator
 
 
 class TestPasswordGenerator:

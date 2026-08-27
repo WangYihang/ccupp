@@ -5,8 +5,8 @@ from pathlib import Path
 import pytest
 import yaml
 
-from ccupp.config import load_profiles
-from ccupp.models import Profile
+from pii2pw.config import load_profiles
+from pii2pw.models import Profile
 
 
 class TestLoadProfiles:

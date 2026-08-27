@@ -1,6 +1,6 @@
 {
     "_academic_paired": {
-        "CCUPP": {
+        "PII2PW": {
             "synthetic_200": {
                 "coverage": 0.84,
                 "guess_curve": [
@@ -163,7 +163,7 @@
     },
     "en_full": {
         "dataset_evals": {
-            "CCUPP": {
+            "PII2PW": {
                 "common-passwords": {
                     "dataset_size": 122,
                     "hit_passwords": [
@@ -438,7 +438,7 @@
             }
         },
         "length_distribution": {
-            "CCUPP": {
+            "PII2PW": {
                 "1-6": 590,
                 "13-16": 989,
                 "17-24": 219,
@@ -472,7 +472,7 @@
             }
         },
         "pii_embedding_rate": {
-            "CCUPP": {
+            "PII2PW": {
                 "account": 0.09115523465703972,
                 "date": 0.28046028880866425,
                 "name": 0.3822202166064982,
@@ -502,7 +502,7 @@
             }
         },
         "results": {
-            "CCUPP": {
+            "PII2PW": {
                 "count": 4432,
                 "duration_seconds": 0.0010085105895996094,
                 "error": null,
@@ -530,7 +530,7 @@
     },
     "en_minimal": {
         "dataset_evals": {
-            "CCUPP": {
+            "PII2PW": {
                 "common-passwords": {
                     "dataset_size": 122,
                     "hit_passwords": [
@@ -767,7 +767,7 @@
             }
         },
         "length_distribution": {
-            "CCUPP": {
+            "PII2PW": {
                 "1-6": 326,
                 "13-16": 435,
                 "17-24": 82,
@@ -801,7 +801,7 @@
             }
         },
         "pii_embedding_rate": {
-            "CCUPP": {
+            "PII2PW": {
                 "account": 0.0,
                 "date": 0.4234104046242775,
                 "name": 0.4653179190751445,
@@ -831,7 +831,7 @@
             }
         },
         "results": {
-            "CCUPP": {
+            "PII2PW": {
                 "count": 2076,
                 "duration_seconds": 0.00047206878662109375,
                 "error": null,
@@ -859,7 +859,7 @@
     },
     "zh_full": {
         "dataset_evals": {
-            "CCUPP": {
+            "PII2PW": {
                 "common-passwords": {
                     "dataset_size": 122,
                     "hit_passwords": [
@@ -1094,7 +1094,7 @@
             }
         },
         "length_distribution": {
-            "CCUPP": {
+            "PII2PW": {
                 "1-6": 2407,
                 "13-16": 2268,
                 "17-24": 1044,
@@ -1128,7 +1128,7 @@
             }
         },
         "pii_embedding_rate": {
-            "CCUPP": {
+            "PII2PW": {
                 "account": 0.05139845966761249,
                 "date": 0.20802594244021078,
                 "name": 0.22423996757194975,
@@ -1158,7 +1158,7 @@
             }
         },
         "results": {
-            "CCUPP": {
+            "PII2PW": {
                 "count": 12335,
                 "duration_seconds": 0.0030050277709960938,
                 "error": null,
@@ -1186,7 +1186,7 @@
     },
     "zh_medium": {
         "dataset_evals": {
-            "CCUPP": {
+            "PII2PW": {
                 "common-passwords": {
                     "dataset_size": 122,
                     "hit_passwords": [
@@ -1418,7 +1418,7 @@
             }
         },
         "length_distribution": {
-            "CCUPP": {
+            "PII2PW": {
                 "1-6": 1898,
                 "13-16": 1770,
                 "17-24": 877,
@@ -1452,7 +1452,7 @@
             }
         },
         "pii_embedding_rate": {
-            "CCUPP": {
+            "PII2PW": {
                 "account": 0.058843122016209615,
                 "date": 0.24869545908737647,
                 "name": 0.3490618407904963,
@@ -1482,7 +1482,7 @@
             }
         },
         "results": {
-            "CCUPP": {
+            "PII2PW": {
                 "count": 9007,
                 "duration_seconds": 0.0021555423736572266,
                 "error": null,
@@ -1510,7 +1510,7 @@
     },
     "zh_minimal": {
         "dataset_evals": {
-            "CCUPP": {
+            "PII2PW": {
                 "common-passwords": {
                     "dataset_size": 122,
                     "hit_passwords": [
@@ -1736,7 +1736,7 @@
             }
         },
         "length_distribution": {
-            "CCUPP": {
+            "PII2PW": {
                 "1-6": 829,
                 "13-16": 903,
                 "17-24": 563,
@@ -1770,7 +1770,7 @@
             }
         },
         "pii_embedding_rate": {
-            "CCUPP": {
+            "PII2PW": {
                 "account": 0.0,
                 "date": 0.3360037700282752,
                 "name": 0.4637134778510839,
@@ -1800,7 +1800,7 @@
             }
         },
         "results": {
-            "CCUPP": {
+            "PII2PW": {
                 "count": 4244,
                 "duration_seconds": 0.0009982585906982422,
                 "error": null,
