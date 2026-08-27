@@ -10,6 +10,7 @@ from ccupp.benchmark.academic import get_targeted_papers
 from ccupp.benchmark.datasets import PairedRecord
 from ccupp.benchmark.datasets import get_builtin_common_passwords
 from ccupp.benchmark.datasets import load_paired_dataset
+from ccupp.benchmark.datasets import load_paired_dataset_verbose
 from ccupp.benchmark.metrics import GuessNumberStats
 from ccupp.benchmark.metrics import aggregate_guess_curve
 from ccupp.benchmark.metrics import aggregate_success_rate_at_n
@@ -84,8 +85,37 @@ class TestPairedDataset:
         jsonl_file = tmp_path / 'test.jsonl'
         jsonl_file.write_text('\n'.join(json.dumps(d, ensure_ascii=False) for d in data), encoding='utf-8')
 
-        records = load_paired_dataset(jsonl_file)
+        with pytest.warns(UserWarning, match='1 of 2 rows'):
+            records = load_paired_dataset(jsonl_file)
         assert len(records) == 1
+
+    def test_skipped_rows_are_reported_not_silent(self, tmp_path):
+        """A malformed row must never vanish without a trace.
+
+        This harness turns dropped records into shifted success rates with
+        no visible cause, so the loader reports what it could not parse.
+        """
+        jsonl_file = tmp_path / 'test.jsonl'
+        jsonl_file.write_text(
+            '{"surname": "\u674e", "target_password": "test123"}\n'
+            'not json at all\n'
+            '{"surname": "\u5f20"}\n',
+            encoding='utf-8',
+        )
+
+        load = load_paired_dataset_verbose(jsonl_file)
+        assert len(load.records) == 1
+        assert load.total_rows == 3
+        assert [line for line, _ in load.skipped] == [2, 3]
+        assert 'JSONDecodeError' in load.skipped[0][1]
+        assert 'target_password' in load.skipped[1][1]
+
+    def test_strict_raises_on_malformed_row(self, tmp_path):
+        jsonl_file = tmp_path / 'test.jsonl'
+        jsonl_file.write_text('{"surname": "x"}\n', encoding='utf-8')
+
+        with pytest.raises(ValueError, match='could not be parsed'):
+            load_paired_dataset(jsonl_file, strict=True)
 
     def test_file_not_found(self):
         with pytest.raises(FileNotFoundError):

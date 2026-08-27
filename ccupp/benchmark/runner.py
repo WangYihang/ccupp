@@ -13,7 +13,7 @@ from rich.table import Table
 from ccupp.benchmark.academic import get_targeted_papers
 from ccupp.benchmark.datasets import PairedRecord
 from ccupp.benchmark.datasets import get_builtin_common_passwords
-from ccupp.benchmark.datasets import load_paired_dataset
+from ccupp.benchmark.datasets import load_paired_dataset_verbose
 from ccupp.benchmark.datasets import load_password_set
 from ccupp.benchmark.metrics import GuessNumberStats
 from ccupp.benchmark.metrics import aggregate_guess_curve
@@ -113,9 +113,18 @@ class BenchmarkRunner:
 
     def add_paired_dataset(self, name: str, path: str | Path) -> None:
         """Add a PII-password paired dataset for academic evaluation."""
-        records = load_paired_dataset(path)
-        self.paired_datasets[name] = records
-        self.console.print(f'[dim]Loaded paired dataset "{name}": {len(records):,} records[/dim]')
+        load = load_paired_dataset_verbose(path)
+        self.paired_datasets[name] = load.records
+        self.console.print(
+            f'[dim]Loaded paired dataset "{name}": {len(load.records):,} records[/dim]'
+        )
+        if load.skipped:
+            line_num, reason = load.skipped[0]
+            self.console.print(
+                f'[yellow]Warning:[/yellow] skipped {len(load.skipped):,} of '
+                f'{load.total_rows:,} rows in {path} '
+                f'(first: line {line_num}: {reason})'
+            )
 
     def run(
         self,

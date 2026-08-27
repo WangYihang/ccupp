@@ -11,7 +11,9 @@ from __future__ import annotations
 import csv
 import gzip
 import json
+import warnings
 from dataclasses import dataclass
+from dataclasses import field
 from pathlib import Path
 from typing import Any
 
@@ -49,7 +51,7 @@ TOP_COMMON_PASSWORDS = [
     'hello', 'password1', 'password123', 'admin', 'admin123',
     'iloveu', 'changeme', 'passw0rd', 'p@ssword', 'p@ssw0rd',
     # Chinese-common patterns (from published research)
-    '5201314', '520520', '1314520', '888888', '666666',
+    '5201314', '520520', '1314520', '888888',
     'woaini', 'woaini520', 'aini1314', '521521', '168168',
     'woaini1314', 'iloveyou520', 'asd123', 'qwe123',
     'abc123456', '1q2w3e4r', 'asdf1234', 'zxcvbnm123',
@@ -96,7 +98,23 @@ def get_builtin_common_passwords() -> set[str]:
     return set(TOP_COMMON_PASSWORDS)
 
 
-def load_paired_dataset(path: str | Path) -> list[PairedRecord]:
+@dataclass
+class PairedDatasetLoad:
+    """The outcome of loading a paired dataset, including what was dropped."""
+    records: list[PairedRecord]
+    skipped: list[tuple[int, str]] = field(default_factory=list)
+    # (line number, reason) for every row that could not be parsed
+
+    @property
+    def total_rows(self) -> int:
+        return len(self.records) + len(self.skipped)
+
+
+def load_paired_dataset(
+    path: str | Path,
+    *,
+    strict: bool = False,
+) -> list[PairedRecord]:
     """Load a PII-password paired dataset for academic evaluation.
 
     Supports two formats:
@@ -106,15 +124,41 @@ def load_paired_dataset(path: str | Path) -> list[PairedRecord]:
     Example JSONL line:
         {"surname":"李","first_name":"伟","birthdate":["1990","01","15"],"target_password":"liwei1990"}
 
+    Rows that cannot be parsed are skipped, but never silently: a warning
+    naming the count and the first failure is emitted. Silent loss matters
+    here more than usual — this feeds an evaluation harness, where dropping
+    records shifts every reported rate with no visible cause.
+
     Args:
         path: Path to the paired dataset file.
+        strict: Raise on the first unparseable row instead of skipping it.
 
     Returns:
         List of PairedRecord objects.
 
     Raises:
         FileNotFoundError: If the file doesn't exist.
-        ValueError: If the file format is not supported.
+        ValueError: If the file format is not supported, or if `strict` is
+            set and any row fails to parse.
+    """
+    load = load_paired_dataset_verbose(path)
+    if load.skipped:
+        line_num, reason = load.skipped[0]
+        detail = (
+            f'{len(load.skipped)} of {load.total_rows} rows in {path} could not '
+            f'be parsed (first: line {line_num}: {reason})'
+        )
+        if strict:
+            raise ValueError(detail)
+        warnings.warn(detail, stacklevel=2)
+    return load.records
+
+
+def load_paired_dataset_verbose(path: str | Path) -> PairedDatasetLoad:
+    """Load a paired dataset, returning the skipped rows alongside the records.
+
+    Use this over :func:`load_paired_dataset` when the caller wants to report
+    the skip count itself rather than rely on a warning.
     """
     path = Path(path)
     if not path.exists():
@@ -129,9 +173,10 @@ def load_paired_dataset(path: str | Path) -> list[PairedRecord]:
         raise ValueError(f'Unsupported paired dataset format: {suffix} (use .jsonl or .csv)')
 
 
-def _load_paired_jsonl(path: Path) -> list[PairedRecord]:
+def _load_paired_jsonl(path: Path) -> PairedDatasetLoad:
     """Load paired data from JSONL file."""
     records: list[PairedRecord] = []
+    skipped: list[tuple[int, str]] = []
     with open(path, encoding='utf-8') as f:
         for line_num, line in enumerate(f, 1):
             line = line.strip()
@@ -141,22 +186,29 @@ def _load_paired_jsonl(path: Path) -> list[PairedRecord]:
                 data = json.loads(line)
                 target = data.pop('target_password', None)
                 if not target:
+                    skipped.append((line_num, 'missing or empty target_password'))
                     continue
                 profile = Profile(**data)
-                records.append(PairedRecord(profile=profile, target_password=target))
-            except (json.JSONDecodeError, Exception):
+            except (TypeError, ValueError) as exc:
+                # ValueError covers json.JSONDecodeError and pydantic's
+                # ValidationError, both of which subclass it.
+                skipped.append((line_num, f'{type(exc).__name__}: {exc}'))
                 continue
-    return records
+            records.append(PairedRecord(profile=profile, target_password=target))
+    return PairedDatasetLoad(records=records, skipped=skipped)
 
 
-def _load_paired_csv(path: Path) -> list[PairedRecord]:
+def _load_paired_csv(path: Path) -> PairedDatasetLoad:
     """Load paired data from CSV file."""
     records: list[PairedRecord] = []
+    skipped: list[tuple[int, str]] = []
     with open(path, encoding='utf-8') as f:
         reader = csv.DictReader(f)
-        for row in reader:
+        # Row 1 is the header, so data rows start at 2.
+        for line_num, row in enumerate(reader, 2):
             target = row.pop('target_password', None)
             if not target:
+                skipped.append((line_num, 'missing or empty target_password'))
                 continue
             # Convert CSV string fields to expected types
             data: dict[str, Any] = {}
@@ -181,10 +233,11 @@ def _load_paired_csv(path: Path) -> list[PairedRecord]:
 
             try:
                 profile = Profile(**data)
-                records.append(PairedRecord(profile=profile, target_password=target))
-            except Exception:
+            except (TypeError, ValueError) as exc:
+                skipped.append((line_num, f'{type(exc).__name__}: {exc}'))
                 continue
-    return records
+            records.append(PairedRecord(profile=profile, target_password=target))
+    return PairedDatasetLoad(records=records, skipped=skipped)
 
 
 def find_password_lists() -> list[Path]:
