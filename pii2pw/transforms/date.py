@@ -17,22 +17,26 @@ def date_variants(year: str, month: str, day: str) -> Iterator[str]:
     d_short = day.lstrip('0') or day
     y_short = year[-2:] if len(year) == 4 else year
 
+    # Order is emission order, and downstream stages consume these in
+    # sequence — so the forms that dominate real corpora lead. Published
+    # analyses of Chinese password sets put YYYYMMDD, MMDD and YYYY well
+    # ahead of the partial and delimited shapes.
     variants = [
-        # Full forms
+        # Dominant forms
         f'{year}{month}{day}',      # 19830924
-        f'{year}{month}',           # 198309
         f'{month}{day}',            # 0924
         f'{year}',                  # 1983
-        # Short year forms
         f'{y_short}{month}{day}',   # 830924
+        # Secondary full forms
+        f'{year}{month}',           # 198309
         f'{y_short}{month}',        # 8309
         f'{y_short}',               # 83
-        # Individual parts
-        month,                       # 09
-        day,                         # 24
         # No-leading-zero forms
         f'{m_short}{d_short}',      # 924
         f'{y_short}{m_short}{d_short}',  # 83924
+        # Individual parts
+        month,                       # 09
+        day,                         # 24
         # With delimiters
         f'{year}-{month}-{day}',    # 1983-09-24
         f'{year}.{month}.{day}',    # 1983.09.24

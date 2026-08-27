@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import statistics
+from collections.abc import Sequence
 from dataclasses import dataclass
 from dataclasses import field
 from typing import TYPE_CHECKING
@@ -175,6 +176,65 @@ def compute_guess_curve(
         point_idx += 1
 
     return curve
+
+
+def aggregate_success_rate_at_n(
+    ranks: Sequence[int | None],
+    n_values: list[int] | None = None,
+) -> dict[int, float]:
+    """Success Rate @ N across independently-guessed targets.
+
+    Each entry of `ranks` is the guess number at which one target was found
+    in the dictionary generated *for that target's own profile*, or None if
+    that dictionary never produced it.
+
+    This is the shape the metric takes in the targeted-guessing literature:
+    every user is attacked with a dictionary built for them, so the rate has
+    to be aggregated over per-user ranks. Matching one user's dictionary
+    against every user's password measures something else entirely.
+
+    Args:
+        ranks: One entry per target, in any order.
+        n_values: List of N values to evaluate at.
+
+    Returns:
+        Dict mapping each N to the fraction of targets found (0.0-1.0).
+    """
+    n_values = sorted(n_values or DEFAULT_N_VALUES)
+    if not ranks:
+        return {n: 0.0 for n in n_values}
+    total = len(ranks)
+    return {
+        n: sum(1 for r in ranks if r is not None and r <= n) / total
+        for n in n_values
+    }
+
+
+def aggregate_guess_curve(
+    ranks: Sequence[int | None],
+    sample_points: list[int] | None = None,
+) -> list[tuple[int, float]]:
+    """Guess Curve across independently-guessed targets.
+
+    The CDF counterpart of :func:`aggregate_success_rate_at_n`, sharing its
+    inputs so the two can never disagree: the curve's value at N is exactly
+    Success Rate @ N.
+
+    Args:
+        ranks: One entry per target, as in :func:`aggregate_success_rate_at_n`.
+        sample_points: N values to sample at (default: log-spaced).
+
+    Returns:
+        List of (N, success_rate) tuples.
+    """
+    if not ranks:
+        return []
+    points = sorted(sample_points or GUESS_CURVE_SAMPLE_POINTS)
+    total = len(ranks)
+    return [
+        (n, sum(1 for r in ranks if r is not None and r <= n) / total)
+        for n in points
+    ]
 
 
 def compute_pii_embedding_rate(

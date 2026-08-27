@@ -49,10 +49,16 @@ def test_generate_passwords_length_filters(sample_profile: Profile):
 
 
 def test_generate_passwords_disable_strategies(minimal_profile: Profile):
-    """Disabling keyboard patterns drops keyboard-derived candidates."""
+    """Disabling keyboard patterns drops keyboard-derived candidates.
+
+    The generic weak-password list also carries 'qwerty', so it is disabled
+    too — otherwise this asserts nothing about the keyboard stage.
+    """
     # A minimal profile produces a finite, fully-enumerable set.
-    enabled = set(generate_passwords(minimal_profile, enable_keyboard_patterns=True))
-    disabled = set(generate_passwords(minimal_profile, enable_keyboard_patterns=False))
+    enabled = set(generate_passwords(
+        minimal_profile, enable_keyboard_patterns=True, enable_common_passwords=False))
+    disabled = set(generate_passwords(
+        minimal_profile, enable_keyboard_patterns=False, enable_common_passwords=False))
     assert 'qwerty' in enabled
     assert 'qwerty' not in disabled
 
@@ -70,7 +76,12 @@ def test_generate_passwords_matches_manual_pipeline(sample_profile: Profile):
 def test_generate_passwords_empty_profile(empty_profile: Profile):
     """An empty profile yields no component-derived passwords.
 
-    Keyboard patterns are component-independent, so they are disabled here
-    to assert that nothing is derived from the (empty) profile itself.
+    Keyboard patterns and the generic weak-password list are both
+    component-independent, so both are disabled here to assert that nothing
+    is derived from the (empty) profile itself.
     """
-    assert list(generate_passwords(empty_profile, enable_keyboard_patterns=False)) == []
+    assert list(generate_passwords(
+        empty_profile,
+        enable_keyboard_patterns=False,
+        enable_common_passwords=False,
+    )) == []

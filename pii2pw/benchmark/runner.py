@@ -13,13 +13,13 @@ from rich.table import Table
 from pii2pw.benchmark.academic import get_targeted_papers
 from pii2pw.benchmark.datasets import PairedRecord
 from pii2pw.benchmark.datasets import get_builtin_common_passwords
-from pii2pw.benchmark.datasets import load_paired_dataset
+from pii2pw.benchmark.datasets import load_paired_dataset_verbose
 from pii2pw.benchmark.datasets import load_password_set
 from pii2pw.benchmark.metrics import GuessNumberStats
-from pii2pw.benchmark.metrics import compute_guess_curve
+from pii2pw.benchmark.metrics import aggregate_guess_curve
+from pii2pw.benchmark.metrics import aggregate_success_rate_at_n
 from pii2pw.benchmark.metrics import compute_guess_numbers
 from pii2pw.benchmark.metrics import compute_pii_embedding_rate
-from pii2pw.benchmark.metrics import compute_success_rate_at_n
 from pii2pw.benchmark.profiles import BENCHMARK_PROFILES
 from pii2pw.benchmark.tools import BaseTool
 from pii2pw.benchmark.tools import ToolResult
@@ -113,9 +113,18 @@ class BenchmarkRunner:
 
     def add_paired_dataset(self, name: str, path: str | Path) -> None:
         """Add a PII-password paired dataset for academic evaluation."""
-        records = load_paired_dataset(path)
-        self.paired_datasets[name] = records
-        self.console.print(f'[dim]Loaded paired dataset "{name}": {len(records):,} records[/dim]')
+        load = load_paired_dataset_verbose(path)
+        self.paired_datasets[name] = load.records
+        self.console.print(
+            f'[dim]Loaded paired dataset "{name}": {len(load.records):,} records[/dim]'
+        )
+        if load.skipped:
+            line_num, reason = load.skipped[0]
+            self.console.print(
+                f'[yellow]Warning:[/yellow] skipped {len(load.skipped):,} of '
+                f'{load.total_rows:,} rows in {path} '
+                f'(first: line {line_num}: {reason})'
+            )
 
     def run(
         self,
@@ -196,62 +205,56 @@ class BenchmarkRunner:
         records: list[PairedRecord],
         ds_name: str,
     ) -> AcademicEvaluation:
-        """Evaluate a tool against PII-password paired records."""
-        all_targets: set[str] = set()
-        all_ordered: list[str] = []
+        """Evaluate a tool against PII-password paired records.
+
+        Every record is attacked with a dictionary generated for that
+        record's own profile, so each metric aggregates over per-record
+        ranks. Success Rate @ N and the guess curve are both derived from
+        the same `ranks` list, which is what keeps them consistent.
+        """
         found_count = 0
-        all_ranks: list[int] = []
-        per_record_sr: dict[int, list[float]] = {}  # N -> list of per-record 0/1
+        any_ordered = False
+        # One entry per record: the rank its own dictionary produced the
+        # target at, or None if that dictionary never did.
+        ranks: list[int | None] = []
 
         for record in records:
             result = tool.generate(record.profile)
             target = record.target_password
-            all_targets.add(target)
 
-            # Check coverage (unordered)
+            # Coverage is order-independent: was it generated at all?
             if target in result.passwords:
                 found_count += 1
 
-            # If ordered, compute Success Rate @ N and Guess Number
             if result.ordered_passwords:
-                target_set = {target}
-                sr = compute_success_rate_at_n(result.ordered_passwords, target_set)
-                for n, rate in sr.items():
-                    per_record_sr.setdefault(n, []).append(rate)
+                any_ordered = True
+                gn = compute_guess_numbers(result.ordered_passwords, {target})
+                ranks.append(gn.ranks[0] if gn.ranks else None)
+            else:
+                # Tool has no likelihood ordering (CUPP, bopscrk).
+                ranks.append(None)
 
-                gn = compute_guess_numbers(result.ordered_passwords, target_set)
-                all_ranks.extend(gn.ranks)
+        found_ranks = [r for r in ranks if r is not None]
 
-                # Use first record's full output for the guess curve sample
-                if not all_ordered:
-                    all_ordered = result.ordered_passwords
-
-        # Aggregate Success Rate @ N (average across records)
-        agg_sr: dict[int, float] = {}
-        for n, rates in per_record_sr.items():
-            agg_sr[n] = sum(rates) / len(rates)
-
-        # Aggregate Guess Numbers
         import statistics
         guess_stats = GuessNumberStats(
-            found=len(all_ranks),
+            found=len(found_ranks),
             total=len(records),
-            min_rank=min(all_ranks) if all_ranks else 0,
-            max_rank=max(all_ranks) if all_ranks else 0,
-            median_rank=statistics.median(all_ranks) if all_ranks else 0,
-            mean_rank=statistics.mean(all_ranks) if all_ranks else 0,
-            ranks=all_ranks,
+            min_rank=min(found_ranks) if found_ranks else 0,
+            max_rank=max(found_ranks) if found_ranks else 0,
+            median_rank=statistics.median(found_ranks) if found_ranks else 0,
+            mean_rank=statistics.mean(found_ranks) if found_ranks else 0,
+            ranks=found_ranks,
         )
 
-        # Guess curve from first record (representative)
-        curve = compute_guess_curve(all_ordered, all_targets) if all_ordered else []
-
+        # An unordered tool has no rank to report, so leave the ranked
+        # metrics empty rather than reporting a misleading 0%.
         return AcademicEvaluation(
             dataset_name=ds_name,
             num_targets=len(records),
-            success_rates=agg_sr,
+            success_rates=aggregate_success_rate_at_n(ranks) if any_ordered else {},
             guess_numbers=guess_stats,
-            guess_curve=curve,
+            guess_curve=aggregate_guess_curve(ranks) if any_ordered else [],
             coverage=found_count / len(records) if records else 0,
         )
 

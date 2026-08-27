@@ -10,7 +10,10 @@ from pii2pw.benchmark.academic import get_targeted_papers
 from pii2pw.benchmark.datasets import PairedRecord
 from pii2pw.benchmark.datasets import get_builtin_common_passwords
 from pii2pw.benchmark.datasets import load_paired_dataset
+from pii2pw.benchmark.datasets import load_paired_dataset_verbose
 from pii2pw.benchmark.metrics import GuessNumberStats
+from pii2pw.benchmark.metrics import aggregate_guess_curve
+from pii2pw.benchmark.metrics import aggregate_success_rate_at_n
 from pii2pw.benchmark.metrics import compute_guess_curve
 from pii2pw.benchmark.metrics import compute_guess_numbers
 from pii2pw.benchmark.metrics import compute_pii_embedding_rate
@@ -82,8 +85,37 @@ class TestPairedDataset:
         jsonl_file = tmp_path / 'test.jsonl'
         jsonl_file.write_text('\n'.join(json.dumps(d, ensure_ascii=False) for d in data), encoding='utf-8')
 
-        records = load_paired_dataset(jsonl_file)
+        with pytest.warns(UserWarning, match='1 of 2 rows'):
+            records = load_paired_dataset(jsonl_file)
         assert len(records) == 1
+
+    def test_skipped_rows_are_reported_not_silent(self, tmp_path):
+        """A malformed row must never vanish without a trace.
+
+        This harness turns dropped records into shifted success rates with
+        no visible cause, so the loader reports what it could not parse.
+        """
+        jsonl_file = tmp_path / 'test.jsonl'
+        jsonl_file.write_text(
+            '{"surname": "\u674e", "target_password": "test123"}\n'
+            'not json at all\n'
+            '{"surname": "\u5f20"}\n',
+            encoding='utf-8',
+        )
+
+        load = load_paired_dataset_verbose(jsonl_file)
+        assert len(load.records) == 1
+        assert load.total_rows == 3
+        assert [line for line, _ in load.skipped] == [2, 3]
+        assert 'JSONDecodeError' in load.skipped[0][1]
+        assert 'target_password' in load.skipped[1][1]
+
+    def test_strict_raises_on_malformed_row(self, tmp_path):
+        jsonl_file = tmp_path / 'test.jsonl'
+        jsonl_file.write_text('{"surname": "x"}\n', encoding='utf-8')
+
+        with pytest.raises(ValueError, match='could not be parsed'):
+            load_paired_dataset(jsonl_file, strict=True)
 
     def test_file_not_found(self):
         with pytest.raises(FileNotFoundError):
@@ -280,3 +312,44 @@ class TestBenchmarkRunner:
         # 'liwei' should be found (it's name pinyin), 'nonexistent_xyz' should not
         assert acad.coverage > 0
         assert 10 in acad.success_rates or 100 in acad.success_rates
+
+
+class TestAggregateMetrics:
+    """Aggregation across independently-guessed targets.
+
+    Each target is attacked with a dictionary built for its own profile, so
+    these aggregate per-record ranks. The earlier implementation matched one
+    record's dictionary against every record's password, which reported a
+    guess curve two orders of magnitude below the Success Rate @ N computed
+    from the same run.
+    """
+
+    def test_success_rate_counts_ranks_within_n(self):
+        ranks = [1, 50, 500, 5000, None]
+        sr = aggregate_success_rate_at_n(ranks)
+        assert sr[10] == 0.2
+        assert sr[100] == 0.4
+        assert sr[1000] == 0.6
+        assert sr[10_000] == 0.8
+
+    def test_unfound_targets_count_against_the_rate(self):
+        """None means that target's own dictionary never produced it."""
+        assert aggregate_success_rate_at_n([None, None])[10_000] == 0.0
+        assert aggregate_success_rate_at_n([1, None])[10] == 0.5
+
+    def test_curve_agrees_with_success_rate(self):
+        """The curve at N is exactly Success Rate @ N — same inputs, same answer."""
+        ranks = [3, 42, 900, 12_000, None, 7]
+        sr = aggregate_success_rate_at_n(ranks)
+        curve = dict(aggregate_guess_curve(ranks))
+        for n, rate in sr.items():
+            assert curve[n] == rate, f'curve and SR disagree at N={n}'
+
+    def test_curve_is_monotonic(self):
+        curve = aggregate_guess_curve([1, 100, 10_000, None])
+        rates = [rate for _, rate in curve]
+        assert rates == sorted(rates)
+
+    def test_empty_input(self):
+        assert aggregate_guess_curve([]) == []
+        assert all(v == 0.0 for v in aggregate_success_rate_at_n([]).values())

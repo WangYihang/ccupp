@@ -77,3 +77,74 @@ class TestPasswordGenerator:
         assert 'test' in passwords
         assert 'test123' in passwords
         assert 'Test' in passwords
+
+
+def _rank(passwords: list[str], target: str) -> int | None:
+    """1-based position of `target`, or None if it is never generated."""
+    for i, pw in enumerate(passwords, 1):
+        if pw == target:
+            return i
+    return None
+
+
+class TestGenerationOrder:
+    """Ordering regressions.
+
+    Coverage alone says nothing for online guessing, where an attacker gets
+    10-1000 attempts. These assert that the patterns real Chinese users pick
+    most often are ranked where a throttled attacker would still reach them,
+    which a set-membership test cannot express.
+    """
+
+    def test_name_birthdate_ranks_early(self, sample_profile):
+        """Full-pinyin name + birthdate is the dominant pattern; it leads."""
+        gen = PasswordGenerator(components=extract_components(sample_profile))
+        passwords = list(gen.generate())
+        for target in ('liergou19830924', 'liergou0924', 'liergou1983'):
+            rank = _rank(passwords, target)
+            assert rank is not None, f'{target} was never generated'
+            assert rank <= 200, f'{target} ranked {rank}, expected within 200'
+
+    def test_bare_identity_values_rank_first(self, sample_profile):
+        """A bare account handle or full name outranks any decorated form."""
+        gen = PasswordGenerator(components=extract_components(sample_profile))
+        passwords = list(gen.generate())
+        bare = _rank(passwords, 'liergou')
+        decorated = _rank(passwords, 'liergou123')
+        assert bare is not None and decorated is not None
+        assert bare < decorated
+        assert bare <= 50, f'bare full name ranked {bare}, expected within 50'
+
+    def test_undelimited_before_delimited(self, sample_profile):
+        """The empty delimiter dominates, so it is exhausted first."""
+        gen = PasswordGenerator(components=extract_components(sample_profile))
+        passwords = list(gen.generate())
+        tight = _rank(passwords, 'liergou1983')
+        delimited = _rank(passwords, 'liergou.1983')
+        assert tight is not None and delimited is not None
+        assert tight < delimited
+
+    def test_pii_outranks_profile_independent_sources(self, sample_profile):
+        """Targeted guesses come before the generic fallback list."""
+        gen = PasswordGenerator(components=extract_components(sample_profile))
+        passwords = list(gen.generate())
+        pii = _rank(passwords, 'liergou19830924')
+        generic = _rank(passwords, '123456')
+        assert pii is not None and generic is not None
+        assert pii < generic
+
+    def test_combination_plus_suffix_is_reachable(self, sample_profile):
+        """name+date+suffix has no other stage that would produce it."""
+        gen = PasswordGenerator(components=extract_components(sample_profile))
+        passwords = set(gen.generate())
+        assert 'liergou1983!' in passwords
+
+    def test_common_fallback_can_be_disabled(self, sample_profile):
+        """The generic list is profile-independent and must be switchable."""
+        components = extract_components(sample_profile)
+        with_fallback = set(PasswordGenerator(components=components).generate())
+        without = set(PasswordGenerator(
+            components=components, enable_common_passwords=False,
+        ).generate())
+        assert '123456' in with_fallback
+        assert '123456' not in without

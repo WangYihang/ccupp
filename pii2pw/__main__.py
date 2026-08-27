@@ -111,6 +111,12 @@ def generate(
     no_keyboard: bool = typer.Option(
         False, '--no-keyboard', help='Disable keyboard pattern generation',
     ),
+    no_common: bool = typer.Option(
+        False, '--no-common', help='Disable the generic weak-password fallback list',
+    ),
+    no_case_variants: bool = typer.Option(
+        False, '--no-case-variants', help='Disable upper/lower/title-case variants',
+    ),
     stats: bool = typer.Option(
         False, '--stats', help='Print generation statistics to stderr',
     ),
@@ -143,8 +149,10 @@ def generate(
         generator = PasswordGenerator(
             components=components,
             enable_leetspeak=not no_leetspeak,
+            enable_case_variants=not no_case_variants,
             enable_cultural_numbers=not no_cultural,
             enable_keyboard_patterns=not no_keyboard,
+            enable_common_passwords=not no_common,
         )
 
         for pw in generator.generate():
